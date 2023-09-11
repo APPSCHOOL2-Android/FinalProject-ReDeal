@@ -11,7 +11,7 @@
 
     <style name="Theme.ReDeal" parent="Base.Theme.ReDeal" />
 
-    <style name="Theme.ReDea.ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+    <style name="Theme.ReDeal.ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
     </style>
 </resources>
