@@ -2,4 +2,32 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary10">#0050A1</color>
+    <color name="primary20">#026DC0</color>
+    <color name="primary30">#0C7FD2</color>
+    <color name="primary40">#1891E4</color>
+    <color name="primary50">#209FF2</color>
+    <color name="primary60">#44ADF3</color>
+    <color name="primary70">#67BBF4</color>
+    <color name="primary80">#92CFF8</color>
+    <color name="primary90">#BCE1FA</color>
+    <color name="primary95">#E4F3FC</color>
+    <color name="primary99">#F3F9FD</color>
+    <color name="primary100">#FFFFFF</color>
+
+    <color name="거래중">#0050A1</color>
+    <color name="거래시도">#209FF2</color>
+    <color name="거래중지">#92CFF8</color>
+
+    <color name="background">#FCFCFC</color>
+
+    <color name="text10">#0F0F0D</color>
+    <color name="text30">#4D4D4B</color>
+    <color name="text50">#878785</color>
+    <color name="text60">#A8A8A6</color>
+    <color name="text70">#CDCDCB</color>
+    <color name="text80">#E0E0DE</color>
+
+    <color name="calendarRed">#E51C24</color>
+    <color name="calendarRedBlur">#FFCFD2</color>
 </resources>
