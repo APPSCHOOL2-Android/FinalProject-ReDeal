@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MakeScheduleFragment" >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/makeScheduleAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/makeScheduleToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:clickable="true"
+            android:minHeight="?attr/actionBarSize"
+            app:itemIconTint="@color/primary20"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:navigationIconTint="@color/primary20"
+            app:title="일정 등록"
+            app:titleCentered="false"
+            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+            app:titleTextColor="@color/primary20" />
+
+        <View
+            android:id="@+id/makeScheduleToolbarDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/makeScheduleBtnVisit"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elegantTextHeight="false"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="방문 일정"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/primary20" />
+
+                <Button
+                    android:id="@+id/makeScheduleBtnNotVisit"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:elegantTextHeight="false"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="미방문 일정"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/primary20" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="거래처를 선택해주세요."
+                    android:textColor="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/makeScheduleBtnSelectAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_round_primary20"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/card_account_detail_24px_primary99" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="일정 선택"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/makeScheduleBtnSelectCalendar"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="2023.09.08"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/primary20" />
+
+                <Button
+                    android:id="@+id/makeScheduleBtnSelectTime"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="오후 2:30"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/primary20" />
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:hint="일정 제목" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:hint="일정 내용" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
