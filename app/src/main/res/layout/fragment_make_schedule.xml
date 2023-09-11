@@ -59,6 +59,7 @@
                     android:elegantTextHeight="false"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="방문 일정"
+                    android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
 
@@ -71,6 +72,7 @@
                     android:elegantTextHeight="false"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="미방문 일정"
+                    android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
             </LinearLayout>
@@ -86,9 +88,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:fontFamily="@font/nanumsquareneo_bold"
                     android:text="거래처를 선택해주세요."
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <ImageButton
                     android:id="@+id/makeScheduleBtnSelectAccount"
@@ -110,9 +113,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:fontFamily="@font/nanumsquareneo_bold"
                     android:text="일정 선택"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/makeScheduleBtnSelectCalendar"
@@ -121,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="2023.09.08"
+                    android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
 
@@ -132,34 +137,49 @@
                     android:layout_marginLeft="4dp"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="오후 2:30"
+                    android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
             </LinearLayout>
 
 
+            <TimePicker
+                android:id="@+id/makeScheduleTimePicker"
+                style="@style/CustomTimePickerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:timePickerMode="spinner"
+                android:numbersSelectorColor="@color/primary10" />
+
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/makeScheduleLayoutScheduleTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/makeScheduleEditTextScheduleTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
-                    android:hint="일정 제목" />
+                    android:hint="일정 제목"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/makeScheduleLayoutScheduleContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/makeScheduleEditTextScheduleContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
-                    android:hint="일정 내용" />
+                    android:hint="일정 내용"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>

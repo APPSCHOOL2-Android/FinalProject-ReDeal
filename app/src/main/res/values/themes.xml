@@ -16,4 +16,10 @@
         <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
         <item name="android:textSize">20dp</item>
     </style>
+
+    <style name="CustomTimePickerStyle" parent="Widget.Material3.MaterialTimePicker">
+        <!-- 기타 TimePicker 스타일 속성 설정 -->
+        <item name="android:numbersSelectorColor">@color/primary10</item>
+<!--        <item name="android:selectDividerHeight">0dp</item>-->
+    </style>
 </resources>
