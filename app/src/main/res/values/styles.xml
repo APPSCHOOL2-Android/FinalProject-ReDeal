@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <style name="bottom_navigation_view_item_text_appearance" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/nanumsquareneo_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="account_list_toolbar_title_text_appearance" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/primary20</item>
+    </style>
+    
+</resources>
