@@ -17,7 +17,7 @@
             android:id="@+id/makeScheduleToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/background"
             android:clickable="true"
             android:minHeight="?attr/actionBarSize"
             app:itemIconTint="@color/primary20"
@@ -99,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_round_primary20"
-                    android:padding="5dp"
+                    android:padding="4dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/card_account_detail_24px_primary99" />
             </LinearLayout>
@@ -143,12 +143,12 @@
                     app:strokeColor="@color/primary20" />
             </LinearLayout>
 
+
             <com.hifi.redeal.CustomTimePicker
                 android:id="@+id/makeScheduleTimePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:timePickerMode="spinner" />
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/makeScheduleLayoutScheduleTitle"
