@@ -38,11 +38,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -182,5 +183,14 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/makeScheduleBtnComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/btn_round_primary20"
+        android:text="일정 등록"
+        android:textSize="20sp" />
 
 </LinearLayout>
