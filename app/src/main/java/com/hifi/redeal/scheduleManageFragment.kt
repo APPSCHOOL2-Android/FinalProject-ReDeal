@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.hifi.redeal.databinding.CompleteScheduleItemBinding
 import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -55,6 +56,17 @@ class scheduleManageFragment : Fragment(){
             scheduleItemBinding.root.layoutParams = layoutParams
 
             fragmentScheduleManageBinding.scheduleListLayout.addView(scheduleItemBinding.root)
+
+            if(it == 2){
+                val completeScheduleItemBinding = CompleteScheduleItemBinding.inflate(layoutInflater)
+                var layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                completeScheduleItemBinding.root.layoutParams = layoutParams
+
+                fragmentScheduleManageBinding.scheduleListLayout.addView(completeScheduleItemBinding.root)
+            }
         }
 
         val spaceTextView = TextView(mainActivity)

@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <View
-                android:id="@+id/scheduleClinetState"
+                android:id="@+id/completeScheduleClinetState"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_marginTop="3dp"
@@ -34,23 +34,23 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/scheduleClientInfo"
+                android:id="@+id/completeScheduleClientInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:text="라이온 김대리"
-                android:textColor="@color/text10"
+                android:text="ABC Company 김대리"
+                android:textColor="@color/text70"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/scheduleName"
+                android:id="@+id/completeScheduleName"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:maxLines="1"
                 android:text="판매 자료 엑셀 정리 후 보내기"
-                android:textColor="@color/text50"
+                android:textColor="@color/text80"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -60,23 +60,23 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/scheduleTime"
+                android:id="@+id/completeScheduleTime"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_gravity="end"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:text="14 : 30"
-                android:textColor="@color/primary10"
+                android:textColor="@color/primary90"
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/completeCheckSchedule"
+                android:id="@+id/completeScheduleRetryImageView"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/btn_round_primary20"
-                app:srcCompat="@drawable/done_24px" />
+                android:background="@drawable/btn_round_primary90"
+                app:srcCompat="@drawable/replay_24px" />
         </LinearLayout>
 
     </LinearLayout>
