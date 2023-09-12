@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageViewRowItemAccountListTransactionState"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="4dp"
+        app:srcCompat="@drawable/circle_big_24px_primary20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/constraintLayoutRowItemAccountListAccountName"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutRowItemAccountListAccountName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toEndOf="@id/imageViewRowItemAccountListTransactionState"
+        app:layout_constraintEnd_toStartOf="@id/buttonRowItemAccountListCall"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textViewRowItemAccountListAccountName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:maxLines="1"
+            android:text="ABC Company"
+            android:textColor="@color/text10"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/buttonRowItemAccountListCall"
+        android:background="@drawable/btn_round_primary20"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="4dp"
+        android:padding="4dp"
+        app:srcCompat="@drawable/call_24px"
+        app:layout_constraintTop_toTopOf="@id/constraintLayoutRowItemAccountListAccountName"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewRowItemAccountListRepresentative"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="이소은"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:textSize="16sp"
+        android:textColor="@color/text10"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="@id/constraintLayoutRowItemAccountListAccountName"
+        app:layout_constraintEnd_toStartOf="@id/textViewRowItemAccountListRecentVisitDate"
+        app:layout_constraintTop_toBottomOf="@id/constraintLayoutRowItemAccountListAccountName"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewRowItemAccountListRecentVisitDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="최근 방문 4 시간 전"
+        android:textSize="10sp"
+        android:textColor="@color/text50"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@id/buttonRowItemAccountListCall"
+        app:layout_constraintTop_toBottomOf="@id/constraintLayoutRowItemAccountListAccountName"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
