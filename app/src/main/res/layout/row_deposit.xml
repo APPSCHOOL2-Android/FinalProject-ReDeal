@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textDepositDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="2000.01.01"
+        android:textColor="@color/text10"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewDeposit"
+        android:layout_width="320dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="@color/background"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDepositDate">
+
+        <TextView
+            android:id="@+id/textDepositAmount"
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="24dp"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:gravity="center|right"
+            android:text="0"
+            android:textColor="@color/text10"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/textDeposit1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:gravity="center|right"
+            android:text="원"
+            android:textColor="@color/text10"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/textDeposit2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:gravity="center|left"
+            android:text="입금"
+            android:textColor="@color/text10"
+            android:textSize="12dp" />
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

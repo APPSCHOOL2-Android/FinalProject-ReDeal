@@ -5,11 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/primary20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDepositDialog" />
+
+    <TextView
+        android:id="@+id/textDepositDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nanumsquareneo_extrabold"
+        android:text="입금 추가"
+        android:textColor="@color/primary20"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/textInputLayoutDeposit"
         android:layout_width="312dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="80dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -18,7 +41,8 @@
             android:id="@+id/textInputEditTextDeposit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="hint" />
+            android:hint="금액"
+            android:inputType="number|numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -26,16 +50,18 @@
         android:layout_width="312dp"
         android:layout_height="48dp"
         android:layout_marginStart="140dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="140dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/primary20"
         android:fontFamily="@font/nanumsquareneo_bold"
         android:text="입금 추가"
         android:textSize="20sp"
         app:cornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDeposit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
