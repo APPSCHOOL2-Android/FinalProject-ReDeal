@@ -20,4 +20,9 @@
         android:name="com.hifi.redeal.account.AccountEditFragment"
         android:label="fragment_account_edit"
         tools:layout="@layout/fragment_account_edit" />
+    <fragment
+        android:id="@+id/addressSearchFragment"
+        android:name="com.hifi.redeal.account.AddressSearchFragment"
+        android:label="fragment_address_search"
+        tools:layout="@layout/fragment_address_search" />
 </navigation>

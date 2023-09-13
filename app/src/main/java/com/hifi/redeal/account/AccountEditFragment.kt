@@ -7,20 +7,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.TextView
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
+import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAccountEditBinding
 
-class AccountEditFragment : Fragment() {
+class AccountEditFragment : Fragment(){
 
+    lateinit var mainActivity: MainActivity
     lateinit var fragmentAccountEditBinding: FragmentAccountEditBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainActivity = activity as MainActivity
         fragmentAccountEditBinding = FragmentAccountEditBinding.inflate(layoutInflater)
+
+        setFragmentResultListener("addressSearchResult") { _, bundle ->
+            val data = bundle.getString("address")
+            fragmentAccountEditBinding.textEditTextAccountEditZipCode.setText(data.toString())
+        }
 
         fragmentAccountEditBinding.run {
             val items = listOf("거래 중", "거래 시도", "거래 중지")
@@ -41,6 +50,10 @@ class AccountEditFragment : Fragment() {
                         2 -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
                     }
                 }
+            }
+
+            buttonAccountEditAddressSearch.setOnClickListener {
+                mainActivity.navigateTo(R.id.addressSearchFragment)
             }
         }
 
