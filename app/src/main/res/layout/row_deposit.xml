@@ -19,7 +19,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewDeposit"
-        android:layout_width="320dp"
+        android:layout_width="350dp"
         android:layout_height="37dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="8dp"
@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/textDepositAmount"
-            android:layout_width="260dp"
+            android:layout_width="288dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:layout_marginRight="24dp"

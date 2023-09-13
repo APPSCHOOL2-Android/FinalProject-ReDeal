@@ -19,7 +19,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewTrasaction"
-        android:layout_width="320dp"
+        android:layout_width="350dp"
         android:layout_height="142dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="8dp"
@@ -34,7 +34,7 @@
 
         <View
             android:id="@+id/divider5"
-            android:layout_width="296dp"
+            android:layout_width="324dp"
             android:layout_height="1dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="90dp"
@@ -81,7 +81,7 @@
             android:gravity="center|left"
             android:text="수량"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction4"
@@ -94,20 +94,20 @@
             android:gravity="center|left"
             android:text="개"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textProductCount"
-            android:layout_width="wrap_content"
+            android:layout_width="81dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="45dp"
-            android:layout_marginRight="202dp"
+            android:layout_marginRight="230dp"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:gravity="center|left"
+            android:gravity="center|right"
             android:hint="수량"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction3"
@@ -120,20 +120,20 @@
             android:gravity="center|left"
             android:text="단가"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textUnitPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="68dp"
-            android:layout_marginRight="202dp"
+            android:layout_marginRight="230dp"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:gravity="center|left"
+            android:gravity="center|right"
             android:hint="단가"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction5"
@@ -146,7 +146,7 @@
             android:gravity="center|left"
             android:text="원"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction7"
@@ -159,11 +159,11 @@
             android:gravity="center|left"
             android:text="금액"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTotalAmount"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="68dp"
@@ -172,20 +172,20 @@
             android:gravity="center|right"
             android:hint="총 금액"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction8"
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="295dp"
+            android:layout_marginLeft="325dp"
             android:layout_marginTop="68dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
             android:text="원"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction9"
@@ -198,7 +198,7 @@
             android:gravity="center|left"
             android:text="받은 금액"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction10"
@@ -211,11 +211,11 @@
             android:gravity="center|left"
             android:text="발생 미수금"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textRecievedAmount"
-            android:layout_width="wrap_content"
+            android:layout_width="98dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="99dp"
@@ -224,11 +224,11 @@
             android:gravity="center|right"
             android:hint="받은 금액"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textRecievables"
-            android:layout_width="wrap_content"
+            android:layout_width="85dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="120dp"
@@ -237,33 +237,33 @@
             android:gravity="center|right"
             android:hint="미수금"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction11"
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="295dp"
+            android:layout_marginLeft="325dp"
             android:layout_marginTop="99dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
             android:text="원"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/textTransaction12"
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="295dp"
+            android:layout_marginLeft="325dp"
             android:layout_marginTop="120dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
             android:text="원"
             android:textColor="@color/text10"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
     </androidx.cardview.widget.CardView>
 
