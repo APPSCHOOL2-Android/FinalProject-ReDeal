@@ -1,14 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".visitedScheduleFragment">
+    android:orientation="vertical"
+    tools:context=".VisitedScheduleFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/visitedScheduleToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Theme.ReDeal.ToolbarTheme"
+        app:menu="@menu/schedule_menu"
+        app:navigationIcon="@drawable/arrow_back_ios_24px"
+        app:title="방문 일정"
+        app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+        app:titleTextColor="@color/primary20" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/primary20"
+        android:orientation="vertical"></LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_margin="12dp"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/visitedScheduleClientState"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/client_state_circle_trading" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:gravity="center|start"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/visitedClientInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="라이온 김대리"
+                    android:textColor="@color/text10"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/btn_round_primary20"
+                    android:scaleType="center"
+                    android:src="@drawable/card_account_detail_24px_primary99" />
+
+                <ImageView
+                    android:id="@+id/startNavOfTmapBtn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/btn_round_primary20"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/directions_car_24px" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/scheduleClientAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:minHeight="20dp"
+                android:text="서울 특별시 강남구 역삼동 123-45 번지"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="마지막 방문일"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/clientLastVisitedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="2023.08.12"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/clientLastVisitedTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="16 : 37"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="방문 시간"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/clientVisitDateDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="2023.09.13"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/clientVisitedTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="14 : 30"
+                android:textColor="@color/primary20"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/visitedScheduleDataTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="판매 자료 액셀 정리 후 보내기"
+            android:textColor="@color/text10"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/visitedScheduleDataContents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/schedule_content_backround"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:gravity="left|center_vertical"
+            android:minHeight="42dp"
+            android:padding="12dp"
+            android:text="박과장님한테 자료 받아서 처리할 예정"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

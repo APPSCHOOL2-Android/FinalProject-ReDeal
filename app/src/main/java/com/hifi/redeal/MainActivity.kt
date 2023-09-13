@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     // 지정한 Fragment를 보여주는 메서드
     fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle?){
 
-        SystemClock.sleep(200)
+        SystemClock.sleep(100)
 
         // Fragment 교체 상태로 설정한다.
         val fragmentTransaction = supportFragmentManager.beginTransaction()
