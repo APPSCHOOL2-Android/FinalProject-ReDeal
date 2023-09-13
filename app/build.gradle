@@ -17,7 +17,8 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "KAKAO_API_KEY", properties['kakao.key']
+        buildConfigField "String", "KAKAO_API_KEY", "\"${properties['kakao.key']}\""
+        manifestPlaceholders["KAKAO_API_KEY"] = properties['kakao.key']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
@@ -31,6 +32,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            manifestPlaceholders["KAKAO_API_KEY"] =properties['kakao.key']
+        }
+        debug {
+            minifyEnabled false
+//            manifestPlaceholders["KAKAO_API_KEY"] = properties['kakao.key']
+//            manifestPlaceholders["KAKAO_API_KEY"] = properties["kakao.key"] as String
         }
     }
     compileOptions {
