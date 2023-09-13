@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.databinding.ActivityMainBinding
+import com.hifi.redeal.schedule.ScheduleManageFragment
+import com.hifi.redeal.schedule.UnvisitedScheduleFragment
+import com.hifi.redeal.schedule.VisitedScheduleFragment
 
 class MainActivity : AppCompatActivity() {
 

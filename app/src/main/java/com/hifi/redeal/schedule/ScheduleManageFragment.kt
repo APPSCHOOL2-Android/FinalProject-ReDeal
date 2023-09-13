@@ -1,4 +1,4 @@
-package com.hifi.redeal
+package com.hifi.redeal.schedule
 
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.hifi.redeal.MainActivity
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.CompleteScheduleItemBinding
 import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding

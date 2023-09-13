@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".VisitedScheduleFragment">
+    tools:context=".schedule.VisitedScheduleFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/visitedScheduleToolbar"
@@ -30,7 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="12dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:transitionGroup="true">
 
         <LinearLayout
             android:layout_width="match_parent"
