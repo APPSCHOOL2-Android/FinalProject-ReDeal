@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
     var oldFragment:Fragment? = null
 
     companion object{
-        val SCHEDULE_FRAGMENT = "ScheduleFragment"
+        val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
+        val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
+        val VISITED_SCHEDULE_FRAGMENT = "VisitedScheduleFragment"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
-        replaceFragment(SCHEDULE_FRAGMENT, true, null)
+        replaceFragment(SCHEDULE_MANAGE_FRAGMENT, true, null)
 
     }
 
@@ -43,7 +45,9 @@ class MainActivity : AppCompatActivity() {
 
         // 새로운 Fragment를 담을 변수
         newFragment = when(name){
-            SCHEDULE_FRAGMENT -> scheduleManageFragment()
+            SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
+            UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
+            VISITED_SCHEDULE_FRAGMENT -> VisitedScheduleFragment()
             else -> Fragment()
         }
 

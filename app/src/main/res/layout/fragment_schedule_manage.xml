@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context=".scheduleManageFragment">
+    tools:context=".ScheduleManageFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout10"
@@ -25,6 +25,7 @@
         android:background="@color/background"
         android:clickable="true"
         android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Theme.ReDeal.ToolbarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

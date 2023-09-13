@@ -2,7 +2,6 @@ package com.hifi.redeal
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.res.ResourcesCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hifi.redeal.databinding.CompleteScheduleItemBinding
 import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
@@ -26,7 +23,7 @@ import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
 
-class scheduleManageFragment : Fragment(){
+class ScheduleManageFragment : Fragment(){
 
     lateinit var mainActivity: MainActivity
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
@@ -77,7 +74,8 @@ class scheduleManageFragment : Fragment(){
             scheduleItemBinding.run{
                 // 뷰 클릭 이벤트
                 root.setOnClickListener {
-
+                    // 추후 번들에 선택한 일정 idx 넣은 후 전달
+                    mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
                 }
 
                 // 스케줄 완료 처리 버튼 클릭 이벤트
@@ -105,6 +103,12 @@ class scheduleManageFragment : Fragment(){
             completeScheduleItemBinding.root.layoutParams = layoutParams
 
             completeScheduleItemBinding.run {
+
+                root.setOnClickListener {
+                    // 추후 번들에 선택한 일정 idx 넣은 후 전달
+                    mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
+                }
+
                 completeScheduleRetryImageView.setOnClickListener {
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setTitle("일정 완료 취소 처리")
