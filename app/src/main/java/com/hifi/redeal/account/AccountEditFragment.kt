@@ -1,0 +1,65 @@
+package com.hifi.redeal.account
+
+import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.TextView
+import com.hifi.redeal.R
+import com.hifi.redeal.databinding.FragmentAccountEditBinding
+
+class AccountEditFragment : Fragment() {
+
+    lateinit var fragmentAccountEditBinding: FragmentAccountEditBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        fragmentAccountEditBinding = FragmentAccountEditBinding.inflate(layoutInflater)
+
+        fragmentAccountEditBinding.run {
+            val items = listOf("거래 중", "거래 시도", "거래 중지")
+            val adapter = CustomArrayAdapter(items)
+            textEditTextAccountEditState.run {
+                setAdapter(adapter)
+
+                setOnItemClickListener { parent, view, position, id ->
+
+                    val scale = resources.displayMetrics.density // 화면 밀도를 가져옴
+                    val pixel = (4 * scale + 0.5f).toInt()
+
+                    compoundDrawablePadding = pixel
+
+                    when (position) {
+                        0 -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary20, 0, 0, 0)
+                        1 -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary50, 0, 0, 0)
+                        2 -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
+                    }
+                }
+            }
+        }
+
+        return fragmentAccountEditBinding.root
+    }
+
+    inner class CustomArrayAdapter(items: List<String>): ArrayAdapter<String>(
+        requireContext(),
+        R.layout.dropdown_menu_item_account_edit,
+        items
+    ) {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = super.getView(position, convertView, parent)
+            when ((view as TextView).text) {
+                "거래 중" -> view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.circle_big_16px_primary20, 0, 0, 0)
+                "거래 시도" -> view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.circle_big_16px_primary50, 0, 0, 0)
+                "거래 중지" -> view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
+            }
+            return view
+        }
+    }
+}

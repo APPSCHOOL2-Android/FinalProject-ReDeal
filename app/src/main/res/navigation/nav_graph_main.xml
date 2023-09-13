@@ -10,4 +10,14 @@
         android:name="com.hifi.redeal.account.AccountListFragment"
         android:label="fragment_account_list"
         tools:layout="@layout/fragment_account_list" />
+    <fragment
+        android:id="@+id/accountDetailFragment"
+        android:name="com.hifi.redeal.account.AccountDetailFragment"
+        android:label="fragment_account_detail"
+        tools:layout="@layout/fragment_account_detail" />
+    <fragment
+        android:id="@+id/accountEditFragment"
+        android:name="com.hifi.redeal.account.AccountEditFragment"
+        android:label="fragment_account_edit"
+        tools:layout="@layout/fragment_account_edit" />
 </navigation>
