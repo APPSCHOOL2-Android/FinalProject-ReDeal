@@ -17,14 +17,80 @@
         android:backgroundTint="@color/background"
         app:tint="@color/primary40" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/mapBottomSheetTabClient"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/background"></com.google.android.material.tabs.TabLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="14dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mapBottomSheetRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/mapBottomSheetDistanceList"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@color/white">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/background"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center"
+                android:hint="반경 거리 선택"
+                android:inputType="none"
+                android:textStyle="normal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/mapBottomSheetTabAll"
+                android:layout_width="78dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="전체"
+                android:textSize="14sp"
+                app:cornerRadius="4dp"
+                app:strokeColor="@color/primary20" />
+
+            <Button
+                android:id="@+id/mapBottomSheetTabBookMark"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="즐겨찾기"
+                android:textSize="14sp"
+                app:cornerRadius="4dp"
+                app:strokeColor="@color/primary20" />
+
+            <Button
+                android:id="@+id/mapBottomSheetTabVisit"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="오늘 방문"
+                android:textSize="14sp"
+                app:cornerRadius="4dp"
+                app:strokeColor="@color/primary20" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mapBottomSheetLayoutClient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
