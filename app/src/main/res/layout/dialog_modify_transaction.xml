@@ -5,13 +5,13 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textTransactionDialog"
+        android:id="@+id/textModifyTransactionDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/nanumsquareneo_extrabold"
-        android:text="거래 추가"
+        android:text="거래 수정"
         android:textColor="@color/primary20"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,10 +26,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textTransactionDialog" />
+        app:layout_constraintTop_toBottomOf="@+id/textModifyTransactionDialog" />
+
+    <ImageButton
+        android:id="@+id/imgBtnDeleteTransaction"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/delete_24px_primary20" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutProductName"
+        android:id="@+id/textInputLayoutModifyProductName"
         android:layout_width="312dp"
         android:layout_height="60dp"
         android:layout_marginTop="100dp"
@@ -38,7 +49,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditTextProductName"
+            android:id="@+id/textInputEditTextModifyProductName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
@@ -47,16 +58,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutProductCount"
+        android:id="@+id/textInputLayoutModifyProductCount"
         android:layout_width="312dp"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutProductName">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutModifyProductName">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditTextProductCount"
+            android:id="@+id/textInputEditTextModifyProductCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
@@ -66,16 +77,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutUnitPrice"
+        android:id="@+id/textInputLayoutModifyUnitPrice"
         android:layout_width="312dp"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutProductCount">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutModifyProductCount">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditTextUnitPrice"
+            android:id="@+id/textInputEditTextModifyUnitPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
@@ -85,7 +96,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/textViewWon2"
+        android:id="@+id/textViewModifyWon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -94,21 +105,21 @@
         android:text="원"
         android:textColor="@color/text30"
         android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/textInputLayoutUnitPrice"
-        app:layout_constraintEnd_toEndOf="@id/textInputLayoutUnitPrice"
-        app:layout_constraintTop_toTopOf="@id/textInputLayoutUnitPrice" />
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayoutModifyUnitPrice"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayoutModifyUnitPrice"
+        app:layout_constraintTop_toTopOf="@id/textInputLayoutModifyUnitPrice" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutAmountReceived"
+        android:id="@+id/textInputLayoutModifyAmountReceived"
         android:layout_width="312dp"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutUnitPrice">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutModifyUnitPrice">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditTextAmountReceived"
+            android:id="@+id/textInputEditTextModifyAmountReceived"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
@@ -118,7 +129,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/textViewWon3"
+        android:id="@+id/textViewModifyWon3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -127,12 +138,12 @@
         android:text="원"
         android:textColor="@color/text30"
         android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/textInputLayoutAmountReceived"
-        app:layout_constraintEnd_toEndOf="@id/textInputLayoutAmountReceived"
-        app:layout_constraintTop_toTopOf="@id/textInputLayoutAmountReceived" />
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayoutModifyAmountReceived"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayoutModifyAmountReceived"
+        app:layout_constraintTop_toTopOf="@id/textInputLayoutModifyAmountReceived" />
 
     <Button
-        android:id="@+id/buttonAddTransaction"
+        android:id="@+id/buttonModifyTransaction"
         android:layout_width="312dp"
         android:layout_height="48dp"
         android:layout_marginStart="140dp"
@@ -141,13 +152,13 @@
         android:layout_marginBottom="30dp"
         android:backgroundTint="@color/primary20"
         android:fontFamily="@font/nanumsquareneo_bold"
-        android:text="거래 추가"
+        android:text="거래 수정"
         android:textSize="20sp"
         app:cornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAmountReceived" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutModifyAmountReceived" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

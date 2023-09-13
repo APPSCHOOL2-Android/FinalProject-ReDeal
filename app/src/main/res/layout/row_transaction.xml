@@ -236,7 +236,7 @@
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|right"
             android:hint="미수금"
-            android:textColor="@color/text10"
+            android:textColor="@color/primary20"
             android:textSize="12dp" />
 
         <TextView
@@ -262,7 +262,7 @@
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
             android:text="원"
-            android:textColor="@color/text10"
+            android:textColor="@color/primary20"
             android:textSize="12dp" />
 
     </androidx.cardview.widget.CardView>
