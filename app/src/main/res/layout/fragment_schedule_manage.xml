@@ -103,6 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/nanumsquareneo_bold"
                     android:text="미방문 일정"
                     android:textColor="@color/primary90"
                     android:textSize="16sp"
@@ -123,7 +124,7 @@
     </ScrollView>
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/button"
+        android:id="@+id/schedultAddBtn"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginEnd="20dp"
