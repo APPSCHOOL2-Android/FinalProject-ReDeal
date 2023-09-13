@@ -1,7 +1,6 @@
-package com.hifi.redeal
+package com.hifi.redeal.schedule
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.NumberPicker
