@@ -60,6 +60,7 @@
                     android:elegantTextHeight="false"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="방문 일정"
+                    android:textColor="@color/primary20"
                     android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
@@ -73,6 +74,7 @@
                     android:elegantTextHeight="false"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="미방문 일정"
+                    android:textColor="@color/primary20"
                     android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
@@ -126,6 +128,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="2023.09.08"
+                    android:textColor="@color/primary20"
                     android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
@@ -138,6 +141,7 @@
                     android:layout_marginLeft="4dp"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="오후 2:30"
+                    android:textColor="@color/primary20"
                     android:textSize="16sp"
                     app:cornerRadius="5dp"
                     app:strokeColor="@color/primary20" />
@@ -184,13 +188,15 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/editScheduleBtnComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/btn_round_primary20"
+        android:fontFamily="@font/nanumsquareneo_bold"
         android:text="일정 수정"
+        android:textColor="@color/primary99"
         android:textSize="20sp" />
 
 </LinearLayout>

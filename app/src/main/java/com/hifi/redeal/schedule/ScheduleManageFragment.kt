@@ -42,7 +42,13 @@ class ScheduleManageFragment : Fragment(){
 
         setCalendarView()
         scheduleListLayoutSetting()
+        clickEventSetting()
 
+
+        return fragmentScheduleManageBinding.root
+    }
+
+    fun clickEventSetting(){
         fragmentScheduleManageBinding.run{
             visitScheduleFilter.run{
                 setOnClickListener {
@@ -50,17 +56,21 @@ class ScheduleManageFragment : Fragment(){
                     notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                 }
             }
+
             notVisitScheduleFilter.run{
                 setOnClickListener {
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                 }
             }
+
+            schedultAddBtn.run{
+                setOnClickListener {
+                    mainActivity.replaceFragment(MainActivity.MAKE_SCHEDULE_FRAGMENT, true, null)
+                }
+            }
         }
-
-        return fragmentScheduleManageBinding.root
     }
-
     fun scheduleListLayoutSetting(){
         fragmentScheduleManageBinding.scheduleListLayout.removeAllViews()
 

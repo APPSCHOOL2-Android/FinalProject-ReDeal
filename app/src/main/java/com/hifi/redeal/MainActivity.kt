@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.databinding.ActivityMainBinding
+import com.hifi.redeal.schedule.MakeScheduleFragment
 import com.hifi.redeal.schedule.ScheduleManageFragment
 import com.hifi.redeal.schedule.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.VisitedScheduleFragment
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
         val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
         val VISITED_SCHEDULE_FRAGMENT = "VisitedScheduleFragment"
+        val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     // 지정한 Fragment를 보여주는 메서드
     fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle?){
 
-        SystemClock.sleep(100)
+        SystemClock.sleep(200)
 
         // Fragment 교체 상태로 설정한다.
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
             UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
             VISITED_SCHEDULE_FRAGMENT -> VisitedScheduleFragment()
+            MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             else -> Fragment()
         }
 
