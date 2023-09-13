@@ -21,7 +21,7 @@
         android:id="@+id/cardViewDeposit"
         android:layout_width="320dp"
         android:layout_height="37dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="4dp"
