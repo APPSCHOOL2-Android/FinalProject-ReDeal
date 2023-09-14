@@ -9,7 +9,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -55,6 +57,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="75dp"
                 android:layout_marginEnd="40dp"
+                android:background="@color/background"
                 android:hint="아이디"
                 android:textColorHint="@color/text50"
                 android:transitionGroup="true"
@@ -81,6 +84,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="40dp"
+                android:background="@color/background"
                 android:hint="비밀번호"
                 android:textColorHint="@color/text50"
                 android:transitionGroup="true"
@@ -150,7 +154,7 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/barLogin1"
-                android:layout_width="0.8dp"
+                android:layout_width="1dp"
                 android:layout_height="22dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="19dp"
@@ -186,13 +190,12 @@
                 android:text="구글 계정으로 시작하기"
                 android:textColor="@color/text30"
                 app:cornerRadius="7dp"
-                app:elevation="4dp"
+                app:elevation="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/buttonAuthLogin" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     </ScrollView>
