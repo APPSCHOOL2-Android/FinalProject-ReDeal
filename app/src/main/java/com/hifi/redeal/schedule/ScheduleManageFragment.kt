@@ -53,7 +53,7 @@ class ScheduleManageFragment : Fragment(){
 
         setCalendarView()
         setViewModel()
-        clickEventSetting()
+        setClickEvent()
 
         return fragmentScheduleManageBinding.root
     }
@@ -63,20 +63,20 @@ class ScheduleManageFragment : Fragment(){
         scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
     }
 
-    fun setViewModel(){
+    private fun setViewModel(){
         scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
 
         scheduleVM.run{
             scheduleListVM.observe(mainActivity){
                 scheduleList = it
-                scheduleListLayoutSetting(scheduleList)
+                setScheduleListLayout(scheduleList)
             }
         }
 
         scheduleVM.getUserDayOfSchedule(userIdx, LocalDate.now().toString())
     }
 
-    fun clickEventSetting(){
+    private fun setClickEvent(){
         fragmentScheduleManageBinding.run{
             visitScheduleFilter.run{
                 setOnClickListener {
@@ -101,9 +101,15 @@ class ScheduleManageFragment : Fragment(){
                     mainActivity.replaceFragment(MainActivity.MAKE_SCHEDULE_FRAGMENT, true, null)
                 }
             }
+
+            scheduleManageToolbar.run{
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.SCHEDULE_MANAGE_FRAGMENT)
+                }
+            }
         }
     }
-    fun scheduleListLayoutSetting(scheduleList: MutableList<ScheduleTotalData>){
+    private fun setScheduleListLayout(scheduleList: MutableList<ScheduleTotalData>){
         fragmentScheduleManageBinding.scheduleListLayout.removeAllViews()
 
         scheduleList.sortWith(compareBy<ScheduleTotalData> { it.isScheduleFinish }.thenBy { it.scheduleDeadlineTime })
@@ -288,7 +294,7 @@ class ScheduleManageFragment : Fragment(){
                         // Hide in and out dates
                         textView.setTextColor(mainActivity.getColor(R.color.text80))
                     }
-                    dateTextSetting()
+                    setDateText()
                 }
             }
             calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
@@ -302,7 +308,7 @@ class ScheduleManageFragment : Fragment(){
         }
     }
 
-    fun dateTextSetting(){
+    private fun setDateText(){
         // 중간 날짜 셋팅
         val selectMonth = if(selectedDate.month.value < 10) "0${selectedDate.month.value}" else selectedDate.month.value.toString()
         val selectDay = if(selectedDate.dayOfMonth < 10) "0${selectedDate.dayOfMonth}" else selectedDate.dayOfMonth.toString()
@@ -320,7 +326,7 @@ class ScheduleManageFragment : Fragment(){
         fragmentScheduleManageBinding.scheduleMidBarToday.text ="${selectedDate.year}.${selectMonth}.${selectDay} $today"
     }
 
-    inner class DayViewContainer(view: View) : ViewContainer(view) {
+    private inner class DayViewContainer(view: View) : ViewContainer(view) {
         val textView = view.findViewById<TextView>(R.id.calendarDayText)
         // Will be set when this container is bound
         lateinit var day: CalendarDay
@@ -335,7 +341,7 @@ class ScheduleManageFragment : Fragment(){
                 // 클릭한 날짜에 해당하는 일정을 가져오는 코드 작성 부분
                 scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
 
-                dateTextSetting()
+                setDateText()
 
                 fragmentScheduleManageBinding.calendarView.notifyDateChanged(day.date)
                 if (currentSelection != null) {
@@ -346,8 +352,7 @@ class ScheduleManageFragment : Fragment(){
         }
     }
 
-
-    inner class MonthViewContainer(view: View) : ViewContainer(view) {
+    private inner class MonthViewContainer(view: View) : ViewContainer(view) {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
     }

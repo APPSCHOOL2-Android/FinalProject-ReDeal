@@ -26,6 +26,7 @@ class MakeScheduleFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     private var selectedDate: LocalDate = LocalDate.now()
 
+    var selectedScheduleKind : Boolean? = null // true 방문, false 미방분, null 미선택
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,19 +35,67 @@ class MakeScheduleFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         setCalendarView()
+        setDateText()
+        setClickEvent()
 
+        return fragmentMakeScheduleBinding.root
+    }
+
+    private fun setClickEvent(){
         fragmentMakeScheduleBinding.run {
             makeScheduleTimePicker.run {
                 // 시간 선택 이벤트 핸들러
                 setOnTimeChangedListener { view, hourOfDay, minute ->
-                    
+
                 }
             }
+
+            makeScheduleBtnVisit.run{
+                setOnClickListener {
+                    selectedScheduleKind = true
+                    setBackgroundResource(R.drawable.btn_round_primary20)
+                    setTextColor(mainActivity.getColor(R.color.primary99))
+                    makeScheduleBtnNotVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    makeScheduleBtnNotVisit.setTextColor(mainActivity.getColor(R.color.primary20))
+                }
+            }
+
+            makeScheduleBtnNotVisit.run{
+                setOnClickListener {
+                    selectedScheduleKind = false
+                    setBackgroundResource(R.drawable.btn_round_primary20)
+                    setTextColor(mainActivity.getColor(R.color.primary99))
+                    makeScheduleBtnVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    makeScheduleBtnVisit.setTextColor(mainActivity.getColor(R.color.primary20))
+                }
+            }
+
+            makeScheduleBtnSelectCalendar.run{
+                setOnClickListener {
+                    setBackgroundResource(R.drawable.btn_round_primary20)
+                    setTextColor(mainActivity.getColor(R.color.primary99))
+                    makeScheduleBtnSelectTime.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    makeScheduleBtnSelectTime.setTextColor(mainActivity.getColor(R.color.primary20))
+                    makeScheduleCalendarView.visibility = View.VISIBLE
+                    makeScheduleTimePicker.visibility = View.GONE
+                }
+            }
+
+            makeScheduleBtnSelectTime.run{
+                setOnClickListener {
+                    setBackgroundResource(R.drawable.btn_round_primary20)
+                    setTextColor(mainActivity.getColor(R.color.primary99))
+                    makeScheduleBtnSelectCalendar.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    makeScheduleBtnSelectCalendar.setTextColor(mainActivity.getColor(R.color.primary20))
+                    makeScheduleCalendarView.visibility = View.GONE
+                    makeScheduleTimePicker.visibility = View.VISIBLE
+                }
+            }
+
         }
-        return fragmentMakeScheduleBinding.root
     }
 
-    fun dateTextSetting(){
+    private fun setDateText(){
         // 중간 날짜 셋팅
         val selectMonth = if(selectedDate.month.value < 10) "0${selectedDate.month.value}" else selectedDate.month.value.toString()
         val selectDay = if(selectedDate.dayOfMonth < 10) "0${selectedDate.dayOfMonth}" else selectedDate.dayOfMonth.toString()
@@ -109,7 +158,7 @@ class MakeScheduleFragment : Fragment() {
         }
     }
 
-    inner class DayViewContainer(view: View) : ViewContainer(view) {
+    private inner class DayViewContainer(view: View) : ViewContainer(view) {
         val textView = view.findViewById<TextView>(R.id.calendarDayText)
         // Will be set when this container is bound
         lateinit var day: CalendarDay
@@ -123,7 +172,7 @@ class MakeScheduleFragment : Fragment() {
 
                 // 선택되어 있는 날짜에 해당하는 일정을 가져오는 코드 작성 부분
 
-                dateTextSetting()
+                setDateText()
                 fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(day.date)
                 if (currentSelection != null) {
                     fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(currentSelection)
@@ -133,8 +182,7 @@ class MakeScheduleFragment : Fragment() {
         }
     }
 
-
-    inner class MonthViewContainer(view: View) : ViewContainer(view) {
+    private inner class MonthViewContainer(view: View) : ViewContainer(view) {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
     }

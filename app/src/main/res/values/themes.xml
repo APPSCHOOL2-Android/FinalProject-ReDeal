@@ -15,4 +15,5 @@
         <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
         <item name="android:textSize">20dp</item>
     </style>
+
 </resources>
