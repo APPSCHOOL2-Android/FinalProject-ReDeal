@@ -12,7 +12,7 @@ import java.util.Locale
 class ScheduleVM: ViewModel() {
 
     //일정 관련 데이터
-    var scheduleList = MutableLiveData<MutableList<ScheduleData>>()
+    var scheduleListVM = MutableLiveData<MutableList<ScheduleData>>()
     var tempScheduleList = mutableListOf<ScheduleData>()
     fun getUserDayOfSchedule(userIdx: String, date: String){
         tempScheduleList.clear()
@@ -31,7 +31,7 @@ class ScheduleVM: ViewModel() {
                     scheduleDataCreateTime, scheduleDeadlineTime, scheduleTitle)
                 tempScheduleList.add(newScheduleData)
             }
-            scheduleList.value = tempScheduleList
+            scheduleListVM.value = tempScheduleList
         }
     }
 }

@@ -37,8 +37,9 @@ class ScheduleManageFragment : Fragment(){
     lateinit var mainActivity: MainActivity
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
     private var selectedDate: LocalDate = LocalDate.now()
-    val userIdx = "1"
+    var userIdx = "1" // 추후 사용자의 idx 저장
     var visitFilter = true // true 일 경우 방문 일정, false 일 경우 미방문 일정.
+    var scheduleList = mutableListOf<ScheduleData>()
 
 
     override fun onCreateView(
@@ -66,9 +67,9 @@ class ScheduleManageFragment : Fragment(){
         scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
 
         scheduleVM.run{
-            scheduleList.observe(mainActivity){
-                Log.d("ttt", "$it")
-                scheduleListLayoutSetting(it)
+            scheduleListVM.observe(mainActivity){
+                scheduleList = it
+                scheduleListLayoutSetting(scheduleList)
             }
         }
 
@@ -82,6 +83,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     visitFilter = true
+                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
                 }
             }
 
@@ -90,6 +92,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     visitFilter = false
+                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
                 }
             }
 
@@ -106,75 +109,80 @@ class ScheduleManageFragment : Fragment(){
         scheduleList.sortBy { it.isScheduleFinish }
         scheduleList.sortWith(Comparator { o1, o2 -> o1.scheduleDeadlineTime.compareTo(o2.scheduleDeadlineTime) })
 
+        var count = 0
+
         for(schedule in scheduleList){
             // 미완료 스케줄 레이아웃 추가 및 이벤트 설정
-            if(!schedule.isScheduleFinish){
-                val scheduleItemBinding = ScheduleItemBinding.inflate(layoutInflater)
+            if(schedule.isVisitSchedule == visitFilter){
+                count++
+                if(!schedule.isScheduleFinish){
+                    val scheduleItemBinding = ScheduleItemBinding.inflate(layoutInflater)
 
-                scheduleItemBinding.scheduleName.text = schedule.scheduleTitle
-                val sdf = SimpleDateFormat("HH : mm", Locale.getDefault())
-                var time = schedule.scheduleDeadlineTime.toDate()
-                var scheduleTime = sdf.format(time)
-                scheduleItemBinding.scheduleTime.text = scheduleTime
+                    scheduleItemBinding.scheduleName.text = schedule.scheduleTitle
+                    val sdf = SimpleDateFormat("HH : mm", Locale.getDefault())
+                    var time = schedule.scheduleDeadlineTime.toDate()
+                    var scheduleTime = sdf.format(time)
+                    scheduleItemBinding.scheduleTime.text = scheduleTime
 
-                var layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                scheduleItemBinding.root.layoutParams = layoutParams
-                // 일정 클릭 이벤트 설정 부분
-                scheduleItemBinding.run{
+                    var layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    scheduleItemBinding.root.layoutParams = layoutParams
+                    // 일정 클릭 이벤트 설정 부분
+                    scheduleItemBinding.run{
 
-                    // 뷰 클릭 이벤트
-                    root.setOnClickListener {
-                        // 추후 번들에 선택한 일정 idx 넣은 후 전달
-                        mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
+                        // 뷰 클릭 이벤트
+                        root.setOnClickListener {
+                            // 추후 번들에 선택한 일정 idx 넣은 후 전달
+                            mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
+                        }
+
+                        // 스케줄 완료 처리 버튼 클릭 이벤트
+                        completeCheckSchedule.setOnClickListener {
+                            val builder = AlertDialog.Builder(mainActivity)
+                            builder.setTitle("일정 완료 처리")
+                            builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 처리 됩니다.")
+                            builder.setNegativeButton("확인", null)
+                            builder.setPositiveButton("취소", null)
+                            builder.show()
+                        }
+                    }
+                    fragmentScheduleManageBinding.scheduleListLayout.addView(scheduleItemBinding.root)
+                } else {
+                    val completeScheduleItemBinding = CompleteScheduleItemBinding.inflate(layoutInflater)
+
+                    completeScheduleItemBinding.completeScheduleName.text = schedule.scheduleTitle
+                    val sdf = SimpleDateFormat("HH : mm", Locale.getDefault())
+                    var time = schedule.scheduleDeadlineTime.toDate()
+                    var scheduleTime = sdf.format(time)
+                    completeScheduleItemBinding.completeScheduleTime.text = scheduleTime
+
+                    var layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    completeScheduleItemBinding.root.layoutParams = layoutParams
+
+                    completeScheduleItemBinding.run {
+
+                        root.setOnClickListener {
+                            // 추후 번들에 선택한 일정 idx 넣은 후 전달
+                            mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
+                        }
+
+                        completeScheduleRetryImageView.setOnClickListener {
+                            val builder = AlertDialog.Builder(mainActivity)
+                            builder.setTitle("일정 완료 취소 처리")
+                            builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 취소 처리 됩니다.")
+                            builder.setNegativeButton("확인", null)
+                            builder.setPositiveButton("취소", null)
+                            builder.show()
+                        }
                     }
 
-                    // 스케줄 완료 처리 버튼 클릭 이벤트
-                    completeCheckSchedule.setOnClickListener {
-                        val builder = AlertDialog.Builder(mainActivity)
-                        builder.setTitle("일정 완료 처리")
-                        builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 처리 됩니다.")
-                        builder.setNegativeButton("확인", null)
-                        builder.setPositiveButton("취소", null)
-                        builder.show()
-                    }
+                    fragmentScheduleManageBinding.scheduleListLayout.addView(completeScheduleItemBinding.root)
                 }
-                fragmentScheduleManageBinding.scheduleListLayout.addView(scheduleItemBinding.root)
-            } else {
-                val completeScheduleItemBinding = CompleteScheduleItemBinding.inflate(layoutInflater)
-
-                completeScheduleItemBinding.completeScheduleName.text = schedule.scheduleTitle
-                val sdf = SimpleDateFormat("HH : mm", Locale.getDefault())
-                var time = schedule.scheduleDeadlineTime.toDate()
-                var scheduleTime = sdf.format(time)
-                completeScheduleItemBinding.completeScheduleTime.text = scheduleTime
-
-                var layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                completeScheduleItemBinding.root.layoutParams = layoutParams
-
-                completeScheduleItemBinding.run {
-
-                    root.setOnClickListener {
-                        // 추후 번들에 선택한 일정 idx 넣은 후 전달
-                        mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
-                    }
-
-                    completeScheduleRetryImageView.setOnClickListener {
-                        val builder = AlertDialog.Builder(mainActivity)
-                        builder.setTitle("일정 완료 취소 처리")
-                        builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 취소 처리 됩니다.")
-                        builder.setNegativeButton("확인", null)
-                        builder.setPositiveButton("취소", null)
-                        builder.show()
-                    }
-                }
-
-                fragmentScheduleManageBinding.scheduleListLayout.addView(completeScheduleItemBinding.root)
             }
 
         }
@@ -186,7 +194,11 @@ class ScheduleManageFragment : Fragment(){
             400
         )
         spaceTextView.layoutParams = layoutParams
-        spaceTextView.text = "방문 일정 ${scheduleList.size}개"
+        spaceTextView.text = if(visitFilter) {
+            "방문 일정 ${count}개"
+        } else {
+            "미방문 일정 ${count}개"
+        }
         spaceTextView.setTextColor(mainActivity.getColor(R.color.text50))
         spaceTextView.gravity = Gravity.CENTER_HORIZONTAL
         spaceTextView.setBackgroundColor(mainActivity.getColor(R.color.background))
