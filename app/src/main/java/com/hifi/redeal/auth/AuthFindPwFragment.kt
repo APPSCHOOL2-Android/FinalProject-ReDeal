@@ -6,15 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hifi.redeal.R
+import com.hifi.redeal.databinding.FragmentAuthFindPwBinding
 
 class AuthFindPwFragment : Fragment() {
+
+    private lateinit var fragmentAuthFindPwBinding: FragmentAuthFindPwBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        fragmentAuthFindPwBinding = FragmentAuthFindPwBinding.inflate(inflater)
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_auth_find_pw, container, false)
+        return fragmentAuthFindPwBinding.root
     }
 }
