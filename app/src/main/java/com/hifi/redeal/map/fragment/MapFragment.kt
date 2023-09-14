@@ -24,6 +24,9 @@ class MapFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         fragmentMapBinding.run {
+            mapSearchBar.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.MAP_SEARCH_CLIENT_FRAGMENT,true,null)
+            }
             mapKakao.start(object : MapLifeCycleCallback() {
                 override fun onMapDestroy() {
                     // 지도 API가 정상적으로 종료될 때 호출됨

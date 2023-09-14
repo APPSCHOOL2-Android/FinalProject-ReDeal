@@ -8,30 +8,16 @@
     android:orientation="vertical"
     tools:context=".map.fragment.MapFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.kakao.vectormap.MapView
+        android:id="@+id/mapKakao"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mapFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="64dp"
-            android:clickable="true"
-            android:src="@drawable/my_location_24"
-            app:backgroundTint="@color/background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/primary20" />
 
-        <com.kakao.vectormap.MapView
-            android:id="@+id/mapKakao"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="-108dp">
-
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,6 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:hint="찾고 계신 거래처를 입력해주세요."
                     app:defaultMarginsEnabled="false">
 
                 </com.google.android.material.search.SearchBar>
@@ -62,14 +49,28 @@
                     app:cornerRadius="4dp" />
 
             </LinearLayout>
-        </com.kakao.vectormap.MapView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mapFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginEnd="32dp"
+                android:clickable="true"
+                android:src="@drawable/my_location_24"
+                app:backgroundTint="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/primary20" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.kakao.vectormap.MapView>
 
     <include
         android:id="@+id/mapBottomSheet"
         layout="@layout/fragment_map_bottom_sheet" />
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
