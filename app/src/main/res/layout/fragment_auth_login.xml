@@ -69,10 +69,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textInputEditTextLoginUserId"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="60dp"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:inputType="text|textEmailAddress"
+                    android:padding="1dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/text30" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -97,10 +98,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textInputEditTextLoginUserPw"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="60dp"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:inputType="text|textPassword"
+                    android:padding="1dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/text30" />
 

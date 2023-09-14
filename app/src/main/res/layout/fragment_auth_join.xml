@@ -64,10 +64,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textInputEditTextJoinUserId"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="60dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:inputType="text|textEmailAddress"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text30" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -75,8 +76,8 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonJoinIdCheck"
             android:layout_width="83dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="42dp"
             android:fontFamily="@font/nanumsquareneo_bold"
             android:padding="1dp"
@@ -84,7 +85,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textSize="11dp"
             app:backgroundTint="@color/primary20"
-            app:cornerRadius="6dp"
+            app:cornerRadius="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayoutJoinUserId"
             app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
@@ -107,10 +108,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textInputEditTextJoinIdCheck"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="60dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:inputType="number"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text30" />
 
@@ -136,10 +138,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textInputEditTextJoinUserPw"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="60dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:inputType="text|textPassword"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text30" />
 
@@ -165,10 +168,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textInputEditTextJoinUserPwCheck"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="60dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:inputType="text|textPassword"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text30" />
 
