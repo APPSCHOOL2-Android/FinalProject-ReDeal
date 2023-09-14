@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.CompleteScheduleItemBinding
 import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
+import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -25,6 +27,8 @@ import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
 
+
+lateinit var scheduleVM: ScheduleVM
 class ScheduleManageFragment : Fragment(){
 
     lateinit var mainActivity: MainActivity
@@ -44,6 +48,8 @@ class ScheduleManageFragment : Fragment(){
         scheduleListLayoutSetting()
         clickEventSetting()
 
+        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+        scheduleVM.getUserSchedule("1")
 
         return fragmentScheduleManageBinding.root
     }
