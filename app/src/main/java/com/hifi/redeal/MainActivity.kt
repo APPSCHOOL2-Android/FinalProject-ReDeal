@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.map.fragment.MapFragment
+import com.hifi.redeal.map.fragment.MapSearchRegionFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     companion object{
         val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
         val MAP_FRAGMENT = "MapFragment"
+        val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         newFragment = when(name){
             MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             MAP_FRAGMENT -> MapFragment()
+            MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
             else -> Fragment()
         }
 
