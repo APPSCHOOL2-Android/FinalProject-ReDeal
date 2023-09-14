@@ -16,7 +16,7 @@ class ScheduleVM: ViewModel() {
     var tempScheduleList = mutableListOf<ScheduleData>()
     fun getUserDayOfSchedule(userIdx: String, date: String){
         tempScheduleList.clear()
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+
         ScheduleRepository.getUserDayOfSchedule(userIdx, date){
             for (c1 in it.result){
                 val clientIdx = c1["clientIdx"] as Long
@@ -28,10 +28,10 @@ class ScheduleVM: ViewModel() {
 
                 val scheduleTitle = c1["scheduleTitle"] as String
                 val newScheduleData = ScheduleData(clientIdx, isScheduleFinish, isVisitSchedule, scheduleContext,
-                    "${sdf.format(scheduleDataCreateTime.toDate())}", "${sdf.format(scheduleDeadlineTime.toDate())}", scheduleTitle)
+                    scheduleDataCreateTime, scheduleDeadlineTime, scheduleTitle)
                 tempScheduleList.add(newScheduleData)
-                scheduleList.value = tempScheduleList
             }
+            scheduleList.value = tempScheduleList
         }
     }
 }
