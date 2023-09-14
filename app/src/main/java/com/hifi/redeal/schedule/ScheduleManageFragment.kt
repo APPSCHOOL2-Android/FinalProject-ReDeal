@@ -2,6 +2,7 @@ package com.hifi.redeal.schedule
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,6 +36,7 @@ class ScheduleManageFragment : Fragment(){
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
     private var selectedDate: LocalDate = LocalDate.now()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,13 +47,24 @@ class ScheduleManageFragment : Fragment(){
         fragmentScheduleManageBinding = FragmentScheduleManageBinding.inflate(layoutInflater)
 
         setCalendarView()
+        setViewModel()
         scheduleListLayoutSetting()
         clickEventSetting()
 
-        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
-        scheduleVM.getUserSchedule("1")
-
         return fragmentScheduleManageBinding.root
+    }
+
+    fun setViewModel(){
+        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+
+        scheduleVM.run{
+            scheduleList.observe(mainActivity){
+                Log.d("ttt", "$it")
+            }
+        }
+
+
+        scheduleVM.getUserDayOfSchedule("1", LocalDate.now().toString())
     }
 
     fun clickEventSetting(){
@@ -194,11 +207,6 @@ class ScheduleManageFragment : Fragment(){
                         if(day.date.dayOfWeek.value == 6){
                             textView.setTextColor(mainActivity.getColor(R.color.primary30))
                         }
-//                        // 오늘 날짜 표시 설정
-//                        if(day.date == LocalDate.now()){
-//                            textView.setTextColor(mainActivity.getColor(R.color.primary99))
-//                            textView.setBackgroundResource(R.drawable.btn_round_primary20)
-//                        }
 
                     } else {
                         // Hide in and out dates
@@ -232,6 +240,7 @@ class ScheduleManageFragment : Fragment(){
             7 -> "일"
             else -> "날짜 오류"
         }
+
         fragmentScheduleManageBinding.scheduleMidBarToday.text ="${selectedDate.year}.${selectMonth}.${selectDay} $today"
     }
 
@@ -248,8 +257,10 @@ class ScheduleManageFragment : Fragment(){
                 selectedDate = day.date
 
                 // 선택되어 있는 날짜에 해당하는 일정을 가져오는 코드 작성 부분
+                scheduleVM.getUserDayOfSchedule("1", "$selectedDate")
 
                 dateTextSetting()
+
                 fragmentScheduleManageBinding.calendarView.notifyDateChanged(day.date)
                 if (currentSelection != null) {
                     fragmentScheduleManageBinding.calendarView.notifyDateChanged(currentSelection)
