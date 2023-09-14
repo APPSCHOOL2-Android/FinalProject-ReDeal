@@ -24,8 +24,8 @@ class MapFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         fragmentMapBinding.run {
-            mapSearchBar.setOnClickListener {
-                mainActivity.replaceFragment(MainActivity.MAP_SEARCH_CLIENT_FRAGMENT,true,null)
+            mapBtnSearchRegion.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT,true,null)
             }
             mapKakao.start(object : MapLifeCycleCallback() {
                 override fun onMapDestroy() {
