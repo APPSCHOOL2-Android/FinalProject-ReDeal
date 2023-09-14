@@ -7,7 +7,7 @@
     tools:context=".auth.AuthJoinFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayoutAuthMain"
+        android:id="@+id/appBarLayoutAuthJoin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarAuthMain"
+            android:id="@+id/toolbarAuthJoin"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:background="@color/background"
@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutAuthMain">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutAuthJoin">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutJoinUserId"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:inputType="text|textPersonName"
+                android:inputType="text|textEmailAddress"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/text30" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -78,13 +78,13 @@
             android:layout_height="52dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="42dp"
-            android:fontFamily="@font/nanumsquareneo_regular"
+            android:fontFamily="@font/nanumsquareneo_bold"
             android:padding="1dp"
             android:text="인증코드 전송"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textSize="11dp"
             app:backgroundTint="@color/primary20"
-            app:cornerRadius="3dp"
+            app:cornerRadius="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayoutJoinUserId"
             app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
@@ -181,9 +181,10 @@
             android:layout_marginStart="200dp"
             android:layout_marginTop="55dp"
             android:layout_marginEnd="200dp"
+            android:fontFamily="@font/nanumsquareneo_bold"
             android:text="완료"
             app:backgroundTint="@color/primary20"
-            app:cornerRadius="4dp"
+            app:cornerRadius="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserPwCheck"
