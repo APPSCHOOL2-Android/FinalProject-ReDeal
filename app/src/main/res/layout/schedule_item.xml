@@ -38,7 +38,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:text="라이온 김대리"
                 android:textColor="@color/text10"
                 android:textSize="16sp" />
 

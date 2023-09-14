@@ -17,6 +17,7 @@ import com.hifi.redeal.databinding.CompleteScheduleItemBinding
 import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
 import com.hifi.redeal.schedule.model.ScheduleData
+import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -39,7 +40,7 @@ class ScheduleManageFragment : Fragment(){
     private var selectedDate: LocalDate = LocalDate.now()
     var userIdx = "1" // 추후 사용자의 idx 저장
     var visitFilter = true // true 일 경우 방문 일정, false 일 경우 미방문 일정.
-    var scheduleList = mutableListOf<ScheduleData>()
+    var scheduleList = mutableListOf<ScheduleTotalData>()
 
 
     override fun onCreateView(
@@ -103,7 +104,7 @@ class ScheduleManageFragment : Fragment(){
             }
         }
     }
-    fun scheduleListLayoutSetting(scheduleList: MutableList<ScheduleData>){
+    fun scheduleListLayoutSetting(scheduleList: MutableList<ScheduleTotalData>){
         fragmentScheduleManageBinding.scheduleListLayout.removeAllViews()
 
         scheduleList.sortBy { it.isScheduleFinish }
@@ -123,6 +124,10 @@ class ScheduleManageFragment : Fragment(){
                     var time = schedule.scheduleDeadlineTime.toDate()
                     var scheduleTime = sdf.format(time)
                     scheduleItemBinding.scheduleTime.text = scheduleTime
+
+                    if(schedule.clientName != null){
+                        scheduleItemBinding.scheduleClientInfo.text = "${schedule.clientName} ${schedule.clientManagerName}"
+                    }
 
                     var layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -157,6 +162,10 @@ class ScheduleManageFragment : Fragment(){
                     var time = schedule.scheduleDeadlineTime.toDate()
                     var scheduleTime = sdf.format(time)
                     completeScheduleItemBinding.completeScheduleTime.text = scheduleTime
+
+                    if(schedule.clientName != null){
+                        completeScheduleItemBinding.completeScheduleClientInfo.text = "${schedule.clientName} ${schedule.clientManagerName}"
+                    }
 
                     var layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,

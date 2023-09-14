@@ -12,7 +12,18 @@ import java.util.Locale
 
 class ScheduleRepository {
     companion object{
-        fun getUserDayOfSchedule(userIdx: String, date: String, callback1: (Task<QuerySnapshot>) -> Unit){
+
+        fun getClientInfo(userIdx: String, clinetIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
+            val db = Firebase.firestore
+            val clientRef = db.collection("userData")
+                .document(userIdx)
+                .collection("clientData")
+            val query = clientRef
+                .whereEqualTo("clientIdx", clinetIdx)
+
+            query.get().addOnCompleteListener(callback1)
+        }
+        fun getUserDayOfSchedule(userIdx: String, date: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore
             val scheduleRef = db.collection("userData")
                 .document(userIdx)
@@ -28,7 +39,7 @@ class ScheduleRepository {
                 .whereGreaterThanOrEqualTo("scheduleDeadlineTime", startDate)
                 .whereLessThan("scheduleDeadlineTime", endDate)
 
-            query.get().addOnCompleteListener(callback1)
+            query.get().addOnCompleteListener(callback1).addOnCompleteListener(callback2)
         }
     }
 }
