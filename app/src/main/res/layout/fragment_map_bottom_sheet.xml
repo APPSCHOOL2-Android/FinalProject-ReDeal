@@ -29,9 +29,9 @@
             android:id="@+id/mapBottomSheetDistanceList"
             style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="end"
-            android:background="@color/white">
+            android:hint="반경 거리 선택">
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
@@ -39,7 +39,6 @@
                 android:backgroundTint="@color/background"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:gravity="center"
-                android:hint="반경 거리 선택"
                 android:inputType="none"
                 android:textStyle="normal" />
 
@@ -47,7 +46,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="37dp"
+            android:layout_height="34dp"
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
@@ -57,8 +56,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:text="전체"
-                android:textSize="14sp"
-                app:cornerRadius="4dp"
+                android:textSize="12sp"
+                app:cornerRadius="16dp"
                 app:strokeColor="@color/primary20" />
 
             <Button
@@ -69,8 +68,8 @@
                 android:layout_marginLeft="8dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:text="즐겨찾기"
-                android:textSize="14sp"
-                app:cornerRadius="4dp"
+                android:textSize="12sp"
+                app:cornerRadius="16dp"
                 app:strokeColor="@color/primary20" />
 
             <Button
@@ -81,8 +80,8 @@
                 android:layout_marginLeft="8dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:text="오늘 방문"
-                android:textSize="14sp"
-                app:cornerRadius="4dp"
+                android:textSize="12sp"
+                app:cornerRadius="16dp"
                 app:strokeColor="@color/primary20" />
         </LinearLayout>
 
@@ -91,7 +90,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mapBottomSheetTextViewEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="257dp"
+                android:gravity="center"
+                android:text="거래내역이 존재하지 않습니다." />
+        </LinearLayout>
 
     </LinearLayout>
 
