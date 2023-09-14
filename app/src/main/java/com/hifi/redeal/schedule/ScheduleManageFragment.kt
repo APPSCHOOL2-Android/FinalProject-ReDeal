@@ -1,8 +1,8 @@
 package com.hifi.redeal.schedule
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,8 +16,8 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.CompleteScheduleItemBinding
 import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
-import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.model.ScheduleTotalData
+import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -41,7 +41,6 @@ class ScheduleManageFragment : Fragment(){
     var userIdx = "1" // 추후 사용자의 idx 저장
     var visitFilter = true // true 일 경우 방문 일정, false 일 경우 미방문 일정.
     var scheduleList = mutableListOf<ScheduleTotalData>()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -107,8 +106,7 @@ class ScheduleManageFragment : Fragment(){
     fun scheduleListLayoutSetting(scheduleList: MutableList<ScheduleTotalData>){
         fragmentScheduleManageBinding.scheduleListLayout.removeAllViews()
 
-        scheduleList.sortBy { it.isScheduleFinish }
-        scheduleList.sortWith(Comparator { o1, o2 -> o1.scheduleDeadlineTime.compareTo(o2.scheduleDeadlineTime) })
+        scheduleList.sortWith(compareBy<ScheduleTotalData> { it.isScheduleFinish }.thenBy { it.scheduleDeadlineTime })
 
         var count = 0
 
@@ -127,6 +125,18 @@ class ScheduleManageFragment : Fragment(){
 
                     if(schedule.clientName != null){
                         scheduleItemBinding.scheduleClientInfo.text = "${schedule.clientName} ${schedule.clientManagerName}"
+                        when(schedule.clientState){
+                            1L -> {
+                                scheduleItemBinding.scheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trading)
+                            }
+                            2L -> {
+                                scheduleItemBinding.scheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
+                            }
+                            3L -> {
+                                scheduleItemBinding.scheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
+                            }
+                            else -> return
+                        }
                     }
 
                     var layoutParams = ViewGroup.LayoutParams(
@@ -148,7 +158,11 @@ class ScheduleManageFragment : Fragment(){
                             val builder = AlertDialog.Builder(mainActivity)
                             builder.setTitle("일정 완료 처리")
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 처리 됩니다.")
-                            builder.setNegativeButton("확인", null)
+                            builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                                ScheduleRepository.updateUserDayOfScheduleState(userIdx, schedule.scheduleIdx.toString()){
+                                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+                                }
+                            }
                             builder.setPositiveButton("취소", null)
                             builder.show()
                         }
@@ -165,6 +179,18 @@ class ScheduleManageFragment : Fragment(){
 
                     if(schedule.clientName != null){
                         completeScheduleItemBinding.completeScheduleClientInfo.text = "${schedule.clientName} ${schedule.clientManagerName}"
+                        when(schedule.clientState){
+                            1L -> {
+                                completeScheduleItemBinding.completeScheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trading)
+                            }
+                            2L -> {
+                                completeScheduleItemBinding.completeScheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
+                            }
+                            3L -> {
+                                completeScheduleItemBinding.completeScheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
+                            }
+                            else -> return
+                        }
                     }
 
                     var layoutParams = ViewGroup.LayoutParams(
@@ -184,7 +210,11 @@ class ScheduleManageFragment : Fragment(){
                             val builder = AlertDialog.Builder(mainActivity)
                             builder.setTitle("일정 완료 취소 처리")
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 취소 처리 됩니다.")
-                            builder.setNegativeButton("확인", null)
+                            builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                                ScheduleRepository.updateUserDayOfScheduleState(userIdx, schedule.scheduleIdx.toString()){
+                                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+                                }
+                            }
                             builder.setPositiveButton("취소", null)
                             builder.show()
                         }

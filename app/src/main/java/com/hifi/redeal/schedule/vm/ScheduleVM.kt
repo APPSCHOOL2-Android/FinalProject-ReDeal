@@ -20,6 +20,7 @@ class ScheduleVM: ViewModel() {
 
         ScheduleRepository.getUserDayOfSchedule(userIdx, date,{
             for (c1 in it.result){
+                val scheduleIdx = c1["scheduleIdx"] as Long
                 val clientIdx = c1["clientIdx"] as Long
                 val isScheduleFinish = c1["isScheduleFinish"] as Boolean
                 val isVisitSchedule = c1["isVisitSchedule"] as Boolean
@@ -29,7 +30,7 @@ class ScheduleVM: ViewModel() {
                 var scheduleDataCreateTime = c1["scheduleDataCreateTime"] as Timestamp
                 var scheduleDeadlineTime = c1["scheduleDeadlineTime"] as Timestamp
 
-                val newScheduleTotalData = ScheduleTotalData(clientIdx, isScheduleFinish, isVisitSchedule, scheduleTitle, scheduleContext,
+                val newScheduleTotalData = ScheduleTotalData(scheduleIdx, clientIdx, isScheduleFinish, isVisitSchedule, scheduleTitle, scheduleContext,
                     scheduleDataCreateTime, scheduleDeadlineTime, null, null, null)
 
                 tempScheduleList.add(newScheduleTotalData)
