@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
@@ -15,6 +16,23 @@ class ScheduleVM: ViewModel() {
     //일정 관련 데이터
     var scheduleListVM = MutableLiveData<MutableList<ScheduleTotalData>>()
     var tempScheduleList = mutableListOf<ScheduleTotalData>()
+
+    var userClientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
+    var tempUserClientSimpleDataList = mutableListOf<ClientSimpleData>()
+
+    fun getAllUserClientInfo(userIdx: String){
+        tempUserClientSimpleDataList.clear()
+        ScheduleRepository.getAllUserClientInfo(userIdx){
+            for(c1 in it.result){
+                var clientName = c1["clientName"] as String
+                var clientManagerName = c1["clientManagerName"] as String
+                var clientState = c1["clientState"] as Long
+                var isBookmark = c1["isBookmark"] as Boolean
+                tempUserClientSimpleDataList.add(ClientSimpleData(clientName,clientManagerName, clientState, isBookmark))
+                userClientSimpleDataListVM.value = tempUserClientSimpleDataList
+            }
+        }
+    }
     fun getUserDayOfSchedule(userIdx: String, date: String){
         tempScheduleList.clear()
 

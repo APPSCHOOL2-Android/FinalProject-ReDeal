@@ -14,6 +14,14 @@ import java.util.Locale
 class ScheduleRepository {
     companion object{
 
+        fun getAllUserClientInfo(userIdx: String,callback1: (Task<QuerySnapshot>) -> Unit){
+            val db = Firebase.firestore
+            val clientRef = db.collection("userData")
+                .document(userIdx)
+                .collection("clientData")
+                .get()
+                .addOnCompleteListener(callback1)
+        }
         fun updateUserDayOfScheduleState(userIdx: String, scheduleIdx: String, callback1: (Task<Transaction>) -> Unit){
             val db = Firebase.firestore
             val scheduleRef = db.collection("userData")

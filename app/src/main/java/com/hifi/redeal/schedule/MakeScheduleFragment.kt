@@ -40,7 +40,7 @@ class MakeScheduleFragment : Fragment() {
 
         setCalendarView()
         setTimePicker()
-        setDateText()
+        setDateToText()
         setTimeToText()
         setClickEvent()
 
@@ -148,10 +148,16 @@ class MakeScheduleFragment : Fragment() {
                 }
             }
 
+            makeScheduleBtnSelectAccount.run{
+                setOnClickListener {
+                    mainActivity.replaceFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT, true, null)
+                }
+            }
+
         }
     }
 
-    private fun setDateText(){
+    private fun setDateToText(){
         // 중간 날짜 셋팅
         val selectMonth = if(selectedDate.month.value < 10) "0${selectedDate.month.value}" else selectedDate.month.value.toString()
         val selectDay = if(selectedDate.dayOfMonth < 10) "0${selectedDate.dayOfMonth}" else selectedDate.dayOfMonth.toString()
@@ -227,7 +233,7 @@ class MakeScheduleFragment : Fragment() {
                 selectedDate = day.date
 
                 // 선택되어 있는 날짜에 해당하는 일정을 가져오는 코드 작성 부분
-                setDateText()
+                setDateToText()
                 fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(day.date)
                 if (currentSelection != null) {
                     fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(currentSelection)

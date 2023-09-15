@@ -11,3 +11,5 @@ data class ScheduleTotalData(val scheduleIdx: Long, val clientIdx: Long, val isS
                              val scheduleDataCreateTime: Timestamp, val scheduleDeadlineTime: Timestamp,
                              var clientName: String?, var clientManagerName: String?, var clientState: Long?, var isBookmark: Boolean?
                              )
+
+data class ClientSimpleData(var clientName: String, var clientManagerName: String, var clientState: Long, var isBookmark: Boolean)

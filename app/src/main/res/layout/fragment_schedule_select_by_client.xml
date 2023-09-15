@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".schedule.ScheduleSelectByClientFragment">
+
+    <com.google.android.material.search.SearchBar
+        android:id="@+id/scheduleClientBySearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/background"
+        android:hint="찾고 계신 거래처를 입력해 주세요"
+        android:theme="@style/Theme.ReDeal.ClientSearchBarTheme">
+
+    </com.google.android.material.search.SearchBar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewAllResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:transitionGroup="false" />
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/searchViewClientList"
+        style="@style/Theme.ReDeal.ClientSearchViewTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionGroup="false"
+        app:layout_anchor="@id/scheduleClientBySearchBar"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
