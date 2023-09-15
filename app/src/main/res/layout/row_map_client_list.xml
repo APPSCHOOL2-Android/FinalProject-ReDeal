@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/rowMapClientListTransactionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/transaction_type_in_progress" />
@@ -19,50 +20,66 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="12dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/nanumsquareneo_regular"
-                android:text="TextView"
-                android:textColor="@color/text10"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rowMapClientListName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="clip_vertical"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:gravity="center_vertical"
+                    android:text="TextView"
+                    android:textColor="@color/text10"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/rowMapClientListBookMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="clip_vertical"
+                    app:srcCompat="@drawable/star_fill_24px" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/rowMapClientListManagerName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center_vertical"
                 android:text="TextView"
                 android:textColor="@color/text10"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <Button
+            android:id="@+id/rowMapClientListBtnToNavi"
             style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             app:cornerRadius="4dp"
             app:icon="@drawable/directions_car_24px"
-            app:iconGravity="textStart"
-            app:iconSize="16dp" />
+            app:iconGravity="textStart" />
 
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/rowMapClientListDateRecentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <View
-            android:id="@+id/view2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -76,7 +93,7 @@
             android:textSize="10sp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/rowMapClientListDateRecent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
