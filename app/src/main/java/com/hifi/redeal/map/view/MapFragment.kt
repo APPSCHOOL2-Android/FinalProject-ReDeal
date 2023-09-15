@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.search.SearchView
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMapBinding
+import com.hifi.redeal.map.vm.ClientViewModel
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -24,11 +27,11 @@ import com.kakao.vectormap.label.LabelOptions
 class MapFragment : Fragment() {
     lateinit var fragmentMapBinding: FragmentMapBinding
     lateinit var mainActivity: MainActivity
-    lateinit var kakaoMapTemp: KakaoMap
 
-    private val kakaoMap: KakaoMap? = null
+    lateinit var clientViewModel: ClientViewModel
+
+    lateinit var kakaoMapTemp: KakaoMap
     private var centerPointLabel: Label? = null
-    private val ckAnimate: CheckBox? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +39,14 @@ class MapFragment : Fragment() {
     ): View? {
         fragmentMapBinding = FragmentMapBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
+
+        clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
+        clientViewModel.run {
+            clientDataListByKeyWord.observe(mainActivity){
+                Log.d("검색",it.toString())
+            }
+        }
+
 
         fragmentMapBinding.run {
             mapBtnSearchRegion.setOnClickListener {
@@ -74,20 +85,24 @@ class MapFragment : Fragment() {
             }
 
             mapSearchView.run {
-                editText.setOnEditorActionListener { v, actionId, event ->
-                    if (actionId == KeyEvent.ACTION_DOWN || event.keyCode == KeyEvent.KEYCODE_ENTER) {
-                        // 엔터 키를 눌렀을 때 실행할 동작
-
-
+                addTransitionListener { searchView, previousState, newState ->
+                    // 서치바를 눌러 서치뷰가 보일 때
+                    if(newState == SearchView.TransitionState.SHOWING){
+                        // Snackbar.make(fragmentPostListBinding.root, "Showing", Snackbar.LENGTH_SHORT).show()
+                        clientViewModel.resetClientList()
                     }
+
+                }
+
+                editText.setOnEditorActionListener { textView, i, keyEvent ->
+                    // Snackbar.make(fragmentPostListBinding.root, text!!, Snackbar.LENGTH_SHORT).show()
+                    clientViewModel.getClientListByKeyword("1", text.toString())
                     true
                 }
             }
 
 
         }
-
-
 
 
         return fragmentMapBinding.root
@@ -101,5 +116,7 @@ class MapFragment : Fragment() {
             )
         )
     }
+
+
 
 }
