@@ -1,4 +1,4 @@
-package com.hifi.redeal.map.fragment
+package com.hifi.redeal.map.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

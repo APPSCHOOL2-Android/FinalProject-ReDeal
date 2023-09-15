@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:backgroundTint="@color/background"
     android:orientation="vertical"
-    tools:context=".map.fragment.MapFragment">
+    tools:context=".map.view.MapFragment">
 
     <com.kakao.vectormap.MapView
         android:id="@+id/mapKakao"
@@ -52,7 +52,7 @@
             </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/mapFAB"
+                android:id="@+id/mapFABMyLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="72dp"
                 android:layout_marginTop="100dp"
