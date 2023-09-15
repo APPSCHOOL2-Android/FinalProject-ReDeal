@@ -9,5 +9,5 @@ val scheduleDataCreateTime: Timestamp, val scheduleDeadlineTime: Timestamp, val 
 // 뷰에 보여줄 정보를 가지고 있는 형태
 data class ScheduleTotalData(val scheduleIdx: Long, val clientIdx: Long, val isScheduleFinish: Boolean, val isVisitSchedule: Boolean,val scheduleTitle: String, val scheduleContext: String,
                              val scheduleDataCreateTime: Timestamp, val scheduleDeadlineTime: Timestamp,
-                             var clientName: String?, var clientManagerName: String?, var clientState: Long?
+                             var clientName: String?, var clientManagerName: String?, var clientState: Long?, var isBookmark: Boolean?
                              )

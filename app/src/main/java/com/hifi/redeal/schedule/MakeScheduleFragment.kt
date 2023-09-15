@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.TimePicker
+import androidx.core.view.isVisible
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
@@ -16,6 +18,7 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import org.checkerframework.checker.units.qual.min
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
@@ -25,8 +28,9 @@ class MakeScheduleFragment : Fragment() {
     lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
     lateinit var mainActivity: MainActivity
     private var selectedDate: LocalDate = LocalDate.now()
+    var userIdx = "1" // 추후 사용자의 idx 저장
 
-    var selectedScheduleKind : Boolean? = null // true 방문, false 미방분, null 미선택
+    var selectedScheduleIsVisit : Boolean? = null // true 방문, false 미방분, null 미선택
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,24 +39,60 @@ class MakeScheduleFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         setCalendarView()
+        setTimePicker()
         setDateText()
+        setTimeToText()
         setClickEvent()
 
         return fragmentMakeScheduleBinding.root
     }
 
-    private fun setClickEvent(){
-        fragmentMakeScheduleBinding.run {
+    private fun setTimePicker(){
+        fragmentMakeScheduleBinding.run{
+
             makeScheduleTimePicker.run {
                 // 시간 선택 이벤트 핸들러
                 setOnTimeChangedListener { view, hourOfDay, minute ->
-
+                    var amPm = if(hour > 12) "오후" else "오전"
+                    var hour = if(hourOfDay > 12) hourOfDay - 12 else hourOfDay
+                    if(hour == 0) hour = 12
+                    var selMinute = if(minute * 5 < 10) "0${minute * 5}" else "${minute * 5}"
+                    makeScheduleBtnSelectTime.text = "$amPm $hour : $selMinute"
                 }
             }
 
+        }
+
+    }
+
+    fun setTimeToText(){
+        fragmentMakeScheduleBinding.run {
+            var minute = makeScheduleTimePicker.minute
+            var hour = makeScheduleTimePicker.hour
+            if(((minute/5)+1)*5 > 55) {
+                hour++
+                minute = 0
+            } else {
+                minute = ((minute/5)+1)*5
+            }
+            if(hour == 0) hour = 12
+
+            var amPm = if(hour > 12) "오후" else "오전"
+            if(minute < 10){
+                makeScheduleBtnSelectTime.text = "$amPm $hour : 0$minute"
+            } else {
+                makeScheduleBtnSelectTime.text = "$amPm $hour : $minute"
+            }
+
+        }
+    }
+
+    private fun setClickEvent(){
+        fragmentMakeScheduleBinding.run {
+
             makeScheduleBtnVisit.run{
                 setOnClickListener {
-                    selectedScheduleKind = true
+                    selectedScheduleIsVisit = true
                     setBackgroundResource(R.drawable.btn_round_primary20)
                     setTextColor(mainActivity.getColor(R.color.primary99))
                     makeScheduleBtnNotVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
@@ -62,7 +102,7 @@ class MakeScheduleFragment : Fragment() {
 
             makeScheduleBtnNotVisit.run{
                 setOnClickListener {
-                    selectedScheduleKind = false
+                    selectedScheduleIsVisit = false
                     setBackgroundResource(R.drawable.btn_round_primary20)
                     setTextColor(mainActivity.getColor(R.color.primary99))
                     makeScheduleBtnVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
@@ -72,23 +112,39 @@ class MakeScheduleFragment : Fragment() {
 
             makeScheduleBtnSelectCalendar.run{
                 setOnClickListener {
-                    setBackgroundResource(R.drawable.btn_round_primary20)
-                    setTextColor(mainActivity.getColor(R.color.primary99))
+
+                    if(makeScheduleCalendarView.isVisible){
+                        makeScheduleCalendarView.visibility = View.GONE
+                        setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                        setTextColor(mainActivity.getColor(R.color.primary20))
+                    } else {
+                        makeScheduleCalendarView.visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.btn_round_primary20)
+                        setTextColor(mainActivity.getColor(R.color.primary99))
+                    }
+
+                    makeScheduleTimePicker.visibility = View.GONE
                     makeScheduleBtnSelectTime.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
                     makeScheduleBtnSelectTime.setTextColor(mainActivity.getColor(R.color.primary20))
-                    makeScheduleCalendarView.visibility = View.VISIBLE
-                    makeScheduleTimePicker.visibility = View.GONE
                 }
             }
 
             makeScheduleBtnSelectTime.run{
                 setOnClickListener {
-                    setBackgroundResource(R.drawable.btn_round_primary20)
-                    setTextColor(mainActivity.getColor(R.color.primary99))
+
+                    if(makeScheduleTimePicker.isVisible){
+                        makeScheduleTimePicker.visibility = View.GONE
+                        setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                        setTextColor(mainActivity.getColor(R.color.primary20))
+                    } else {
+                        makeScheduleTimePicker.visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.btn_round_primary20)
+                        setTextColor(mainActivity.getColor(R.color.primary99))
+                    }
+
+                    makeScheduleCalendarView.visibility = View.GONE
                     makeScheduleBtnSelectCalendar.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
                     makeScheduleBtnSelectCalendar.setTextColor(mainActivity.getColor(R.color.primary20))
-                    makeScheduleCalendarView.visibility = View.GONE
-                    makeScheduleTimePicker.visibility = View.VISIBLE
                 }
             }
 
@@ -171,7 +227,6 @@ class MakeScheduleFragment : Fragment() {
                 selectedDate = day.date
 
                 // 선택되어 있는 날짜에 해당하는 일정을 가져오는 코드 작성 부분
-
                 setDateText()
                 fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(day.date)
                 if (currentSelection != null) {

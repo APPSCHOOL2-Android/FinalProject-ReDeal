@@ -31,7 +31,7 @@ class ScheduleVM: ViewModel() {
                 var scheduleDeadlineTime = c1["scheduleDeadlineTime"] as Timestamp
 
                 val newScheduleTotalData = ScheduleTotalData(scheduleIdx, clientIdx, isScheduleFinish, isVisitSchedule, scheduleTitle, scheduleContext,
-                    scheduleDataCreateTime, scheduleDeadlineTime, null, null, null)
+                    scheduleDataCreateTime, scheduleDeadlineTime, null, null, null, null)
 
                 tempScheduleList.add(newScheduleTotalData)
             }
@@ -43,6 +43,7 @@ class ScheduleVM: ViewModel() {
                         data.clientName = c1["clientName"] as String
                         data.clientManagerName = c1["clientManagerName"] as String
                         data.clientState = c1["clientState"] as Long
+                        data.isBookmark = c1["isBookmark"] as Boolean
                         scheduleListVM.value = tempScheduleList
                     }
                 }

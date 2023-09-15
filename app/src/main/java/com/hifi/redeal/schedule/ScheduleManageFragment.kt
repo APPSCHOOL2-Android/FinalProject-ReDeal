@@ -145,6 +145,12 @@ class ScheduleManageFragment : Fragment(){
                         }
                     }
 
+                    if(schedule.isBookmark != null){
+                        if(schedule.isBookmark!!){
+                            scheduleItemBinding.scheduleClientBookmarkView.setBackgroundResource(R.drawable.star_fill_24px)
+                        }
+                    }
+
                     var layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -196,6 +202,12 @@ class ScheduleManageFragment : Fragment(){
                                 completeScheduleItemBinding.completeScheduleClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
                             }
                             else -> return
+                        }
+                    }
+
+                    if(schedule.isBookmark != null){
+                        if(schedule.isBookmark!!){
+                            completeScheduleItemBinding.completeScheduleClientBookmarkView.setBackgroundResource(R.drawable.star_fill_24px)
                         }
                     }
 
