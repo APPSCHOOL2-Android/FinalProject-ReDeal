@@ -37,7 +37,7 @@ class MapFragment : Fragment() {
     lateinit var mainActivity: MainActivity
 
     lateinit var clientViewModel: ClientViewModel
-    var clientAddress : String? = null
+    var currentAddress: String? = null
 
     lateinit var kakaoMapTemp: KakaoMap
     private var centerPointLabel: Label? = null
@@ -101,7 +101,7 @@ class MapFragment : Fragment() {
                     if(newState == SearchView.TransitionState.SHOWING){
                         clientViewModel.resetClientList()
                     } else {
-                        Log.d("지도주소",clientAddress.toString())
+                        Log.d("지도주소",currentAddress.toString())
                     }
                 }
 
@@ -158,7 +158,7 @@ class MapFragment : Fragment() {
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-                clientAddress = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!
+                currentAddress = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!
 
                 fragmentMapBinding.mapSearchView.hide()
 
