@@ -1,18 +1,26 @@
 package com.hifi.redeal.map.view
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.search.SearchView
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMapBinding
+import com.hifi.redeal.databinding.RowMapClientListBinding
 import com.hifi.redeal.map.vm.ClientViewModel
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -29,6 +37,7 @@ class MapFragment : Fragment() {
     lateinit var mainActivity: MainActivity
 
     lateinit var clientViewModel: ClientViewModel
+    var clientAddress : String? = null
 
     lateinit var kakaoMapTemp: KakaoMap
     private var centerPointLabel: Label? = null
@@ -40,10 +49,13 @@ class MapFragment : Fragment() {
         fragmentMapBinding = FragmentMapBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+
+
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
         clientViewModel.run {
             clientDataListByKeyWord.observe(mainActivity){
-                Log.d("검색",it.toString())
+//                Log.d("검색",it.toString())
+                fragmentMapBinding.mapSearchRecyclerViewResult.adapter?.notifyDataSetChanged()
             }
         }
 
@@ -86,26 +98,85 @@ class MapFragment : Fragment() {
 
             mapSearchView.run {
                 addTransitionListener { searchView, previousState, newState ->
-                    // 서치바를 눌러 서치뷰가 보일 때
                     if(newState == SearchView.TransitionState.SHOWING){
-                        // Snackbar.make(fragmentPostListBinding.root, "Showing", Snackbar.LENGTH_SHORT).show()
                         clientViewModel.resetClientList()
+                    } else {
+                        Log.d("지도주소",clientAddress.toString())
                     }
-
                 }
 
                 editText.setOnEditorActionListener { textView, i, keyEvent ->
-                    // Snackbar.make(fragmentPostListBinding.root, text!!, Snackbar.LENGTH_SHORT).show()
                     clientViewModel.getClientListByKeyword("1", text.toString())
                     true
                 }
             }
+
+            mapSearchRecyclerViewResult.run {
+                adapter = SearchClientResultRecyclerViewAdapter()
+                layoutManager = LinearLayoutManager(context)
+                addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
+
+            }
+
 
 
         }
 
 
         return fragmentMapBinding.root
+    }
+
+    inner class SearchClientResultRecyclerViewAdapter : RecyclerView.Adapter<SearchClientResultRecyclerViewAdapter.ResultViewHolder>(){
+        inner class ResultViewHolder(rowMapClientListBinding: RowMapClientListBinding) : RecyclerView.ViewHolder(rowMapClientListBinding.root){
+
+            val rowMapClientListName: TextView
+            val rowMapClientListManagerName: TextView
+            val rowMapClientListDateRecent: TextView
+            val rowMapClientListDateRecentLayout : LinearLayout
+            val rowMapClientListTransactionType : ImageView
+            val rowMapClientListBtnToNavi : Button
+
+            init{
+                rowMapClientListName = rowMapClientListBinding.rowMapClientListName
+                rowMapClientListManagerName = rowMapClientListBinding.rowMapClientListManagerName
+                rowMapClientListDateRecent = rowMapClientListBinding.rowMapClientListDateRecent
+                rowMapClientListTransactionType = rowMapClientListBinding.rowMapClientListTransactionType
+                rowMapClientListBtnToNavi = rowMapClientListBinding.rowMapClientListBtnToNavi
+                rowMapClientListDateRecentLayout = rowMapClientListBinding.rowMapClientListDateRecentLayout
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
+            val rowMapClientListBinding = RowMapClientListBinding.inflate(layoutInflater)
+            val allViewHolder = ResultViewHolder(rowMapClientListBinding)
+
+            rowMapClientListBinding.root.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+            rowMapClientListBinding.root.setOnClickListener {
+                val position = allViewHolder.adapterPosition
+                clientAddress = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!
+
+                fragmentMapBinding.mapSearchView.hide()
+
+            }
+
+            return allViewHolder
+        }
+
+        override fun getItemCount(): Int {
+            return clientViewModel.clientDataListByKeyWord.value?.size!!
+        }
+
+        override fun onBindViewHolder(holder: ResultViewHolder, position: Int) {
+            holder.rowMapClientListName.text = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientName
+            holder.rowMapClientListManagerName.text = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientManagerName
+            holder.rowMapClientListDateRecentLayout.visibility = View.GONE
+//            holder.rowMapClientListDateRecent.text = clientViewModel.clientDataListByKeyWord.value?.get(position)?
+        }
     }
 
 
