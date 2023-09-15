@@ -146,7 +146,6 @@ class MapFragment : Fragment() {
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.Q)
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
             val rowMapClientListBinding = RowMapClientListBinding.inflate(layoutInflater)
             val allViewHolder = ResultViewHolder(rowMapClientListBinding)
