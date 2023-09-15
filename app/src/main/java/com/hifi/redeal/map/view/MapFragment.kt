@@ -21,6 +21,7 @@ import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMapBinding
 import com.hifi.redeal.databinding.RowMapClientListBinding
+import com.hifi.redeal.map.repository.ClientRepository
 import com.hifi.redeal.map.vm.ClientViewModel
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -158,6 +159,10 @@ class MapFragment : Fragment() {
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
                 currentAddress = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!
+
+                if(currentAddress!=null){
+                    ClientRepository.searchAddr(currentAddress!!.trim())
+                }
 
                 fragmentMapBinding.mapSearchView.hide()
 
