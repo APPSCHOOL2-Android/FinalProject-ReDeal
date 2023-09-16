@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ktx.toObject
 import com.hifi.redeal.schedule.model.ClientData
 import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
@@ -29,6 +30,10 @@ class ScheduleVM: ViewModel() {
     var clientResultData = MutableLiveData<ClientData>()
     lateinit var tempclientResultData : ClientData
 
+    var clientLastVisitDate = MutableLiveData<Timestamp>()
+
+    var selectScheduleData = MutableLiveData<ScheduleData>()
+
     // 사용자가 선택한 데이터
     var selectedScheduleIsVisit = true
     var selectDate = LocalDate.now()
@@ -36,6 +41,31 @@ class ScheduleVM: ViewModel() {
     // 사용자가 선택했던 데이터들을 초기화 한다.
     fun selectDataClear(){
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
+    }
+    fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String){
+        ScheduleRepository.getSelectScheduleInfo(userIdx, scheduleIdx){
+            val tempSelectScheduleData = ScheduleData(
+                it.result["scheduleIdx"] as Long,
+                it.result["clientIdx"] as Long,
+                it.result["isScheduleFinish"] as Boolean,
+                it.result["isVisitSchedule"] as Boolean,
+                it.result["scheduleContext"] as String,
+                it.result["scheduleDataCreateTime"] as Timestamp,
+                it.result["scheduleDeadlineTime"] as Timestamp,
+                it.result["scheduleFinishTime"] as Timestamp,
+                it.result["scheduleTitle"] as String,
+            )
+            selectScheduleData.postValue(tempSelectScheduleData)
+        }
+    }
+    fun getSelectClientLastVisitDate (userIdx: String, clientIdx: Long){
+        ScheduleRepository.getSelectClientLastVisitDate(userIdx, clientIdx){
+            for(c1 in it.result){
+                val lastTime = c1["scheduleFinishTime"] as Timestamp
+                clientLastVisitDate.postValue(lastTime)
+                Log.d("ttt", "결과 시간 : ${lastTime.toDate()}")
+            }
+        }
     }
 
     fun getClientInfo(userIdx: Long, clientIdx: Long) {

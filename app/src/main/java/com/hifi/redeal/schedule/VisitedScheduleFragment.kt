@@ -11,6 +11,12 @@ import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentVisitedScheduleBinding
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import org.threeten.bp.DateTimeUtils.toDate
+import java.sql.Date
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import kotlin.math.min
 
 
 class VisitedScheduleFragment : Fragment() {
@@ -57,7 +63,50 @@ class VisitedScheduleFragment : Fragment() {
                 }
             }
 
+            clientLastVisitDate.observe(requireActivity()){ timestamp ->
+                fragmentVisitedScheduleBinding.run{
+
+                    var date = Date(timestamp.toDate().time).toString().replace("-",".")
+                    clientLastVisitedDate.text = date
+
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = timestamp.toDate().time
+
+                    val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
+                    val minute = calendar.get(Calendar.MINUTE)
+                    if(hour < 10){
+                        clientLastVisitedTime.text = "0$hour : $minute"
+                    } else {
+                        clientLastVisitedTime.text = "$hour : $minute"
+                    }
+
+                }
+            }
+
+            selectScheduleData.observe(requireActivity()){ scheduleInfo ->
+                fragmentVisitedScheduleBinding.run{
+                    var date = Date(scheduleInfo.scheduleDeadlineTime.toDate().time).toString().replace("-",".")
+                    clientVisitDateDate.text = date
+
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = scheduleInfo.scheduleDeadlineTime.toDate().time
+
+                    val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
+                    val minute = calendar.get(Calendar.MINUTE)
+                    if(hour < 10){
+                        clientVisitedTime.text = "0$hour : $minute"
+                    } else {
+                        clientVisitedTime.text = "$hour : $minute"
+                    }
+
+                    visitedScheduleDataTitle.text = scheduleInfo.scheduleTitle
+                    visitedScheduleDataContents.text = scheduleInfo.scheduleContext
+                }
+            }
+
             getClientInfo(userIdx,clientIdx)
+            getSelectClientLastVisitDate("$userIdx", clientIdx)
+            getSelectScheduleInfo("$userIdx", "$scheduleIdx")
         }
 
         return fragmentVisitedScheduleBinding.root
