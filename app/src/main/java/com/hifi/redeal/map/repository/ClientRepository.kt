@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.BuildConfig
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.map.model.KakaoAPI
+import com.hifi.redeal.map.model.Place
 import com.hifi.redeal.map.model.ResultSearchAddr
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,7 +27,7 @@ class ClientRepository {
 
         }
 
-        fun searchAddr(address: String) {
+        fun searchAddr(address: String,callback: (List<Place>?) -> Unit) {
             val retrofit = Retrofit.Builder()   // Retrofit 구성
                 .baseUrl(MainActivity.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -43,13 +44,19 @@ class ClientRepository {
                     // 통신 성공 (검색 결과는 response.body()에 담겨있음)
                     Log.d("Test", "Raw: ${response.raw()}")
                     Log.d("Test", "Body: ${response.body()}")
+
+                    val result = response.body()!!.documents
+                    callback(result)
+
                 }
 
                 override fun onFailure(call: Call<ResultSearchAddr>, t: Throwable) {
                     // 통신 실패
                     Log.w("MainActivity", "통신 실패: ${t.message}")
+                    callback(null)
                 }
             })
+
         }
 
     }
