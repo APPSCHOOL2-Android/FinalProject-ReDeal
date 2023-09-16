@@ -1,15 +1,12 @@
 package com.hifi.redeal.schedule
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,11 +14,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
 import com.hifi.redeal.databinding.FragmentScheduleSelectByClientBinding
 import com.hifi.redeal.databinding.SelectScheduleClientItemBinding
 import com.hifi.redeal.schedule.model.ClientSimpleData
-import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getUserAllClientInfo
 import com.hifi.redeal.schedule.vm.ScheduleVM
 
 
@@ -57,8 +52,10 @@ class ScheduleSelectByClientFragment : Fragment() {
                 userClientSimpleDataList = it
                 fragmentScheduleSelectByClientBinding.recyclerViewAllResult.adapter?.notifyDataSetChanged()
             }
+
             getUserAllClientInfo(userIdx)
         }
+
     }
 
     private fun setOnBasicView(){
@@ -93,8 +90,9 @@ class ScheduleSelectByClientFragment : Fragment() {
             val selectScheduleClientBookmarkView = selectScheduleClientItemBinding.selectScheduleClientBookmarkView
             init{
                 selectClientBtn.setOnClickListener {
-                    scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
-                    scheduleVM.getUserSelectClientInfo(userIdx, userClientSimpleDataList[bindingAdapterPosition].clientIdx.toString())
+                    scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
+                    scheduleVM.getUserSelectClientInfo(userIdx, userClientSimpleDataList[bindingAdapterPosition].clientIdx)
+                    Log.d("ttt", "리사이클러뷰 선택 : ${userClientSimpleDataList[bindingAdapterPosition]}")
                     mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
                 }
             }

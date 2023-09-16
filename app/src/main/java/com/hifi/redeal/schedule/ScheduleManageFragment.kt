@@ -58,11 +58,6 @@ class ScheduleManageFragment : Fragment(){
         return fragmentScheduleManageBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
-    }
-
     private fun setViewModel(){
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 

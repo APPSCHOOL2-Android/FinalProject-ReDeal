@@ -3,6 +3,7 @@ package com.hifi.redeal.schedule.vm
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
 import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
@@ -32,14 +33,24 @@ class ScheduleVM: ViewModel() {
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     }
 
-    fun getUserSelectClientInfo(userIdx: String, clientIdx:String){
+    fun addUserSchedule(userIdx: String, scheduleData:ScheduleData, callback1: (Task<Void>) -> Unit){
+        ScheduleRepository.getUserAllSchedule(userIdx,{
+            for(c1 in it.result){
+                val scheduleIdx = c1["scheduleIdx"] as Long
+                scheduleData.scheduleIdx = scheduleIdx + 1L
+            }
+        },{
+            ScheduleRepository.setUserSchedule(userIdx, scheduleData, callback1)
+        })
+    }
+    fun getUserSelectClientInfo(userIdx: String, clientIdx:Long){
         ScheduleRepository.getUserSelectClientInfo(userIdx, clientIdx){
             val clientName = it.result["clientName"] as String
             val clientManagerName = it.result["clientManagerName"] as String
             val clientState = it.result["clientState"] as Long
             val isBookmark = it.result["isBookmark"] as Boolean
-            tempUserSelectClientSimpleData = ClientSimpleData(clientState,clientName, clientManagerName, clientState, isBookmark)
-            userSelectClientSimpleData.value = tempUserSelectClientSimpleData
+            tempUserSelectClientSimpleData = ClientSimpleData(clientIdx,clientName, clientManagerName, clientState, isBookmark)
+            userSelectClientSimpleData.postValue(tempUserSelectClientSimpleData)
         }
     }
 
@@ -54,7 +65,7 @@ class ScheduleVM: ViewModel() {
                 var clientState = c1["clientState"] as Long
                 var isBookmark = c1["isBookmark"] as Boolean
                 tempUserClientSimpleDataList.add(ClientSimpleData(clientIdx, clientName, clientManagerName, clientState, isBookmark))
-                userClientSimpleDataListVM.value = tempUserClientSimpleDataList
+                userClientSimpleDataListVM.postValue(tempUserClientSimpleDataList)
             }
         }
     }
@@ -78,7 +89,7 @@ class ScheduleVM: ViewModel() {
 
                 tempScheduleList.add(newScheduleTotalData)
             }
-            scheduleListVM.value = tempScheduleList
+            scheduleListVM.postValue(tempScheduleList)
         },{
             tempScheduleList.forEach {data ->
                 ScheduleRepository.getClientInfo(userIdx, data.clientIdx){
@@ -87,7 +98,7 @@ class ScheduleVM: ViewModel() {
                         data.clientManagerName = c1["clientManagerName"] as String
                         data.clientState = c1["clientState"] as Long
                         data.isBookmark = c1["isBookmark"] as Boolean
-                        scheduleListVM.value = tempScheduleList
+                        scheduleListVM.postValue(tempScheduleList)
                     }
                 }
             }

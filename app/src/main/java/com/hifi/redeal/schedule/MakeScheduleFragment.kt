@@ -4,6 +4,7 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +16,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
 import com.hifi.redeal.schedule.model.ClientSimpleData
+import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -29,15 +32,17 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class MakeScheduleFragment : Fragment() {
     private lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
     private lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
-    private lateinit var selectClientSimpleData: ClientSimpleData
     private var selectedDate: LocalDate = LocalDate.now()
     private var userIdx = "1" // 추후 사용자의 idx 저장
+    private var clientIdx = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +69,8 @@ class MakeScheduleFragment : Fragment() {
             userSelectClientSimpleData.observe(mainActivity){
                 val clientName = it.clientName
                 val clientManagerName = it.clientManagerName
+                clientIdx = it.clientIdx
+                Log.d("ttt","$it")
                 fragmentMakeScheduleBinding.makeScheduleClientInfo.text = "$clientName $clientManagerName"
             }
         }
@@ -107,9 +114,6 @@ class MakeScheduleFragment : Fragment() {
                         } else {
                             // 키보드가 닫혀 있는 상태
                             if (isKeyboardOpen) {
-                                // 키보드가 내려갈 때 포커스를 제거합니다.
-                                val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                                imm.hideSoftInputFromWindow(makeScheduleEditTextScheduleTitle?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                                 clearFocus()
                                 isKeyboardOpen = false
                             }
@@ -176,9 +180,10 @@ class MakeScheduleFragment : Fragment() {
             } else {
                 minute = ((minute/5)+1)*5
             }
-            if(hour == 0) hour = 12
+            if(makeScheduleTimePicker.hour > 12)  hour -= 12
+            if(makeScheduleTimePicker.hour == 0) hour = 12
 
-            var amPm = if(hour > 12) "오후" else "오전"
+            var amPm = if(makeScheduleTimePicker.hour > 12) "오후" else "오전"
             if(minute < 10){
                 makeScheduleBtnSelectTime.text = "$amPm $hour : 0$minute"
             } else {
@@ -292,6 +297,34 @@ class MakeScheduleFragment : Fragment() {
                     builder.show()
                     return@setOnClickListener
                 }
+
+                val scheduleDeadlineTime = java.sql.Date.valueOf("$selectedDate")
+
+                val calendar = Calendar.getInstance()
+                calendar.time = scheduleDeadlineTime
+                calendar.set(Calendar.HOUR_OF_DAY, makeScheduleTimePicker.hour)
+                calendar.set(Calendar.MINUTE, makeScheduleTimePicker.minute*5)
+
+                val newScheduleData = ScheduleData(
+                    0L,
+                    clientIdx,
+                    false,
+                    scheduleVM.selectedScheduleIsVisit!!,
+                    makeScheduleEditTextScheduleContent.editableText.toString(),
+                    Timestamp(Date()),
+                    Timestamp(Date(calendar.timeInMillis)),
+                    makeScheduleEditTextScheduleTitle.editableText.toString()
+                )
+
+                scheduleVM.addUserSchedule(userIdx, newScheduleData){
+                    val builder = AlertDialog.Builder(mainActivity)
+                    builder.setMessage("일정을 성공적으로 저장하였습니다.")
+                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                        mainActivity.removeFragment(MainActivity.MAKE_SCHEDULE_FRAGMENT)
+                    }
+                    builder.show()
+                }
+
             }
 
         }
