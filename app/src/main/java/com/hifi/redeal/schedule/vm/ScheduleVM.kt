@@ -10,6 +10,7 @@ import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Locale
 
 class ScheduleVM: ViewModel() {
@@ -26,10 +27,23 @@ class ScheduleVM: ViewModel() {
 
     // 사용자가 선택한 데이터
     var selectedScheduleIsVisit = true
+    var selectDate = LocalDate.now()
 
     // 사용자가 선택했던 데이터들을 초기화 한다.
     fun selectDataClear(){
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
+    }
+
+    fun getClientInfo(userIdx: Long, clientIdx: Long) {
+        ScheduleRepository.getClientInfo("$userIdx", clientIdx){
+            for(c1 in it.result){
+                val clientName = c1["clientName"] as String
+                val clientManagerName = c1["clientManagerName"] as String
+                val clientState = c1["clientState"] as Long
+                val isBookmark = c1["isBookmark"] as Boolean
+                scheduleListVM.postValue(tempScheduleList)
+            }
+        }
     }
 
     fun addUserSchedule(userIdx: String, scheduleData:ScheduleData, callback1: (Task<Void>) -> Unit){

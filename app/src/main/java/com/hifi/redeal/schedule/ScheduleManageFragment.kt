@@ -28,7 +28,9 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.ZoneId.systemDefault
 import java.time.temporal.WeekFields
+import java.util.Date
 import java.util.Locale
 
 class ScheduleManageFragment : Fragment(){
@@ -37,7 +39,6 @@ class ScheduleManageFragment : Fragment(){
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
     lateinit var scheduleVM: ScheduleVM
 
-    private var selectedDate: LocalDate = LocalDate.now()
     var userIdx = "1" // 추후 사용자의 idx 저장
     var scheduleList = mutableListOf<ScheduleTotalData>()
 
@@ -61,7 +62,7 @@ class ScheduleManageFragment : Fragment(){
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            scheduleListVM.observe(mainActivity){
+            scheduleListVM.observe(requireActivity()){
                 scheduleList = it
                 setScheduleListLayout(scheduleList)
             }
@@ -80,7 +81,7 @@ class ScheduleManageFragment : Fragment(){
             }
         }
 
-        scheduleVM.getUserDayOfSchedule(userIdx, LocalDate.now().toString())
+        scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
     }
 
     private fun setClickEvent(){
@@ -90,7 +91,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     scheduleVM.selectedScheduleIsVisit = true
-                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
                 }
             }
 
@@ -99,7 +100,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     scheduleVM.selectedScheduleIsVisit = false
-                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
                 }
             }
 
@@ -180,7 +181,7 @@ class ScheduleManageFragment : Fragment(){
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 처리 됩니다.")
                             builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                 ScheduleRepository.updateUserDayOfScheduleState(userIdx, schedule.scheduleIdx.toString()){
-                                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+                                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
                                 }
                             }
                             builder.setPositiveButton("취소", null)
@@ -238,7 +239,7 @@ class ScheduleManageFragment : Fragment(){
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 취소 처리 됩니다.")
                             builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                 ScheduleRepository.updateUserDayOfScheduleState(userIdx, schedule.scheduleIdx.toString()){
-                                    scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+                                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
                                 }
                             }
                             builder.setPositiveButton("취소", null)
@@ -292,7 +293,7 @@ class ScheduleManageFragment : Fragment(){
                         // Show the month dates. Remember that views are recycled!
                         textView.visibility = View.VISIBLE
 
-                        if (day.date == selectedDate) {
+                        if (day.date == scheduleVM.selectDate) {
                             // If this is the selected date, show a round background and change the text color.
                             textView.setTextColor(Color.BLACK)
                             textView.setBackgroundResource(R.drawable.date_selection_background)
@@ -330,9 +331,9 @@ class ScheduleManageFragment : Fragment(){
 
     private fun setDateText(){
         // 중간 날짜 셋팅
-        val selectMonth = if(selectedDate.month.value < 10) "0${selectedDate.month.value}" else selectedDate.month.value.toString()
-        val selectDay = if(selectedDate.dayOfMonth < 10) "0${selectedDate.dayOfMonth}" else selectedDate.dayOfMonth.toString()
-        val today = when(selectedDate.dayOfWeek.value){
+        val selectMonth = if(scheduleVM.selectDate.month.value < 10) "0${scheduleVM.selectDate.month.value}" else scheduleVM.selectDate.month.value.toString()
+        val selectDay = if(scheduleVM.selectDate.dayOfMonth < 10) "0${scheduleVM.selectDate.dayOfMonth}" else scheduleVM.selectDate.dayOfMonth.toString()
+        val today = when(scheduleVM.selectDate.dayOfWeek.value){
             1 -> "월"
             2 -> "화"
             3 -> "수"
@@ -343,7 +344,7 @@ class ScheduleManageFragment : Fragment(){
             else -> "날짜 오류"
         }
 
-        fragmentScheduleManageBinding.scheduleMidBarToday.text ="${selectedDate.year}.${selectMonth}.${selectDay} $today"
+        fragmentScheduleManageBinding.scheduleMidBarToday.text ="${scheduleVM.selectDate.year}.${selectMonth}.${selectDay} $today"
     }
 
     private inner class DayViewContainer(view: View) : ViewContainer(view) {
@@ -355,11 +356,12 @@ class ScheduleManageFragment : Fragment(){
             // 날짜 클릭 이벤트
             view.setOnClickListener {
                 // Use the CalendarDay associated with this container.
-                val currentSelection = selectedDate
-                selectedDate = day.date
+                val currentSelection = scheduleVM.selectDate
+                scheduleVM.selectDate = day.date
 
                 // 클릭한 날짜에 해당하는 일정을 가져오는 코드 작성 부분
-                scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
+
+                scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
 
                 setDateText()
 

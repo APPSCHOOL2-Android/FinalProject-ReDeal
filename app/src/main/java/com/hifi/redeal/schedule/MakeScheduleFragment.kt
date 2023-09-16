@@ -40,7 +40,6 @@ class MakeScheduleFragment : Fragment() {
     private lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
     private lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
-    private var selectedDate: LocalDate = LocalDate.now()
     private var userIdx = "1" // 추후 사용자의 idx 저장
     private var clientIdx = 0L
 
@@ -318,7 +317,7 @@ class MakeScheduleFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                val scheduleDeadlineTime = java.sql.Date.valueOf("$selectedDate")
+                val scheduleDeadlineTime = java.sql.Date.valueOf("${scheduleVM.selectDate}")
 
                 val calendar = Calendar.getInstance()
                 calendar.time = scheduleDeadlineTime
@@ -353,10 +352,10 @@ class MakeScheduleFragment : Fragment() {
 
     private fun setDateToText(){
         // 중간 날짜 셋팅
-        val selectMonth = if(selectedDate.month.value < 10) "0${selectedDate.month.value}" else selectedDate.month.value.toString()
-        val selectDay = if(selectedDate.dayOfMonth < 10) "0${selectedDate.dayOfMonth}" else selectedDate.dayOfMonth.toString()
+        val selectMonth = if(scheduleVM.selectDate.month.value < 10) "0${scheduleVM.selectDate.month.value}" else scheduleVM.selectDate.month.value.toString()
+        val selectDay = if(scheduleVM.selectDate.dayOfMonth < 10) "0${scheduleVM.selectDate.dayOfMonth}" else scheduleVM.selectDate.dayOfMonth.toString()
 
-        fragmentMakeScheduleBinding.makeScheduleBtnSelectCalendar.text ="${selectedDate.year}.${selectMonth}.${selectDay}"
+        fragmentMakeScheduleBinding.makeScheduleBtnSelectCalendar.text ="${scheduleVM.selectDate.year}.${selectMonth}.${selectDay}"
     }
     private fun setCalendarView(){
         fragmentMakeScheduleBinding.run{
@@ -379,7 +378,7 @@ class MakeScheduleFragment : Fragment() {
                         // Show the month dates. Remember that views are recycled!
                         textView.visibility = View.VISIBLE
 
-                        if (day.date == selectedDate) {
+                        if (day.date == scheduleVM.selectDate) {
                             // If this is the selected date, show a round background and change the text color.
                             textView.setTextColor(Color.BLACK)
                             textView.setBackgroundResource(R.drawable.date_selection_background)
@@ -423,8 +422,8 @@ class MakeScheduleFragment : Fragment() {
             // 날짜 클릭 이벤트
             view.setOnClickListener {
                 // Use the CalendarDay associated with this container.
-                val currentSelection = selectedDate
-                selectedDate = day.date
+                val currentSelection = scheduleVM.selectDate
+                scheduleVM.selectDate = day.date
 
                 // 선택되어 있는 날짜에 해당하는 일정을 가져오는 코드 작성 부분
                 setDateToText()
