@@ -56,7 +56,7 @@ class ScheduleRepository {
                 .get()
                 .addOnCompleteListener(callback1)
         }
-        fun updateUserDayOfScheduleState(userIdx: String, scheduleIdx: String, callback1: (Task<Transaction>) -> Unit){
+        fun updateUserDayOfScheduleState(userIdx: String, scheduleIdx: String, callback1: (Task<Unit>) -> Unit){
             val db = Firebase.firestore
             val scheduleRef = db.collection("userData")
                 .document(userIdx)
@@ -65,8 +65,9 @@ class ScheduleRepository {
 
             db.runTransaction {transaction ->
                 val snapshot = transaction.get(scheduleRef)
-                val newState = snapshot.getBoolean("isScheduleFinish")!!
-                transaction.update(scheduleRef, "isScheduleFinish", !newState)
+                val newState = !snapshot.getBoolean("isScheduleFinish")!!
+                transaction.update(scheduleRef, "isScheduleFinish", newState)
+                if(newState) transaction.update(scheduleRef, "scheduleFinishTime", Timestamp(Date()))
             }.addOnCompleteListener(callback1)
 
         }

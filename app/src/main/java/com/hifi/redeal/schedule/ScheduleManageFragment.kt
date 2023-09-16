@@ -39,7 +39,6 @@ class ScheduleManageFragment : Fragment(){
 
     private var selectedDate: LocalDate = LocalDate.now()
     var userIdx = "1" // 추후 사용자의 idx 저장
-    var visitFilter = true // true 일 경우 방문 일정, false 일 경우 미방문 일정.
     var scheduleList = mutableListOf<ScheduleTotalData>()
 
     override fun onCreateView(
@@ -66,6 +65,19 @@ class ScheduleManageFragment : Fragment(){
                 scheduleList = it
                 setScheduleListLayout(scheduleList)
             }
+            if(selectedScheduleIsVisit){
+                fragmentScheduleManageBinding.visitScheduleFilter.run{
+                    setTextColor(mainActivity.getColor(R.color.primary10))
+                    fragmentScheduleManageBinding.notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
+                    scheduleVM.selectedScheduleIsVisit = true
+                }
+            } else {
+                fragmentScheduleManageBinding.notVisitScheduleFilter.run{
+                    setTextColor(mainActivity.getColor(R.color.primary10))
+                    fragmentScheduleManageBinding.visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
+                    scheduleVM.selectedScheduleIsVisit = false
+                }
+            }
         }
 
         scheduleVM.getUserDayOfSchedule(userIdx, LocalDate.now().toString())
@@ -77,7 +89,7 @@ class ScheduleManageFragment : Fragment(){
                 setOnClickListener {
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
-                    visitFilter = true
+                    scheduleVM.selectedScheduleIsVisit = true
                     scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
                 }
             }
@@ -86,7 +98,7 @@ class ScheduleManageFragment : Fragment(){
                 setOnClickListener {
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
-                    visitFilter = false
+                    scheduleVM.selectedScheduleIsVisit = false
                     scheduleVM.getUserDayOfSchedule(userIdx, "$selectedDate")
                 }
             }
@@ -114,7 +126,7 @@ class ScheduleManageFragment : Fragment(){
 
         for(schedule in scheduleList){
             // 미완료 스케줄 레이아웃 추가 및 이벤트 설정
-            if(schedule.isVisitSchedule == visitFilter){
+            if(schedule.isVisitSchedule == scheduleVM.selectedScheduleIsVisit){
                 count++
                 if(!schedule.isScheduleFinish){
                     val scheduleItemBinding = ScheduleItemBinding.inflate(layoutInflater)
@@ -247,7 +259,7 @@ class ScheduleManageFragment : Fragment(){
             400
         )
         spaceTextView.layoutParams = layoutParams
-        spaceTextView.text = if(visitFilter) {
+        spaceTextView.text = if(scheduleVM.selectedScheduleIsVisit) {
             "방문 일정 ${count}개"
         } else {
             "미방문 일정 ${count}개"

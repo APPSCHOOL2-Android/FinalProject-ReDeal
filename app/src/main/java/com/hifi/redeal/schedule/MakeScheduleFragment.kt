@@ -56,7 +56,7 @@ class MakeScheduleFragment : Fragment() {
         setTimePicker()
         setDateToText()
         setTimeToText()
-        setOnBasicView()
+        setBasicView()
         setClickEvent()
 
         return fragmentMakeScheduleBinding.root
@@ -95,7 +95,7 @@ class MakeScheduleFragment : Fragment() {
             }
         }
     }
-    private fun setOnBasicView(){
+    private fun setBasicView(){
         fragmentMakeScheduleBinding.run{
             when(scheduleVM.selectedScheduleIsVisit){
                 true ->{
@@ -333,6 +333,7 @@ class MakeScheduleFragment : Fragment() {
                     makeScheduleEditTextScheduleContent.editableText.toString(),
                     Timestamp(Date()),
                     Timestamp(Date(calendar.timeInMillis)),
+                    Timestamp(Date()),
                     makeScheduleEditTextScheduleTitle.editableText.toString()
                 )
 

@@ -25,11 +25,10 @@ class ScheduleVM: ViewModel() {
     lateinit var tempUserSelectClientSimpleData : ClientSimpleData
 
     // 사용자가 선택한 데이터
-    var selectedScheduleIsVisit: Boolean? = null
+    var selectedScheduleIsVisit = true
 
     // 사용자가 선택했던 데이터들을 초기화 한다.
     fun selectDataClear(){
-        selectedScheduleIsVisit = null
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     }
 

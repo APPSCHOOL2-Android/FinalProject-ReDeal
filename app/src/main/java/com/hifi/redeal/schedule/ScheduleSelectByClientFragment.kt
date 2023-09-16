@@ -39,7 +39,7 @@ class ScheduleSelectByClientFragment : Fragment() {
         fragmentScheduleSelectByClientBinding = FragmentScheduleSelectByClientBinding.inflate(inflater)
 
         setViewModel()
-        setOnBasicView()
+        setBasicView()
 
         return fragmentScheduleSelectByClientBinding.root
     }
@@ -58,7 +58,7 @@ class ScheduleSelectByClientFragment : Fragment() {
 
     }
 
-    private fun setOnBasicView(){
+    private fun setBasicView(){
 
         fragmentScheduleSelectByClientBinding.run{
             recyclerViewAllResult.run{
