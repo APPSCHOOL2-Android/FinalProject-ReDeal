@@ -92,7 +92,6 @@ class ScheduleSelectByClientFragment : Fragment() {
                 selectClientBtn.setOnClickListener {
                     scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
                     scheduleVM.getUserSelectClientInfo(userIdx, userClientSimpleDataList[bindingAdapterPosition].clientIdx)
-                    Log.d("ttt", "리사이클러뷰 선택 : ${userClientSimpleDataList[bindingAdapterPosition]}")
                     mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
                 }
             }

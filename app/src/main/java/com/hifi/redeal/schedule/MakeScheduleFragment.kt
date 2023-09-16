@@ -69,9 +69,29 @@ class MakeScheduleFragment : Fragment() {
             userSelectClientSimpleData.observe(mainActivity){
                 val clientName = it.clientName
                 val clientManagerName = it.clientManagerName
+                val clientState = it.clientState
+                val isBookmark = it.isBookmark
                 clientIdx = it.clientIdx
-                Log.d("ttt","$it")
+                fragmentMakeScheduleBinding.makeScheduleClientState.visibility = View.VISIBLE
+                when(clientState){
+                    1L -> {
+                        fragmentMakeScheduleBinding.makeScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trading)
+                    }
+                    2L -> {
+                        fragmentMakeScheduleBinding.makeScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
+                    }
+                    3L -> {
+                        fragmentMakeScheduleBinding.makeScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
+                    }
+                    else -> fragmentMakeScheduleBinding.makeScheduleClientState.visibility = View.GONE
+                }
                 fragmentMakeScheduleBinding.makeScheduleClientInfo.text = "$clientName $clientManagerName"
+                if(isBookmark){
+                    fragmentMakeScheduleBinding.makeScheduleClientBookmark.setBackgroundResource(R.drawable.star_fill_24px)
+                    fragmentMakeScheduleBinding.makeScheduleClientBookmark.visibility = View.VISIBLE
+                } else {
+                    fragmentMakeScheduleBinding.makeScheduleClientBookmark.visibility = View.GONE
+                }
             }
         }
     }
