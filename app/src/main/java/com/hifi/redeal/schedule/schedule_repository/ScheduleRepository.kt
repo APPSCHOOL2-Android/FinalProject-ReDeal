@@ -18,11 +18,35 @@ import java.util.Locale
 class ScheduleRepository {
     companion object{
 
+        fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String, callback1: (Task<DocumentSnapshot>) -> Unit){
+            val db = Firebase.firestore
+            db.collection("userData")
+                .document(userIdx)
+                .collection("scheduleData")
+                .document(scheduleIdx)
+                .get()
+                .addOnCompleteListener(callback1)
+        }
+        fun getSelectClientLastVisitDate(userIdx: String, clientIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
+            val db = Firebase.firestore
+            val scheduleDataRef = db.collection("userData")
+                .document(userIdx)
+                .collection("scheduleData")
+
+            scheduleDataRef
+                .whereEqualTo("clientIdx", clientIdx)
+                .whereEqualTo("isScheduleFinish", true)
+                .orderBy("scheduleFinishTime",  Query.Direction.DESCENDING).limit(1)
+                .get()
+                .addOnCompleteListener(callback1)
+        }
+
         fun setUserSchedule(userIdx: String, scheduleData: ScheduleData, callback1: (Task<Void>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
                 .document(userIdx)
-                .collection("scheduleData").document("${scheduleData.scheduleIdx}")
+                .collection("scheduleData")
+                .document("${scheduleData.scheduleIdx}")
                 .set(scheduleData, SetOptions.merge()) // SetOptions.merge() : 없으면 추가, 있다면 덮어쓴다.
                 .addOnCompleteListener(callback1)
         }
@@ -72,12 +96,12 @@ class ScheduleRepository {
 
         }
 
-        fun getClientInfo(userIdx: String, clinetIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
+        fun getClientInfo(userIdx: String, clientIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
                 .document(userIdx)
                 .collection("clientData")
-                .whereEqualTo("clientIdx", clinetIdx)
+                .whereEqualTo("clientIdx", clientIdx)
                 .get().addOnCompleteListener(callback1)
         }
         fun getUserDayOfSchedule(userIdx: String, date: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
