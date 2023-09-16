@@ -3,6 +3,7 @@ package com.hifi.redeal.schedule.schedule_repository
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Transaction
 import com.google.firebase.firestore.ktx.firestore
@@ -14,9 +15,19 @@ import java.util.Locale
 class ScheduleRepository {
     companion object{
 
-        fun getAllUserClientInfo(userIdx: String,callback1: (Task<QuerySnapshot>) -> Unit){
+        fun getUserSelectClientInfo(userIdx: String, clientIdx: String, callback1: (Task<DocumentSnapshot>) -> Unit){
             val db = Firebase.firestore
-            val clientRef = db.collection("userData")
+            db.collection("userData")
+                .document(userIdx)
+                .collection("clientData")
+                .document(clientIdx)
+                .get()
+                .addOnCompleteListener(callback1)
+        }
+
+        fun getUserAllClientInfo(userIdx: String,callback1: (Task<QuerySnapshot>) -> Unit){
+            val db = Firebase.firestore
+            db.collection("userData")
                 .document(userIdx)
                 .collection("clientData")
                 .get()

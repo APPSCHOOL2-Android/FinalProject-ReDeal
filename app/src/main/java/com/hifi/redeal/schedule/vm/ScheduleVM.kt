@@ -20,15 +20,31 @@ class ScheduleVM: ViewModel() {
     var userClientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
     var tempUserClientSimpleDataList = mutableListOf<ClientSimpleData>()
 
-    fun getAllUserClientInfo(userIdx: String){
+    var userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
+    lateinit var tempUserSelectClientSimpleData : ClientSimpleData
+
+    fun getUserSelectClientInfo(userIdx: String, clientIdx:String){
+        ScheduleRepository.getUserSelectClientInfo(userIdx, clientIdx){
+            val clientName = it.result["clientName"] as String
+            val clientManagerName = it.result["clientManagerName"] as String
+            val clientState = it.result["clientState"] as Long
+            val isBookmark = it.result["isBookmark"] as Boolean
+            tempUserSelectClientSimpleData = ClientSimpleData(clientState,clientName, clientManagerName, clientState, isBookmark)
+            userSelectClientSimpleData.value = tempUserSelectClientSimpleData
+        }
+    }
+
+
+    fun getUserAllClientInfo(userIdx: String){
         tempUserClientSimpleDataList.clear()
-        ScheduleRepository.getAllUserClientInfo(userIdx){
+        ScheduleRepository.getUserAllClientInfo(userIdx){
             for(c1 in it.result){
+                var clientIdx = c1["clientIdx"] as Long
                 var clientName = c1["clientName"] as String
                 var clientManagerName = c1["clientManagerName"] as String
                 var clientState = c1["clientState"] as Long
                 var isBookmark = c1["isBookmark"] as Boolean
-                tempUserClientSimpleDataList.add(ClientSimpleData(clientName,clientManagerName, clientState, isBookmark))
+                tempUserClientSimpleDataList.add(ClientSimpleData(clientIdx, clientName, clientManagerName, clientState, isBookmark))
                 userClientSimpleDataListVM.value = tempUserClientSimpleDataList
             }
         }

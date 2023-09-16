@@ -2,6 +2,7 @@ package com.hifi.redeal.schedule
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,34 +10,51 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.TimePicker
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
+import com.hifi.redeal.schedule.model.ClientSimpleData
+import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getUserSelectClientInfo
+import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import org.checkerframework.checker.units.qual.min
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
 
 class MakeScheduleFragment : Fragment() {
-    lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
-    lateinit var mainActivity: MainActivity
+    private lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
+    private lateinit var mainActivity: MainActivity
+    private lateinit var selectClientSimpleData: ClientSimpleData
     private var selectedDate: LocalDate = LocalDate.now()
-    var userIdx = "1" // 추후 사용자의 idx 저장
+    private var userIdx = "1" // 추후 사용자의 idx 저장
+
 
     var selectedScheduleIsVisit : Boolean? = null // true 방문, false 미방분, null 미선택
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         fragmentMakeScheduleBinding = FragmentMakeScheduleBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
+
+        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+
+        scheduleVM.run{
+            userSelectClientSimpleData.observe(mainActivity){
+                val clientName = it.clientName
+                val clientManagerName = it.clientManagerName
+                fragmentMakeScheduleBinding.makeScheduleClientInfo.text = "$clientName $clientManagerName"
+            }
+        }
 
         setCalendarView()
         setTimePicker()
@@ -46,6 +64,7 @@ class MakeScheduleFragment : Fragment() {
 
         return fragmentMakeScheduleBinding.root
     }
+
 
     private fun setTimePicker(){
         fragmentMakeScheduleBinding.run{
@@ -65,7 +84,7 @@ class MakeScheduleFragment : Fragment() {
 
     }
 
-    fun setTimeToText(){
+    private fun setTimeToText(){
         fragmentMakeScheduleBinding.run {
             var minute = makeScheduleTimePicker.minute
             var hour = makeScheduleTimePicker.hour

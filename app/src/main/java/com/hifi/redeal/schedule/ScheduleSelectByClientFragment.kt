@@ -1,11 +1,15 @@
 package com.hifi.redeal.schedule
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,9 +28,9 @@ class ScheduleSelectByClientFragment : Fragment() {
 
     lateinit var fragmentScheduleSelectByClientBinding: FragmentScheduleSelectByClientBinding
     lateinit var mainActivity: MainActivity
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
     var userIdx = "1"
     var userClientSimpleDataList = mutableListOf<ClientSimpleData>()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +47,7 @@ class ScheduleSelectByClientFragment : Fragment() {
                 userClientSimpleDataList = it
                 fragmentScheduleSelectByClientBinding.recyclerViewAllResult.adapter?.notifyDataSetChanged()
             }
-            getAllUserClientInfo(userIdx)
+            getUserAllClientInfo(userIdx)
         }
 
         fragmentScheduleSelectByClientBinding.run{
@@ -57,6 +61,18 @@ class ScheduleSelectByClientFragment : Fragment() {
         return fragmentScheduleSelectByClientBinding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
+                onBackPressedCallback.remove()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+
     inner class ClientListAdapter(): RecyclerView.Adapter<ClientListAdapter.ClientViewHodel>(){
         inner class ClientViewHodel(selectScheduleClientItemBinding: SelectScheduleClientItemBinding): ViewHolder(selectScheduleClientItemBinding.root){
             val selectScheduleClientName = selectScheduleClientItemBinding.selectScheduleClientName
@@ -64,6 +80,13 @@ class ScheduleSelectByClientFragment : Fragment() {
             val selectClientBtn = selectScheduleClientItemBinding.selectClientBtn
             val selectScheduleClientManagerName = selectScheduleClientItemBinding.selectScheduleClientManagerName
             val selectScheduleClientBookmarkView = selectScheduleClientItemBinding.selectScheduleClientBookmarkView
+            init{
+                selectClientBtn.setOnClickListener {
+                    scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+                    scheduleVM.getUserSelectClientInfo(userIdx, userClientSimpleDataList[bindingAdapterPosition].clientIdx.toString())
+                    mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
+                }
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClientViewHodel {
