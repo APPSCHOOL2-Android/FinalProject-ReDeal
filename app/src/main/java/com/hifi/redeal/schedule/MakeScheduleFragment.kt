@@ -1,21 +1,24 @@
 package com.hifi.redeal.schedule
 
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.TimePicker
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
 import com.hifi.redeal.schedule.model.ClientSimpleData
-import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getUserSelectClientInfo
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -23,7 +26,6 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
@@ -86,6 +88,62 @@ class MakeScheduleFragment : Fragment() {
                     }
                 }
                 else -> {}
+            }
+
+            makeScheduleEditTextScheduleTitle.run{
+                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                    private var isKeyboardOpen = false // 키보드가 열려 있는지 여부를 추적
+
+                    override fun onGlobalLayout() {
+                        val rect = android.graphics.Rect()
+                        rootView.getWindowVisibleDisplayFrame(rect)
+                        val screenHeight = rootView.height
+
+                        // 화면 높이와 키보드의 높이를 비교하여 키보드 상태를 확인합니다.
+                        val keypadHeight = screenHeight - rect.bottom
+                        if (keypadHeight > screenHeight * 0.15) {
+                            // 키보드가 열려 있는 상태
+                            isKeyboardOpen = true
+                        } else {
+                            // 키보드가 닫혀 있는 상태
+                            if (isKeyboardOpen) {
+                                // 키보드가 내려갈 때 포커스를 제거합니다.
+                                val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                                imm.hideSoftInputFromWindow(makeScheduleEditTextScheduleTitle?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                                clearFocus()
+                                isKeyboardOpen = false
+                            }
+                        }
+                    }
+                })
+                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+            }
+
+            makeScheduleEditTextScheduleContent.run{
+                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                    private var isKeyboardOpen = false // 키보드가 열려 있는지 여부를 추적
+
+                    override fun onGlobalLayout() {
+                        val rect = android.graphics.Rect()
+                        rootView.getWindowVisibleDisplayFrame(rect)
+                        val screenHeight = rootView.height
+
+                        // 화면 높이와 키보드의 높이를 비교하여 키보드 상태를 확인합니다.
+                        val keypadHeight = screenHeight - rect.bottom
+                        if (keypadHeight > screenHeight * 0.15) {
+                            // 키보드가 열려 있는 상태
+                            isKeyboardOpen = true
+                        } else {
+                            // 키보드가 닫혀 있는 상태
+                            if (isKeyboardOpen) {
+                                // 키보드가 내려갈 때 포커스를 제거합니다.
+                                clearFocus()
+                                isKeyboardOpen = false
+                            }
+                        }
+                    }
+                })
+                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             }
         }
     }
@@ -194,6 +252,45 @@ class MakeScheduleFragment : Fragment() {
             makeScheduleBtnSelectAccount.run{
                 setOnClickListener {
                     mainActivity.replaceFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT, true, null)
+                }
+            }
+
+            makeScheduleBtnComplete.setOnClickListener {
+                if(scheduleVM.selectedScheduleIsVisit == null){
+                    val builder = AlertDialog.Builder(mainActivity)
+                    builder.setMessage("일정 종류를 선택해 주세요.")
+                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                        makeScheduleBtnVisit.requestFocus()
+                    }
+                    builder.show()
+                    return@setOnClickListener
+                }
+                if(scheduleVM.userSelectClientSimpleData.value == null){
+                    val builder = AlertDialog.Builder(mainActivity)
+                    builder.setMessage("거래처를 선택해 주세요.")
+                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                        makeScheduleClientInfo.requestFocus()
+                    }
+                    builder.show()
+                    return@setOnClickListener
+                }
+                if(makeScheduleEditTextScheduleTitle.editableText.isNullOrEmpty()){
+                    val builder = AlertDialog.Builder(mainActivity)
+                    builder.setMessage("일정 제목을 입력해 주세요.")
+                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                        makeScheduleClientInfo.requestFocus()
+                    }
+                    builder.show()
+                    return@setOnClickListener
+                }
+                if(makeScheduleEditTextScheduleContent.editableText.isNullOrEmpty()){
+                    val builder = AlertDialog.Builder(mainActivity)
+                    builder.setMessage("일정에 대한 내용을 입력해 주세요.")
+                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                        makeScheduleClientInfo.requestFocus()
+                    }
+                    builder.show()
+                    return@setOnClickListener
                 }
             }
 

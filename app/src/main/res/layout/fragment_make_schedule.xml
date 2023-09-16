@@ -188,7 +188,9 @@
                 android:id="@+id/makeScheduleLayoutScheduleTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                app:boxStrokeColor="@color/primary20"
+                app:hintTextColor="@color/primary20">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/makeScheduleEditTextScheduleTitle"
@@ -196,6 +198,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:hint="일정 제목"
+                    android:textColor="@color/text10"
+                    android:textColorHighlight="@color/primary20"
+                    android:textColorLink="@color/primary20"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -204,7 +209,9 @@
                 android:id="@+id/makeScheduleLayoutScheduleContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                app:boxStrokeColor="@color/primary20"
+                app:hintTextColor="@color/primary20">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/makeScheduleEditTextScheduleContent"
@@ -212,6 +219,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:hint="일정 내용"
+                    android:textColor="@color/text10"
+                    android:textColorHighlight="@color/primary20"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
