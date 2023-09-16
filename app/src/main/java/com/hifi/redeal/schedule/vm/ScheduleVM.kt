@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.hifi.redeal.schedule.model.ClientData
 import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.model.ScheduleTotalData
@@ -25,6 +26,9 @@ class ScheduleVM: ViewModel() {
     var userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     lateinit var tempUserSelectClientSimpleData : ClientSimpleData
 
+    var clientResultData = MutableLiveData<ClientData>()
+    lateinit var tempclientResultData : ClientData
+
     // 사용자가 선택한 데이터
     var selectedScheduleIsVisit = true
     var selectDate = LocalDate.now()
@@ -41,7 +45,16 @@ class ScheduleVM: ViewModel() {
                 val clientManagerName = c1["clientManagerName"] as String
                 val clientState = c1["clientState"] as Long
                 val isBookmark = c1["isBookmark"] as Boolean
-                scheduleListVM.postValue(tempScheduleList)
+                val clientAddress = c1["clientAddress"] as String
+                val clientCeoPhone = c1["clientCeoPhone"] as String
+                val clientDetailAdd = c1["clientDetailAdd"] as String
+                val clientExplain = c1["clientExplain"] as String
+                val clientFaxNumber = c1["clientFaxNumber"] as String
+                val clientManagerPhone = c1["clientManagerPhone"] as String
+                val clientMemo = c1["clientMemo"] as String
+                tempclientResultData = ClientData(clientIdx,clientName, clientManagerName, clientState, isBookmark,clientAddress,clientCeoPhone,
+                    clientDetailAdd, clientExplain, clientFaxNumber, clientManagerPhone, clientMemo)
+                clientResultData.postValue(tempclientResultData)
             }
         }
     }

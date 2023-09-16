@@ -57,8 +57,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
-                android:gravity="center|start"
-                android:orientation="vertical">
+                android:gravity="center|start">
 
                 <TextView
                     android:id="@+id/visitedClientInfo"
@@ -68,6 +67,11 @@
                     android:text="라이온 김대리"
                     android:textColor="@color/text10"
                     android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/visitedClientBookmark"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp" />
             </LinearLayout>
 
             <LinearLayout

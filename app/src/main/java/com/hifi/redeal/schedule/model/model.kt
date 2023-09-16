@@ -13,3 +13,6 @@ data class ScheduleTotalData(var scheduleIdx: Long, val clientIdx: Long, @JvmFie
                              )
 
 data class ClientSimpleData(var clientIdx: Long, var clientName: String, var clientManagerName: String, var clientState: Long, @JvmField var isBookmark: Boolean)
+
+data class ClientData(var clientIdx: Long, var clientName: String, var clientManagerName: String, var clientState: Long, @JvmField var isBookmark: Boolean,
+var clientAddress: String,var clientCeoPhone: String,var clientDetailAdd: String,var clientExplain: String,var clientFaxNumber: String,var clientManagerPhone: String,var clientMemo: String)

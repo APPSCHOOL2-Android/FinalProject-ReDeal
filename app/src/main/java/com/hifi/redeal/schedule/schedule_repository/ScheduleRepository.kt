@@ -74,13 +74,11 @@ class ScheduleRepository {
 
         fun getClientInfo(userIdx: String, clinetIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore
-            val clientRef = db.collection("userData")
+            db.collection("userData")
                 .document(userIdx)
                 .collection("clientData")
-            val query = clientRef
                 .whereEqualTo("clientIdx", clinetIdx)
-
-            query.get().addOnCompleteListener(callback1)
+                .get().addOnCompleteListener(callback1)
         }
         fun getUserDayOfSchedule(userIdx: String, date: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore

@@ -171,7 +171,15 @@ class ScheduleManageFragment : Fragment(){
                         // 뷰 클릭 이벤트
                         root.setOnClickListener {
                             // 추후 번들에 선택한 일정 idx 넣은 후 전달
-                            mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
+                            val bundle = Bundle()
+                            bundle.putLong("clientIdx", schedule.clientIdx)
+                            bundle.putLong("scheduleIdx", schedule.scheduleIdx)
+                            if(schedule.isVisitSchedule){
+                                mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, bundle)
+                            } else {
+                                mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, bundle)
+                            }
+
                         }
 
                         // 스케줄 완료 처리 버튼 클릭 이벤트
@@ -230,7 +238,14 @@ class ScheduleManageFragment : Fragment(){
 
                         root.setOnClickListener {
                             // 추후 번들에 선택한 일정 idx 넣은 후 전달
-                            mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
+                            val bundle = Bundle()
+                            bundle.putLong("clientIdx", schedule.clientIdx)
+                            bundle.putLong("scheduleIdx", schedule.scheduleIdx)
+                            if(schedule.isVisitSchedule){
+                                mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, bundle)
+                            } else {
+                                mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, bundle)
+                            }
                         }
 
                         completeScheduleRetryImageView.setOnClickListener {
