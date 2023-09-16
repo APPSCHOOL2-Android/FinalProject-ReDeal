@@ -32,12 +32,10 @@ import java.util.Locale
 class MakeScheduleFragment : Fragment() {
     private lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
     private lateinit var mainActivity: MainActivity
+    lateinit var scheduleVM: ScheduleVM
     private lateinit var selectClientSimpleData: ClientSimpleData
     private var selectedDate: LocalDate = LocalDate.now()
     private var userIdx = "1" // 추후 사용자의 idx 저장
-
-
-    var selectedScheduleIsVisit : Boolean? = null // true 방문, false 미방분, null 미선택
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +44,19 @@ class MakeScheduleFragment : Fragment() {
         fragmentMakeScheduleBinding = FragmentMakeScheduleBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
-        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+        setViewModel()
+        setCalendarView()
+        setTimePicker()
+        setDateToText()
+        setTimeToText()
+        setOnBasicView()
+        setClickEvent()
+
+        return fragmentMakeScheduleBinding.root
+    }
+
+    private fun setViewModel(){
+        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
             userSelectClientSimpleData.observe(mainActivity){
@@ -55,16 +65,30 @@ class MakeScheduleFragment : Fragment() {
                 fragmentMakeScheduleBinding.makeScheduleClientInfo.text = "$clientName $clientManagerName"
             }
         }
-
-        setCalendarView()
-        setTimePicker()
-        setDateToText()
-        setTimeToText()
-        setClickEvent()
-
-        return fragmentMakeScheduleBinding.root
     }
-
+    private fun setOnBasicView(){
+        fragmentMakeScheduleBinding.run{
+            when(scheduleVM.selectedScheduleIsVisit){
+                true ->{
+                    makeScheduleBtnVisit.run{
+                        setBackgroundResource(R.drawable.btn_round_primary20)
+                        setTextColor(mainActivity.getColor(R.color.primary99))
+                        makeScheduleBtnNotVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                        makeScheduleBtnNotVisit.setTextColor(mainActivity.getColor(R.color.primary20))
+                    }
+                }
+                false ->{
+                    makeScheduleBtnNotVisit.run{
+                        setBackgroundResource(R.drawable.btn_round_primary20)
+                        setTextColor(mainActivity.getColor(R.color.primary99))
+                        makeScheduleBtnVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                        makeScheduleBtnVisit.setTextColor(mainActivity.getColor(R.color.primary20))
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
 
     private fun setTimePicker(){
         fragmentMakeScheduleBinding.run{
@@ -111,7 +135,7 @@ class MakeScheduleFragment : Fragment() {
 
             makeScheduleBtnVisit.run{
                 setOnClickListener {
-                    selectedScheduleIsVisit = true
+                    scheduleVM.selectedScheduleIsVisit = true
                     setBackgroundResource(R.drawable.btn_round_primary20)
                     setTextColor(mainActivity.getColor(R.color.primary99))
                     makeScheduleBtnNotVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
@@ -121,7 +145,7 @@ class MakeScheduleFragment : Fragment() {
 
             makeScheduleBtnNotVisit.run{
                 setOnClickListener {
-                    selectedScheduleIsVisit = false
+                    scheduleVM.selectedScheduleIsVisit = false
                     setBackgroundResource(R.drawable.btn_round_primary20)
                     setTextColor(mainActivity.getColor(R.color.primary99))
                     makeScheduleBtnVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.schedule.MakeScheduleFragment
@@ -12,10 +13,12 @@ import com.hifi.redeal.schedule.ScheduleManageFragment
 import com.hifi.redeal.schedule.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.VisitedScheduleFragment
+import com.hifi.redeal.schedule.vm.ScheduleVM
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
+    lateinit var scheduleVM: ScheduleVM
 
     var newFragment:Fragment? = null
     var oldFragment:Fragment? = null
@@ -32,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
         replaceFragment(SCHEDULE_MANAGE_FRAGMENT, true, null)
 

@@ -21,6 +21,7 @@ import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
 import com.hifi.redeal.databinding.FragmentScheduleSelectByClientBinding
 import com.hifi.redeal.databinding.SelectScheduleClientItemBinding
 import com.hifi.redeal.schedule.model.ClientSimpleData
+import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getUserAllClientInfo
 import com.hifi.redeal.schedule.vm.ScheduleVM
 
 
@@ -28,6 +29,7 @@ class ScheduleSelectByClientFragment : Fragment() {
 
     lateinit var fragmentScheduleSelectByClientBinding: FragmentScheduleSelectByClientBinding
     lateinit var mainActivity: MainActivity
+    lateinit var scheduleVM: ScheduleVM
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     var userIdx = "1"
     var userClientSimpleDataList = mutableListOf<ClientSimpleData>()
@@ -41,7 +43,15 @@ class ScheduleSelectByClientFragment : Fragment() {
         mainActivity = activity as MainActivity
         fragmentScheduleSelectByClientBinding = FragmentScheduleSelectByClientBinding.inflate(inflater)
 
-        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+        setViewModel()
+        setOnBasicView()
+
+        return fragmentScheduleSelectByClientBinding.root
+    }
+
+    private fun setViewModel(){
+        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
+
         scheduleVM.run{
             userClientSimpleDataListVM.observe(mainActivity){
                 userClientSimpleDataList = it
@@ -49,6 +59,9 @@ class ScheduleSelectByClientFragment : Fragment() {
             }
             getUserAllClientInfo(userIdx)
         }
+    }
+
+    private fun setOnBasicView(){
 
         fragmentScheduleSelectByClientBinding.run{
             recyclerViewAllResult.run{
@@ -57,8 +70,6 @@ class ScheduleSelectByClientFragment : Fragment() {
                 addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
             }
         }
-
-        return fragmentScheduleSelectByClientBinding.root
     }
 
     override fun onStart() {

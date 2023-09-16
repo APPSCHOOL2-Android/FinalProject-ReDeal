@@ -31,12 +31,12 @@ import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
 
-
-lateinit var scheduleVM: ScheduleVM
 class ScheduleManageFragment : Fragment(){
 
     lateinit var mainActivity: MainActivity
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
+    lateinit var scheduleVM: ScheduleVM
+
     private var selectedDate: LocalDate = LocalDate.now()
     var userIdx = "1" // 추후 사용자의 idx 저장
     var visitFilter = true // true 일 경우 방문 일정, false 일 경우 미방문 일정.
@@ -64,7 +64,7 @@ class ScheduleManageFragment : Fragment(){
     }
 
     private fun setViewModel(){
-        scheduleVM = ViewModelProvider(mainActivity)[ScheduleVM::class.java]
+        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
             scheduleListVM.observe(mainActivity){
@@ -98,6 +98,7 @@ class ScheduleManageFragment : Fragment(){
 
             schedultAddBtn.run{
                 setOnClickListener {
+                    scheduleVM.selectDataClear()
                     mainActivity.replaceFragment(MainActivity.MAKE_SCHEDULE_FRAGMENT, true, null)
                 }
             }
