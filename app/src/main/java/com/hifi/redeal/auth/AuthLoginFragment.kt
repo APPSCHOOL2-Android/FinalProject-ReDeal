@@ -43,16 +43,43 @@ class AuthLoginFragment : Fragment() {
             mainActivity.replaceFragment(MainActivity.AUTH_FIND_PW_FRAGMENT, true, null)
         }
 
-//        // 로그인 버튼 클릭 시 로그인 처리 함수 호출
-//        fragmentAuthLoginBinding.buttonAuthLogin.setOnClickListener {
-//            handleLoginButtonClick()
-//        }
+        // 로그인 버튼 클릭 시 로그인 처리 함수 호출
+        fragmentAuthLoginBinding.buttonAuthLogin.setOnClickListener {
+            handleLoginButtonClick()
+        }
 
-//        // 이메일 입력 텍스트 클릭 시 소프트 키보드 표시
-//        fragmentAuthLoginBinding.textInputEditTextLoginUserId.setOnClickListener {
-//            authActivity.showSoftInput(it)
-//        }
+        // 이메일 입력 텍스트 클릭 시 소프트 키보드 표시
+        fragmentAuthLoginBinding.textInputEditTextLoginUserId.setOnClickListener {
+            mainActivity.showSoftInput(it)
+        }
+
     }
+
+    // 로그인 버튼 클릭 처리 함수
+    private fun handleLoginButtonClick() {
+        val email = fragmentAuthLoginBinding.textInputEditTextLoginUserId.text.toString()
+        val password = fragmentAuthLoginBinding.textInputEditTextLoginUserPw.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty()) {
+                // 이메일이 비어있다면 이메일 입력란에 포커스 및 키보드 표시
+                fragmentAuthLoginBinding.textInputEditTextLoginUserId.requestFocus()
+                mainActivity.showSoftInput(fragmentAuthLoginBinding.textInputEditTextLoginUserId)
+            } else {
+                // 비밀번호가 비어있다면 비밀번호 입력란에 포커스 및 키보드 표시
+                fragmentAuthLoginBinding.textInputEditTextLoginUserPw.requestFocus()
+                mainActivity.showSoftInput(fragmentAuthLoginBinding.textInputEditTextLoginUserPw)
+            }
+        } else {
+            // 이메일과 비밀번호가 입력되었다면 로그인 처리 함수 호출
+            authViewModel.loginUser(email, password)
+            // 포커스와 키보드 클리어
+            fragmentAuthLoginBinding.textInputEditTextLoginUserId.clearFocus()
+            fragmentAuthLoginBinding.textInputEditTextLoginUserPw.clearFocus()
+        }
+    }
+
+
 
 
 }

@@ -1,7 +1,10 @@
 package com.hifi.redeal
 
+import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -10,6 +13,7 @@ import com.hifi.redeal.auth.AuthFindPwFragment
 import com.hifi.redeal.auth.AuthJoinFragment
 import com.hifi.redeal.auth.AuthLoginFragment
 import com.hifi.redeal.databinding.ActivityMainBinding
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,5 +85,16 @@ class MainActivity : AppCompatActivity() {
     }
     fun removeFragment(name: String) {
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    // 입력 요소에 포커스를 주는 메서드
+    fun showSoftInput(view: View) {
+        view.requestFocus()
+
+        val inputMethodManger = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        thread {
+            SystemClock.sleep(200)
+            inputMethodManger.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 }
