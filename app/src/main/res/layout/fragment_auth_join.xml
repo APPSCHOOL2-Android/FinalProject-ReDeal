@@ -178,12 +178,40 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutJoinUserName"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/background"
+            android:hint="성명 (변경 불가)"
+            android:textColorHint="@color/text50"
+            android:transitionGroup="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserPwCheck">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditTextJoinUserName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="textPersonName"
+                android:padding="1dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text30" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonJoinComplete"
             android:layout_width="330dp"
             android:layout_height="56dp"
             android:layout_marginStart="200dp"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="200dp"
             android:fontFamily="@font/nanumsquareneo_bold"
             android:text="회원가입 완료"
@@ -191,7 +219,7 @@
             app:cornerRadius="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserPwCheck"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserName"
             app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
