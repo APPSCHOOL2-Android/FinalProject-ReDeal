@@ -158,9 +158,9 @@ class MakeScheduleFragment : Fragment() {
             makeScheduleTimePicker.run {
                 // 시간 선택 이벤트 핸들러
                 setOnTimeChangedListener { view, hourOfDay, minute ->
-                    var amPm = if(hour > 12) "오후" else "오전"
+                    var amPm = if(hour >= 12) "오후" else "오전"
                     var hour = if(hourOfDay > 12) hourOfDay - 12 else hourOfDay
-                    if(hour == 0) hour = 12
+                    if(hourOfDay == 0) hour = 12
                     var selMinute = if(minute * 5 < 10) "0${minute * 5}" else "${minute * 5}"
                     makeScheduleBtnSelectTime.text = "$amPm $hour : $selMinute"
                 }
@@ -183,7 +183,7 @@ class MakeScheduleFragment : Fragment() {
             if(makeScheduleTimePicker.hour > 12)  hour -= 12
             if(makeScheduleTimePicker.hour == 0) hour = 12
 
-            var amPm = if(makeScheduleTimePicker.hour > 12) "오후" else "오전"
+            var amPm = if(makeScheduleTimePicker.hour >= 12) "오후" else "오전"
             if(minute < 10){
                 makeScheduleBtnSelectTime.text = "$amPm $hour : 0$minute"
             } else {
