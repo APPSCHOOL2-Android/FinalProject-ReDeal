@@ -170,13 +170,12 @@ class ScheduleManageFragment : Fragment(){
 
                         // 뷰 클릭 이벤트
                         root.setOnClickListener {
-                            scheduleVM.getSelectScheduleInfo("$userIdx", "${schedule.scheduleIdx}")
+                            scheduleVM.selectScheduleIdx  = schedule.scheduleIdx
                             if(schedule.isVisitSchedule){
                                 mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
                             } else {
                                 mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
                             }
-
                         }
 
                         // 스케줄 완료 처리 버튼 클릭 이벤트
@@ -234,7 +233,7 @@ class ScheduleManageFragment : Fragment(){
                     completeScheduleItemBinding.run {
 
                         root.setOnClickListener {
-                            scheduleVM.getSelectScheduleInfo("$userIdx", "${schedule.scheduleIdx}")
+                            scheduleVM.selectScheduleIdx  = schedule.scheduleIdx
                             if(schedule.isVisitSchedule){
                                 mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
                             } else {

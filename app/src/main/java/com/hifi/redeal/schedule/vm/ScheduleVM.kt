@@ -28,9 +28,8 @@ class ScheduleVM: ViewModel() {
 
     var clientLastVisitDate = MutableLiveData<Timestamp>()
 
+    var selectScheduleIdx = 0L
     var selectScheduleData = MutableLiveData<ScheduleData>()
-
-    var selectEditScheduleData = MutableLiveData<ScheduleData>()
 
     // 사용자가 선택한 데이터
     var selectedScheduleIsVisit = true
@@ -41,9 +40,6 @@ class ScheduleVM: ViewModel() {
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     }
 
-    fun setEditScheduleData(){
-        selectEditScheduleData.postValue(selectScheduleData.value)
-    }
     fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String){
         ScheduleRepository.getSelectScheduleInfo(userIdx, scheduleIdx){
             val tempSelectScheduleData = ScheduleData(

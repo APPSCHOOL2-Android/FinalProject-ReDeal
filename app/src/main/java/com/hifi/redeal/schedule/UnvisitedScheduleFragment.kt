@@ -110,6 +110,10 @@ class UnvisitedScheduleFragment : Fragment() {
 
             clientResultData.observe(requireActivity()){
                 fragmentUnvisitedScheduleBinding.run{
+
+                    scheduleClientState.visibility = View.VISIBLE
+                    unvisitedClientBookmark.visibility = View.GONE
+
                     when(it.clientState){
                         1L -> {
                             scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trading)
@@ -124,10 +128,15 @@ class UnvisitedScheduleFragment : Fragment() {
                     }
                     if(it.isBookmark){
                         unvisitedClientBookmark.setBackgroundResource(R.drawable.star_fill_24px)
+                        scheduleClientState.visibility = View.VISIBLE
                     }
+
                     unvisitedClientInfo.text = "${it.clientName} ${it.clientManagerName}"
+
                 }
             }
+
+            getSelectScheduleInfo("$userIdx", "${scheduleVM.selectScheduleIdx}")
 
         }
     }

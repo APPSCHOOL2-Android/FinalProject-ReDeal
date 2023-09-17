@@ -37,31 +37,10 @@ class EditScheduleFragment : Fragment() {
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            selectEditScheduleData.observe(requireActivity()){
-                fragmentEditScheduleBinding.editScheduleClientState.visibility = View.VISIBLE
-//                when(it.){
-//                    1L -> {
-//                        fragmentEditScheduleBinding.editScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trading)
-//                    }
-//                    2L -> {
-//                        fragmentEditScheduleBinding.editScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
-//                    }
-//                    3L -> {
-//                        fragmentEditScheduleBinding.editScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
-//                    }
-//                    else -> fragmentEditScheduleBinding.editScheduleClientState.visibility = View.GONE
-//                }
-//                fragmentEditScheduleBinding.editScheduleClientInfo.text = "$clientName $clientManagerName"
-//                if(isBookmark){
-//                    fragmentEditScheduleBinding.editScheduleClientBookmark.setBackgroundResource(R.drawable.star_fill_24px)
-//                    fragmentEditScheduleBinding.editScheduleClientBookmark.visibility = View.VISIBLE
-//                } else {
-//                    fragmentEditScheduleBinding.editScheduleClientBookmark.visibility = View.GONE
-//                }
-            }
+
 
         }
-        scheduleVM.setEditScheduleData()
+
     }
 
 }
