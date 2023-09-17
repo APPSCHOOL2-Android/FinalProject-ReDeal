@@ -1,27 +1,26 @@
 package com.hifi.redeal.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthJoinBinding
-import com.hifi.redeal.model.UserDataClass
 import com.hifi.redeal.vm.AuthViewModel
 
 class AuthJoinFragment : Fragment() {
 
     private lateinit var fragmentAuthJoinBinding: FragmentAuthJoinBinding
-    lateinit var mainActivity: MainActivity
+    private lateinit var mainActivity: MainActivity
     private lateinit var authViewModel: AuthViewModel
 
+    private var idx: Long = 0 // idx를 선언하고 초기값을 0으로 설정합니다.
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,13 +29,18 @@ class AuthJoinFragment : Fragment() {
         mainActivity = activity as MainActivity
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
+        authViewModel.run{
+            userData.observe(viewLifecycleOwner){
+                showRegistrationSuccessDialog()
+                //가입 성공 시 화면 이동 로직 추가
+                mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, true, null)
+                Log.d("AuthJoinFragment", "replaceFragment 호출됨")
+            }
+        }
+
         fragmentAuthJoinBinding.run {
             toolbarAuthJoin.setNavigationOnClickListener {
                 mainActivity.removeFragment(MainActivity.AUTH_JOIN_FRAGMENT)
-            }
-
-            buttonJoinIdCheck.setOnClickListener {
-
             }
 
             buttonJoinComplete.setOnClickListener {
@@ -44,6 +48,7 @@ class AuthJoinFragment : Fragment() {
                 val password = textInputEditTextJoinUserPw.text.toString()
                 val name = textInputEditTextJoinUserName.text.toString()
                 val passwordCheck = textInputEditTextJoinUserPwCheck.text.toString()
+
                 // 경고 메시지 초기화
                 warningJoinEmailFormat.visibility = View.GONE
                 warningJoinPassword.visibility = View.GONE
@@ -82,43 +87,8 @@ class AuthJoinFragment : Fragment() {
                 }
 
                 // Firebase Authentication을 사용하여 사용자 등록
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            // Firebase Authentication에서 사용자 등록 성공
-                            val firebaseUser = task.result?.user
+                authViewModel.registerUser(email, password, name)
 
-                            // Firestore에 추가할 사용자 정보 선언
-                            val userData =
-                                UserDataClass(0, email, password, name) // 여기도 UserDataClass로 변경
-
-                            firebaseUser?.uid?.let { uid ->
-                                // Firestore에 사용자 정보 추가 함수 호출
-                                authViewModel.registerUser(email, password, name)
-                            }
-                        } else {
-                            // Firebase Authentication에서 사용자 등록 실패
-                            showErrorMessageDialog("Firebase Authentication에서 사용자 등록 실패: ${task.exception?.message}")
-                        }
-                    }
-
-                // LiveData를 옵저빙하여 결과 처리
-                authViewModel.registrationResult.observe(
-                    viewLifecycleOwner,
-                    Observer { registrationSuccess ->
-                        if (registrationSuccess) {
-                            showRegistrationSuccessDialog()
-                            // 가입 성공 시 화면 이동 로직 추가
-                            mainActivity.replaceFragment(
-                                MainActivity.AUTH_LOGIN_FRAGMENT,
-                                true,
-                                null
-                            )
-                        } else {
-                            showErrorMessageDialog("가입 실패")
-                        }
-                    }
-                )
             }
         }
         return fragmentAuthJoinBinding.root
@@ -137,6 +107,9 @@ class AuthJoinFragment : Fragment() {
             alertDialog.dismiss()
         }
         alertDialog.show()
+
+        // 로그 메시지 추가
+        Log.d("AuthJoinFragment", "showRegistrationSuccessDialog() 호출됨")
     }
 
     // 오류 처리 다이얼로그를 보여주는 함수

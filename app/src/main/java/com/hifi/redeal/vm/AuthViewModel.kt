@@ -1,22 +1,15 @@
 package com.hifi.redeal.vm
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hifi.redeal.model.UserDataClass
 import com.hifi.redeal.repository.AuthRepository
 
 class AuthViewModel : ViewModel() {
-    private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-    private val userData = MutableLiveData<UserDataClass>()
-
-    // 회원가입 결과를 나타내는 LiveData
-    private val _registrationResult = MutableLiveData<Boolean>()
-    val registrationResult: LiveData<Boolean> = _registrationResult
+    val userData = MutableLiveData<UserDataClass>()
 
     private val INVALID_NICKNAME_CHARACTERS = listOf(
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
@@ -30,12 +23,13 @@ class AuthViewModel : ViewModel() {
             Log.d("testloginUserVM", "User UID: $userUid")
             if (userUid != null) {
                 AuthRepository.getUserInfoByUserId(userUid) { currentUser ->
-                    val userIdx = currentUser.result.child("idx").value as Long
-                    val userName = currentUser.result.child("idx").value as String
-                    val loginUser = UserDataClass(
-                        userIdx, email, password, userName
-                    )
-                    userData.value = loginUser
+                    if (currentUser != null) {
+                        val loginUser = currentUser
+                        userData.value = loginUser
+                    } else {
+                        // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
+                        Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
+                    }
                 }
             }
         }
@@ -46,11 +40,10 @@ class AuthViewModel : ViewModel() {
         AuthRepository.registerUser(email, password) { authResult ->
             val user = authResult.user
             if (user != null) {
-                getNextIdx { userIdx ->
-                    val newUser = UserDataClass(userIdx, email, password, name)
-                    addUserToFirestore(user.uid, newUser)
-                }
-            } else {
+                // 사용자가 성공적으로 등록된 경우
+                Log.d("testloginUserVM", "사용자가 성공적으로 등록되었습니다.")
+                addUserToFirestore(user.uid, UserDataClass(0, email, password, name))
+           } else {
                 // 사용자가 null인 경우 처리
                 Log.d("testloginUserVM", "사용자가 null입니다.")
             }
@@ -60,19 +53,20 @@ class AuthViewModel : ViewModel() {
     // 파이어스토어에 사용자 정보 추가
     private fun addUserToFirestore(uid: String, newUser: UserDataClass) {
         val userData = hashMapOf(
+            "userIdx" to newUser.userIdx,
             "email" to newUser.userEmail,
             "password" to newUser.userPw,
             "name" to newUser.userName
         )
 
-        firestore.collection("users").document(uid)
-            .set(userData)
-            .addOnSuccessListener {
+        firestore.collection("userData").document(uid).set(userData) // UID를 문서 ID로 사용합니다.
+            .addOnSuccessListener { documentReference ->
                 // Firestore에 사용자 정보 추가 성공
-                setRegistrationResult(true)
+                Log.d("FirestoreSuccess", "Firestore에 사용자 정보 추가 성공")
             }
             .addOnFailureListener { e ->
                 // Firestore에 사용자 정보 추가 실패
+                Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패: ${e.message}")
                 showErrorMessageDialog("Firestore에 사용자 정보 추가 실패: ${e.message}")
             }
     }
@@ -101,9 +95,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    private fun setRegistrationResult(success: Boolean) {
-        _registrationResult.value = success
-    }
 
     fun isEmailValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
