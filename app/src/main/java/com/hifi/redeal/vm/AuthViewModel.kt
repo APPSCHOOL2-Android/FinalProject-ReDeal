@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.hifi.redeal.model.UserDataClass
 import com.hifi.redeal.repository.AuthRepository
 
@@ -42,7 +43,14 @@ class AuthViewModel : ViewModel() {
             if (user != null) {
                 // 사용자가 성공적으로 등록된 경우
                 Log.d("testloginUserVM", "사용자가 성공적으로 등록되었습니다.")
-                addUserToFirestore(user.uid, UserDataClass(0, email, password, name))
+                // IDX를 가져오는 로그를 추가
+
+               getNextIdx { idx ->
+                   Log.d("getNextIdx", "현재 IDX: $idx")
+                    // IDX를 얻은 후 Firestore에 추가
+                    addUserToFirestore(user.uid, UserDataClass(idx, email, password, name))
+                }
+
            } else {
                 // 사용자가 null인 경우 처리
                 Log.d("testloginUserVM", "사용자가 null입니다.")
@@ -73,26 +81,29 @@ class AuthViewModel : ViewModel() {
 
     // 파이어베이스에서 IDX를 가져와서 인덱스 계산
     private fun getNextIdx(callback: (Long) -> Unit) {
-        val idxRef = firestore.collection("idxCounter").document("userIdx")
-
-        firestore.runTransaction { transaction ->
-            // 문서를 가져옵니다.
-            val docSnapshot = transaction.get(idxRef)
-            // "value" 필드의 현재 값 또는 기본 값(0)을 가져옵니다.
-            val currentIdx = docSnapshot.getLong("value") ?: 0
-            // 다음 인덱스 계산
-            val nextIdx = currentIdx + 1
-            // 다음 인덱스를 Firestore에 업데이트합니다.
-            transaction.update(idxRef, "value", nextIdx)
-            // 결과를 반환합니다.
-            nextIdx
-        }.addOnSuccessListener { nextIdx ->
-            // 성공적으로 다음 인덱스를 얻었을 때 콜백을 호출합니다.
-            callback(nextIdx)
-        }.addOnFailureListener { e ->
-            // 실패 시 처리
-            Log.e("getNextIdx", "Error getting next index: $e")
-        }
+        // "userData" 컬렉션에서 가장 마지막 문서를 가져옵니다.
+        firestore.collection("userData")
+            .orderBy("userIdx", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val lastUser = querySnapshot.documents[0]
+                    val currentIdx = lastUser.getLong("userIdx") ?: 0
+                    Log.d("getNextIdx", "현재 IDX: $currentIdx")
+                    // 다음 인덱스 계산
+                    val nextIdx = currentIdx + 1
+                    // 결과를 반환합니다.
+                    callback(nextIdx)
+                } else {
+                    // 컬렉션에 아무 문서도 없을 경우 기본값 0을 반환합니다.
+                    callback(0)
+                }
+            }
+            .addOnFailureListener { e ->
+                // 실패 시 처리
+                Log.e("getNextIdx", "Error getting next index: $e")
+            }
     }
 
 
