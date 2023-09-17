@@ -26,7 +26,6 @@ class UnvisitedScheduleFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
     var userIdx = 1L
-    var clientIdx = 0L
     var scheduleIdx = 0L
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +33,6 @@ class UnvisitedScheduleFragment : Fragment() {
     ): View? {
         fragmentUnvisitedScheduleBinding = FragmentUnvisitedScheduleBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
-
-        clientIdx = arguments?.getLong("clientIdx")!!
-        scheduleIdx = arguments?.getLong("scheduleIdx")!!
 
         setViewModel()
         setClickEvent()
@@ -48,28 +44,11 @@ class UnvisitedScheduleFragment : Fragment() {
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            clientResultData.observe(requireActivity()){
-                fragmentUnvisitedScheduleBinding.run{
-                    when(it.clientState){
-                        1L -> {
-                            scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trading)
-                        }
-                        2L -> {
-                            scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
-                        }
-                        3L -> {
-                            scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
-                        }
-                        else -> scheduleClientState.visibility = View.GONE
-                    }
-                    if(it.isBookmark){
-                        unvisitedClientBookmark.setBackgroundResource(R.drawable.star_fill_24px)
-                    }
-                    unvisitedClientInfo.text = "${it.clientName} ${it.clientManagerName}"
-                }
-            }
 
             selectScheduleData.observe(requireActivity()){ scheduleInfo ->
+
+                getClientInfo(userIdx,scheduleInfo.clientIdx)
+
                 fragmentUnvisitedScheduleBinding.run{
                     var crateDate = Date(scheduleInfo.scheduleDataCreateTime.toDate().time).toString().replace("-",".")
                     scheduleWriteDate.text = crateDate
@@ -116,7 +95,6 @@ class UnvisitedScheduleFragment : Fragment() {
                         }
                     }
 
-
                     scheduleDataTitle.text = scheduleInfo.scheduleTitle
                     scheduleDataContents.text = scheduleInfo.scheduleContext
 
@@ -130,8 +108,27 @@ class UnvisitedScheduleFragment : Fragment() {
                 }
             }
 
-            getClientInfo(userIdx,clientIdx)
-            getSelectScheduleInfo("$userIdx", "$scheduleIdx")
+            clientResultData.observe(requireActivity()){
+                fragmentUnvisitedScheduleBinding.run{
+                    when(it.clientState){
+                        1L -> {
+                            scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trading)
+                        }
+                        2L -> {
+                            scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
+                        }
+                        3L -> {
+                            scheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
+                        }
+                        else -> scheduleClientState.visibility = View.GONE
+                    }
+                    if(it.isBookmark){
+                        unvisitedClientBookmark.setBackgroundResource(R.drawable.star_fill_24px)
+                    }
+                    unvisitedClientInfo.text = "${it.clientName} ${it.clientManagerName}"
+                }
+            }
+
         }
     }
 
@@ -154,7 +151,7 @@ class UnvisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
                                     ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
                                         scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
                                     }
                                 }
@@ -167,7 +164,7 @@ class UnvisitedScheduleFragment : Fragment() {
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
                                     ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
                                         scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
                                     }
                                 }

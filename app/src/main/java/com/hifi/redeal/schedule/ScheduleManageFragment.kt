@@ -18,6 +18,7 @@ import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
 import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
+import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getSelectScheduleInfo
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -26,11 +27,8 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.YearMonth
-import java.time.ZoneId.systemDefault
 import java.time.temporal.WeekFields
-import java.util.Date
 import java.util.Locale
 
 class ScheduleManageFragment : Fragment(){
@@ -66,7 +64,8 @@ class ScheduleManageFragment : Fragment(){
                 scheduleList = it
                 setScheduleListLayout(scheduleList)
             }
-            if(selectedScheduleIsVisit){
+
+            if(selectedScheduleIsVisit == true){
                 fragmentScheduleManageBinding.visitScheduleFilter.run{
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     fragmentScheduleManageBinding.notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
@@ -79,6 +78,7 @@ class ScheduleManageFragment : Fragment(){
                     scheduleVM.selectedScheduleIsVisit = false
                 }
             }
+
         }
 
         scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
@@ -106,7 +106,7 @@ class ScheduleManageFragment : Fragment(){
 
             schedultAddBtn.run{
                 setOnClickListener {
-                    scheduleVM.selectDataClear()
+                    scheduleVM.selectClientDataClear()
                     mainActivity.replaceFragment(MainActivity.MAKE_SCHEDULE_FRAGMENT, true, null)
                 }
             }
@@ -170,14 +170,11 @@ class ScheduleManageFragment : Fragment(){
 
                         // 뷰 클릭 이벤트
                         root.setOnClickListener {
-                            // 추후 번들에 선택한 일정 idx 넣은 후 전달
-                            val bundle = Bundle()
-                            bundle.putLong("clientIdx", schedule.clientIdx)
-                            bundle.putLong("scheduleIdx", schedule.scheduleIdx)
+                            scheduleVM.getSelectScheduleInfo("$userIdx", "${schedule.scheduleIdx}")
                             if(schedule.isVisitSchedule){
-                                mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, bundle)
+                                mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
                             } else {
-                                mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, bundle)
+                                mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
                             }
 
                         }
@@ -237,14 +234,11 @@ class ScheduleManageFragment : Fragment(){
                     completeScheduleItemBinding.run {
 
                         root.setOnClickListener {
-                            // 추후 번들에 선택한 일정 idx 넣은 후 전달
-                            val bundle = Bundle()
-                            bundle.putLong("clientIdx", schedule.clientIdx)
-                            bundle.putLong("scheduleIdx", schedule.scheduleIdx)
+                            scheduleVM.getSelectScheduleInfo("$userIdx", "${schedule.scheduleIdx}")
                             if(schedule.isVisitSchedule){
-                                mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, bundle)
+                                mainActivity.replaceFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT, true, null)
                             } else {
-                                mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, bundle)
+                                mainActivity.replaceFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT, true, null)
                             }
                         }
 

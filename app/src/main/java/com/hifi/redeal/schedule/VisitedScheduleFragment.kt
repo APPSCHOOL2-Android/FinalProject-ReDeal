@@ -25,7 +25,6 @@ class VisitedScheduleFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
     var userIdx = 1L
-    var clientIdx = 0L
     var scheduleIdx = 0L
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,14 +43,54 @@ class VisitedScheduleFragment : Fragment() {
         fragmentVisitedScheduleBinding = FragmentVisitedScheduleBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
-        clientIdx = arguments?.getLong("clientIdx")!!
-        scheduleIdx = arguments?.getLong("scheduleIdx")!!
     }
     private fun setViewModel(){
 
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
+
+            selectScheduleData.observe(requireActivity()){ scheduleInfo ->
+
+                getClientInfo(userIdx,scheduleInfo.clientIdx)
+                getSelectClientLastVisitDate("$userIdx", scheduleInfo.clientIdx)
+
+                fragmentVisitedScheduleBinding.run{
+                    var date = Date(scheduleInfo.scheduleDeadlineTime.toDate().time).toString().replace("-",".")
+                    clientVisitDateDate.text = date
+
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = scheduleInfo.scheduleDeadlineTime.toDate().time
+
+                    val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
+                    val minute = calendar.get(Calendar.MINUTE)
+                    if(hour < 10){
+                        if(minute < 10){
+                            clientVisitedTime.text = "0$hour : 0$minute"
+                        } else {
+                            clientVisitedTime.text = "0$hour : $minute"
+                        }
+                    } else {
+                        if(minute < 10){
+                            clientVisitedTime.text = "$hour : 0$minute"
+                        } else {
+                            clientVisitedTime.text = "$hour : $minute"
+                        }
+                    }
+
+                    visitedScheduleDataTitle.text = scheduleInfo.scheduleTitle
+                    visitedScheduleDataContents.text = scheduleInfo.scheduleContext
+
+                    visitedScheduleToolbar.run {
+                        if(scheduleInfo.isScheduleFinish){
+                            visitedScheduleToolbar.menu.findItem(R.id.scheduleCompleteMenu).setIcon(R.drawable.replay_fill_24px)
+                        } else {
+                            visitedScheduleToolbar.menu.findItem(R.id.scheduleCompleteMenu).setIcon(R.drawable.done_paint_24px)
+                        }
+                    }
+                }
+            }
+
             clientResultData.observe(requireActivity()){
                 fragmentVisitedScheduleBinding.run{
                     when(it.clientState){
@@ -102,46 +141,6 @@ class VisitedScheduleFragment : Fragment() {
                 }
             }
 
-            selectScheduleData.observe(requireActivity()){ scheduleInfo ->
-                fragmentVisitedScheduleBinding.run{
-                    var date = Date(scheduleInfo.scheduleDeadlineTime.toDate().time).toString().replace("-",".")
-                    clientVisitDateDate.text = date
-
-                    val calendar = Calendar.getInstance()
-                    calendar.timeInMillis = scheduleInfo.scheduleDeadlineTime.toDate().time
-
-                    val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
-                    val minute = calendar.get(Calendar.MINUTE)
-                    if(hour < 10){
-                        if(minute < 10){
-                            clientVisitedTime.text = "0$hour : 0$minute"
-                        } else {
-                            clientVisitedTime.text = "0$hour : $minute"
-                        }
-                    } else {
-                        if(minute < 10){
-                            clientVisitedTime.text = "$hour : 0$minute"
-                        } else {
-                            clientVisitedTime.text = "$hour : $minute"
-                        }
-                    }
-
-                    visitedScheduleDataTitle.text = scheduleInfo.scheduleTitle
-                    visitedScheduleDataContents.text = scheduleInfo.scheduleContext
-
-                    visitedScheduleToolbar.run {
-                        if(scheduleInfo.isScheduleFinish){
-                            visitedScheduleToolbar.menu.findItem(R.id.scheduleCompleteMenu).setIcon(R.drawable.replay_fill_24px)
-                        } else {
-                            visitedScheduleToolbar.menu.findItem(R.id.scheduleCompleteMenu).setIcon(R.drawable.done_paint_24px)
-                        }
-                    }
-                }
-            }
-
-            getClientInfo(userIdx,clientIdx)
-            getSelectClientLastVisitDate("$userIdx", clientIdx)
-            getSelectScheduleInfo("$userIdx", "$scheduleIdx")
         }
     }
 
@@ -164,7 +163,7 @@ class VisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
                                     ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
                                         scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
                                     }
                                 }
@@ -177,7 +176,7 @@ class VisitedScheduleFragment : Fragment() {
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
                                     ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
                                         scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
                                     }
                                 }

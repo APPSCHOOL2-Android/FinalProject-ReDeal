@@ -1,19 +1,15 @@
 package com.hifi.redeal.schedule.vm
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.ktx.toObject
 import com.hifi.redeal.schedule.model.ClientData
 import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Locale
 
 class ScheduleVM: ViewModel() {
 
@@ -34,13 +30,19 @@ class ScheduleVM: ViewModel() {
 
     var selectScheduleData = MutableLiveData<ScheduleData>()
 
+    var selectEditScheduleData = MutableLiveData<ScheduleData>()
+
     // 사용자가 선택한 데이터
     var selectedScheduleIsVisit = true
     var selectDate = LocalDate.now()
 
     // 사용자가 선택했던 데이터들을 초기화 한다.
-    fun selectDataClear(){
+    fun selectClientDataClear() {
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
+    }
+
+    fun setEditScheduleData(){
+        selectEditScheduleData.postValue(selectScheduleData.value)
     }
     fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String){
         ScheduleRepository.getSelectScheduleInfo(userIdx, scheduleIdx){
@@ -63,7 +65,6 @@ class ScheduleVM: ViewModel() {
             for(c1 in it.result){
                 val lastTime = c1["scheduleFinishTime"] as Timestamp
                 clientLastVisitDate.postValue(lastTime)
-                Log.d("ttt", "결과 시간 : ${lastTime.toDate()}")
             }
         }
     }
