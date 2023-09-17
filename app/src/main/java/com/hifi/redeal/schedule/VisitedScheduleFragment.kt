@@ -86,9 +86,17 @@ class VisitedScheduleFragment : Fragment() {
                     val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
                     val minute = calendar.get(Calendar.MINUTE)
                     if(hour < 10){
-                        clientLastVisitedTime.text = "0$hour : $minute"
+                        if(minute < 10){
+                            clientLastVisitedTime.text = "0$hour : 0$minute"
+                        } else {
+                            clientLastVisitedTime.text = "0$hour : $minute"
+                        }
                     } else {
-                        clientLastVisitedTime.text = "$hour : $minute"
+                        if(minute < 10){
+                            clientLastVisitedTime.text = "$hour : 0$minute"
+                        } else {
+                            clientLastVisitedTime.text = "$hour : $minute"
+                        }
                     }
 
                 }
@@ -105,9 +113,17 @@ class VisitedScheduleFragment : Fragment() {
                     val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
                     val minute = calendar.get(Calendar.MINUTE)
                     if(hour < 10){
-                        clientVisitedTime.text = "0$hour : $minute"
+                        if(minute < 10){
+                            clientVisitedTime.text = "0$hour : 0$minute"
+                        } else {
+                            clientVisitedTime.text = "0$hour : $minute"
+                        }
                     } else {
-                        clientVisitedTime.text = "$hour : $minute"
+                        if(minute < 10){
+                            clientVisitedTime.text = "$hour : 0$minute"
+                        } else {
+                            clientVisitedTime.text = "$hour : $minute"
+                        }
                     }
 
                     visitedScheduleDataTitle.text = scheduleInfo.scheduleTitle
