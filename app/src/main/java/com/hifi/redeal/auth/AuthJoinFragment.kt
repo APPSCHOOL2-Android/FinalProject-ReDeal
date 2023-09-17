@@ -20,7 +20,6 @@ class AuthJoinFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var authViewModel: AuthViewModel
 
-    private var idx: Long = 0 // idx를 선언하고 초기값을 0으로 설정합니다.
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,14 +28,6 @@ class AuthJoinFragment : Fragment() {
         mainActivity = activity as MainActivity
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        authViewModel.run{
-            userData.observe(viewLifecycleOwner){
-                showRegistrationSuccessDialog()
-                //가입 성공 시 화면 이동 로직 추가
-                mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, true, null)
-                Log.d("AuthJoinFragment", "replaceFragment 호출됨")
-            }
-        }
 
         fragmentAuthJoinBinding.run {
             toolbarAuthJoin.setNavigationOnClickListener {
@@ -53,9 +44,8 @@ class AuthJoinFragment : Fragment() {
                 warningJoinEmailFormat.visibility = View.GONE
                 warningJoinPassword.visibility = View.GONE
                 warningJoinPasswordCheck.visibility = View.GONE
-                warningJoinNicknameFormat.visibility = View.GONE
+                warningJoinNameFormat.visibility = View.GONE
                 warningJoinEmailAlready.visibility = View.GONE
-                warningJoinNicknameAlready.visibility = View.GONE
 
                 // 예외처리
                 if (!authViewModel.isEmailValid(email)) {
@@ -79,15 +69,19 @@ class AuthJoinFragment : Fragment() {
                     warningJoinPasswordCheck.visibility = View.GONE
                 }
 
-                if (!authViewModel.isNicknameValid(name)) {
-                    warningJoinNicknameFormat.visibility = View.VISIBLE
+                if (!authViewModel.isNameValid(name)) {
+                    warningJoinNameFormat.visibility = View.VISIBLE
                     return@setOnClickListener
                 } else {
-                    warningJoinNicknameFormat.visibility = View.GONE
+                    warningJoinNameFormat.visibility = View.GONE
                 }
 
                 // Firebase Authentication을 사용하여 사용자 등록
                 authViewModel.registerUser(email, password, name)
+                
+                        mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, true, null)
+                        Log.d("AuthJoinFragment", "replaceFragment 호출됨")
+
 
             }
         }

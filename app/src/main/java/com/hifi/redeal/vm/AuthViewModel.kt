@@ -79,7 +79,7 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    // 파이어베이스에서 IDX를 가져와서 인덱스 계산
+    // 파이어베이스에서 IDX를 가져와서 인덱스 계산하여 +1
     private fun getNextIdx(callback: (Long) -> Unit) {
         // "userData" 컬렉션에서 가장 마지막 문서를 가져옵니다.
         firestore.collection("userData")
@@ -90,7 +90,7 @@ class AuthViewModel : ViewModel() {
                 if (!querySnapshot.isEmpty) {
                     val lastUser = querySnapshot.documents[0]
                     val currentIdx = lastUser.getLong("userIdx") ?: 0
-                    Log.d("getNextIdx", "현재 IDX: $currentIdx")
+                    Log.d("getNextIdx", "가져온 IDX: $currentIdx")
                     // 다음 인덱스 계산
                     val nextIdx = currentIdx + 1
                     // 결과를 반환합니다.
@@ -119,7 +119,7 @@ class AuthViewModel : ViewModel() {
         return password.length >= 6
     }
 
-    fun isNicknameValid(nickname: String): Boolean {
+    fun isNameValid(nickname: String): Boolean {
         return nickname.length in 2..12 && !INVALID_NICKNAME_CHARACTERS.any { nickname.contains(it) }
     }
 
