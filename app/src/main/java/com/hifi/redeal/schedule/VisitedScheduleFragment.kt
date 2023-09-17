@@ -91,7 +91,7 @@ class VisitedScheduleFragment : Fragment() {
                 }
             }
 
-            clientResultData.observe(requireActivity()){
+            selectClientData.observe(requireActivity()){
                 fragmentVisitedScheduleBinding.run{
 
                     visitedScheduleClientState.visibility = View.VISIBLE

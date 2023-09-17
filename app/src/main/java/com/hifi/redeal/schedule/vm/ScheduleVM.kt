@@ -23,8 +23,8 @@ class ScheduleVM: ViewModel() {
     var userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     lateinit var tempUserSelectClientSimpleData : ClientSimpleData
 
-    var clientResultData = MutableLiveData<ClientData>()
-    lateinit var tempclientResultData : ClientData
+    var selectClientData = MutableLiveData<ClientData>()
+    lateinit var tempSelectClientData : ClientData
 
     var clientLastVisitDate = MutableLiveData<Timestamp>()
 
@@ -79,9 +79,9 @@ class ScheduleVM: ViewModel() {
                 val clientFaxNumber = c1["clientFaxNumber"] as String
                 val clientManagerPhone = c1["clientManagerPhone"] as String
                 val clientMemo = c1["clientMemo"] as String
-                tempclientResultData = ClientData(clientIdx,clientName, clientManagerName, clientState, isBookmark,clientAddress,clientCeoPhone,
+                tempSelectClientData = ClientData(clientIdx,clientName, clientManagerName, clientState, isBookmark,clientAddress,clientCeoPhone,
                     clientDetailAdd, clientExplain, clientFaxNumber, clientManagerPhone, clientMemo)
-                clientResultData.postValue(tempclientResultData)
+                selectClientData.postValue(tempSelectClientData)
             }
         }
     }
