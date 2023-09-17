@@ -3,12 +3,12 @@ package com.hifi.redeal.schedule.model
 import com.google.firebase.Timestamp
 
 // fb와 동일한 형태
-data class ScheduleData(var scheduleIdx: Long, val clientIdx: Long, @JvmField val isScheduleFinish: Boolean, @JvmField val isVisitSchedule: Boolean, val scheduleContext: String,
-                        val scheduleDataCreateTime: Timestamp, val scheduleDeadlineTime: Timestamp, val scheduleFinishTime: Timestamp, val scheduleTitle: String)
+data class ScheduleData(var scheduleIdx: Long, var clientIdx: Long, @JvmField var isScheduleFinish: Boolean, @JvmField var isVisitSchedule: Boolean, var scheduleContext: String,
+                        var scheduleDataCreateTime: Timestamp, var scheduleDeadlineTime: Timestamp, var scheduleFinishTime: Timestamp, var scheduleTitle: String)
 
 // 뷰에 보여줄 정보를 가지고 있는 형태
-data class ScheduleTotalData(var scheduleIdx: Long, val clientIdx: Long, @JvmField val isScheduleFinish: Boolean, @JvmField val isVisitSchedule: Boolean,val scheduleTitle: String, val scheduleContext: String,
-                             val scheduleDataCreateTime: Timestamp, val scheduleDeadlineTime: Timestamp,
+data class ScheduleTotalData(var scheduleIdx: Long, var clientIdx: Long, @JvmField var isScheduleFinish: Boolean, @JvmField var isVisitSchedule: Boolean,var scheduleTitle: String, var scheduleContext: String,
+                             var scheduleDataCreateTime: Timestamp, var scheduleDeadlineTime: Timestamp,
                              var clientName: String?, var clientManagerName: String?, var clientState: Long?, @JvmField var isBookmark: Boolean?
                              )
 

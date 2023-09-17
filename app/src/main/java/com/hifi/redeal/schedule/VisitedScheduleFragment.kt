@@ -1,5 +1,7 @@
 package com.hifi.redeal.schedule
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,16 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentVisitedScheduleBinding
+import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import com.hifi.redeal.schedule.vm.ScheduleVM
-import org.threeten.bp.DateTimeUtils.toDate
 import java.sql.Date
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
-import kotlin.math.min
 
 
 class VisitedScheduleFragment : Fragment() {
@@ -32,11 +32,22 @@ class VisitedScheduleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        setBasicData()
+        setViewModel()
+        setClickEvent()
+
+
+        return fragmentVisitedScheduleBinding.root
+    }
+
+    private fun setBasicData(){
         fragmentVisitedScheduleBinding = FragmentVisitedScheduleBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
         clientIdx = arguments?.getLong("clientIdx")!!
         scheduleIdx = arguments?.getLong("scheduleIdx")!!
+    }
+    private fun setViewModel(){
 
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
@@ -101,6 +112,14 @@ class VisitedScheduleFragment : Fragment() {
 
                     visitedScheduleDataTitle.text = scheduleInfo.scheduleTitle
                     visitedScheduleDataContents.text = scheduleInfo.scheduleContext
+
+                    visitedScheduleToolbar.run {
+                        if(scheduleInfo.isScheduleFinish){
+                            visitedScheduleToolbar.menu.findItem(R.id.scheduleCompleteMenu).setIcon(R.drawable.replay_fill_24px)
+                        } else {
+                            visitedScheduleToolbar.menu.findItem(R.id.scheduleCompleteMenu).setIcon(R.drawable.done_paint_24px)
+                        }
+                    }
                 }
             }
 
@@ -108,9 +127,62 @@ class VisitedScheduleFragment : Fragment() {
             getSelectClientLastVisitDate("$userIdx", clientIdx)
             getSelectScheduleInfo("$userIdx", "$scheduleIdx")
         }
-
-        return fragmentVisitedScheduleBinding.root
     }
 
+    private fun setClickEvent(){
+        fragmentVisitedScheduleBinding.run{
+            visitedScheduleToolbar.run{
+
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT)
+                }
+
+                setOnMenuItemClickListener {
+
+                    when(it.itemId){
+                        R.id.scheduleCompleteMenu -> {
+                            val updateScheduleData = scheduleVM.selectScheduleData.value!!
+                            if(updateScheduleData.isScheduleFinish){
+                                val cancelBuilder = AlertDialog.Builder(requireActivity())
+                                cancelBuilder.setMessage("해당 일정을 완료 취소 처리 합니다.")
+                                cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                                    updateScheduleData.isScheduleFinish = false
+                                    ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
+                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", clientIdx)
+                                        scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
+                                    }
+                                }
+                                cancelBuilder.setPositiveButton("취소",null)
+                                cancelBuilder.show()
+                            } else {
+                                val completeBuilder = AlertDialog.Builder(requireActivity())
+                                completeBuilder.setMessage("해당 일정을 완료 처리합니다.")
+                                completeBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                                    updateScheduleData.isScheduleFinish = true
+                                    updateScheduleData.scheduleFinishTime = Timestamp.now()
+                                    ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
+                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", clientIdx)
+                                        scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
+                                    }
+                                }
+                                completeBuilder.setPositiveButton("취소",null)
+                                completeBuilder.show()
+                            }
+
+                        }
+                        R.id.scheduleEditMenu -> {
+                            Log.d("ttt", "수정버튼")
+                        }
+                        R.id.scheduleDelMenu -> {
+                            Log.d("ttt", "삭제버튼")
+                        }
+                    }
+
+                    true
+                }
+
+            }
+        }
+    }
 
 }
