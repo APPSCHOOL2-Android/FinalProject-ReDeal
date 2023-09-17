@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.databinding.ActivityMainBinding
+import com.hifi.redeal.schedule.EditScheduleFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 import com.hifi.redeal.schedule.ScheduleManageFragment
 import com.hifi.redeal.schedule.ScheduleSelectByClientFragment
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         val VISITED_SCHEDULE_FRAGMENT = "VisitedScheduleFragment"
         val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
         val SCHEDULE_SELECT_BY_CLIENT_FRAGMENT = "ScheduleSelectByClientFragment"
+        val EDIT_SCHEDULE_FRAGMENT = "EditScheduleFragment"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
             VISITED_SCHEDULE_FRAGMENT -> VisitedScheduleFragment()
             MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             SCHEDULE_SELECT_BY_CLIENT_FRAGMENT -> ScheduleSelectByClientFragment()
+            EDIT_SCHEDULE_FRAGMENT -> EditScheduleFragment()
             else -> Fragment()
         }
 

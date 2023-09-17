@@ -187,7 +187,7 @@ class VisitedScheduleFragment : Fragment() {
 
                         }
                         R.id.scheduleEditMenu -> {
-                            Log.d("ttt", "수정버튼")
+                            mainActivity.replaceFragment(MainActivity.EDIT_SCHEDULE_FRAGMENT, true, null)
                         }
                         R.id.scheduleDelMenu -> {
                             val deleteBuilder = AlertDialog.Builder(requireActivity())
