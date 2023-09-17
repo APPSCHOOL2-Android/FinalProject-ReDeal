@@ -138,10 +138,10 @@ class VisitedScheduleFragment : Fragment() {
                 }
 
                 setOnMenuItemClickListener {
+                    val updateScheduleData = scheduleVM.selectScheduleData.value!!
 
                     when(it.itemId){
                         R.id.scheduleCompleteMenu -> {
-                            val updateScheduleData = scheduleVM.selectScheduleData.value!!
                             if(updateScheduleData.isScheduleFinish){
                                 val cancelBuilder = AlertDialog.Builder(requireActivity())
                                 cancelBuilder.setMessage("해당 일정을 완료 취소 처리 합니다.")
@@ -174,10 +174,17 @@ class VisitedScheduleFragment : Fragment() {
                             Log.d("ttt", "수정버튼")
                         }
                         R.id.scheduleDelMenu -> {
-                            Log.d("ttt", "삭제버튼")
+                            val deleteBuilder = AlertDialog.Builder(requireActivity())
+                            deleteBuilder.setMessage("해당 일정을 삭제 처리합니다.")
+                            deleteBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                                ScheduleRepository.delSelectSchedule("$userIdx", "${updateScheduleData.scheduleIdx}"){
+                                    mainActivity.removeFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT)
+                                }
+                            }
+                            deleteBuilder.setPositiveButton("취소",null)
+                            deleteBuilder.show()
                         }
                     }
-
                     true
                 }
 

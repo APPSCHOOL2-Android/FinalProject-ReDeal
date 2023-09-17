@@ -18,6 +18,15 @@ import java.util.Locale
 class ScheduleRepository {
     companion object{
 
+        fun delSelectSchedule(userIdx: String, scheduleIdx: String, callback1: (Task<Void>) -> Unit){
+            val db = Firebase.firestore
+            db.collection("userData")
+                .document(userIdx)
+                .collection("scheduleData")
+                .document(scheduleIdx)
+                .delete()
+                .addOnCompleteListener(callback1)
+        }
         fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String, callback1: (Task<DocumentSnapshot>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
