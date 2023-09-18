@@ -16,7 +16,6 @@ import com.hifi.redeal.repository.AuthRepository
 class AuthViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
-    val userData = MutableLiveData<UserDataClass>()
 
     private val INVALID_NICKNAME_CHARACTERS = listOf(
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
@@ -40,20 +39,16 @@ class AuthViewModel : ViewModel() {
     fun loginUser(email: String, password: String) {
         AuthRepository.loginUser(email, password) { authResult ->
             val userUid = authResult.user?.uid
-            Log.d("testloginUserVM", "User UID: $userUid")
             if (userUid != null) {
-                AuthRepository.getUserInfoByUserId(userUid) { currentUser ->
-                    if (currentUser != null) {
-                        val loginUser = currentUser
-                        userData.value = loginUser
-                        Log.d("testloginUserVM", "User UID: $userUid")
-                        // 로그인 성공 시 UID를 SharedPreferences에 저장
-                        saveUidToSharedPreferences(authResult.user!!.uid)
-                    } else {
-                        // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
-                        Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
-                    }
-                }
+                    // 로그인 성공 시 UID를 SharedPreferences에 저장
+                    saveUidToSharedPreferences(authResult.user!!.uid)
+                    Log.d("testloginUserVM", "로그인 성공.")
+
+                    // 로그인 성공 시 처리
+
+            } else {
+                // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
+                Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
             }
         }
     }

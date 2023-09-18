@@ -17,9 +17,8 @@ class AuthRepository {
         private val firestore = FirebaseFirestore.getInstance()
         fun loginUser(email: String, password: String, callback1: (AuthResult) -> Unit) {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                Log.d("testloginUserRepo", "flag111")
                 if (task.isSuccessful) {
-                    Log.d("testloginUserRepo", "flag222")
+                    Log.d("testloginUserRepo", "리포지트리 loginUser 성공")
                     val result = task.result
                     callback1(result)
                 } else {
@@ -85,8 +84,7 @@ class AuthRepository {
         }
 
 
-
-        // 사용자 아이디를 통해 사용자 정보를 가져온다.
+        // 사용자 아이디를 통해 사용자 정보를 가져온다. (FindPw용)
         fun getUserInfoByUserId(loginUserEmail: String, callback1: (UserDataClass?) -> Unit) {
             // Firestore에서 사용자 정보를 가져옵니다. (예: 이메일로 검색)
             firestore.collection("userData")
