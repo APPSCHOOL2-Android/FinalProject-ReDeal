@@ -84,7 +84,7 @@
 
     <include
         android:id="@+id/mapBottomSheet"
-        layout="@layout/fragment_map_bottom_sheet" />
+        layout="@layout/map_bottom_sheet" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
