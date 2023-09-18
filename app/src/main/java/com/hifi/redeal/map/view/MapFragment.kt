@@ -24,12 +24,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.search.SearchView
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMapBinding
 import com.hifi.redeal.databinding.RowMapClientListBinding
+import com.hifi.redeal.map.adapter.MapBottomSheetRecyclerViewAdapter
 import com.hifi.redeal.map.repository.ClientRepository
 import com.hifi.redeal.map.vm.ClientViewModel
 import com.kakao.vectormap.KakaoMap
@@ -45,6 +47,8 @@ import com.kakao.vectormap.label.LabelOptions
 class MapFragment : Fragment() {
     lateinit var fragmentMapBinding: FragmentMapBinding
     lateinit var mainActivity: MainActivity
+    lateinit var behavior: BottomSheetBehavior<LinearLayout>
+
 
     // 거래처 주소
     lateinit var clientViewModel: ClientViewModel
@@ -60,6 +64,7 @@ class MapFragment : Fragment() {
     var REQUIRED_PERMISSIONS = arrayOf<String>(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+    var clientType = 0 // 0 :전체, 1:즐겨찾기 2: 방문
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,14 +74,30 @@ class MapFragment : Fragment() {
         mainActivity = activity as MainActivity
 
 
-
-
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
         clientViewModel.run {
             clientDataListByKeyWord.observe(mainActivity) {
 //                Log.d("검색",it.toString())
                 fragmentMapBinding.mapSearchRecyclerViewResult.adapter?.notifyDataSetChanged()
             }
+            clientDataListAll.observe(mainActivity){
+                Log.d("하단",it.toString())
+                fragmentMapBinding.mapBottomSheet.run {
+                    mapBottomSheetTextViewEmpty.visibility = View.GONE
+                    mapBottomSheetRecyclerView.run {
+                        visibility = View.VISIBLE
+                        adapter = MapBottomSheetRecyclerViewAdapter(clientViewModel.clientDataListAll.value!!)
+                        layoutManager = LinearLayoutManager(context)
+                        addItemDecoration(
+                            MaterialDividerItemDecoration(
+                                context,
+                                MaterialDividerItemDecoration.VERTICAL
+                            )
+                        )
+                    }
+                }
+            }
+
         }
 
 
@@ -84,6 +105,7 @@ class MapFragment : Fragment() {
             mapBtnSearchRegion.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT, true, null)
             }
+            persistentBottomSheetEvent()
 
             mapKakao.start(object : MapLifeCycleCallback() {
                 override fun onMapDestroy() {
@@ -146,6 +168,12 @@ class MapFragment : Fragment() {
 
             }
 
+            mapBottomSheet.run {
+
+            }
+
+
+
 
         }
 
@@ -164,6 +192,8 @@ class MapFragment : Fragment() {
             val rowMapClientListDateRecentLayout: LinearLayout
             val rowMapClientListTransactionType: ImageView
             val rowMapClientListBtnToNavi: Button
+            val rowMapClientListBookMark : ImageView
+
 
             init {
                 rowMapClientListName = rowMapClientListBinding.rowMapClientListName
@@ -174,6 +204,8 @@ class MapFragment : Fragment() {
                 rowMapClientListBtnToNavi = rowMapClientListBinding.rowMapClientListBtnToNavi
                 rowMapClientListDateRecentLayout =
                     rowMapClientListBinding.rowMapClientListDateRecentLayout
+                rowMapClientListBookMark =
+                    rowMapClientListBinding.rowMapClientListBookMark
             }
         }
 
@@ -209,6 +241,9 @@ class MapFragment : Fragment() {
                 clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientManagerName
             holder.rowMapClientListDateRecentLayout.visibility = View.GONE
 //            holder.rowMapClientListDateRecent.text = clientViewModel.clientDataListByKeyWord.value?.get(position)?
+            if (clientViewModel.clientDataListByKeyWord.value?.get(position)?.isBookmark==false){
+                holder.rowMapClientListBookMark.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -310,6 +345,40 @@ class MapFragment : Fragment() {
         Log.d("주소 확인4", uLogitude.toString())
         moveCamera(LatLng.from(uLatitude, uLogitude))
     }
+
+    private fun persistentBottomSheetEvent() {
+        behavior = BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout)
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // 슬라이드 되는 도중 계속 호출
+                // called continuously while dragging
+                Log.d(TAG, "onStateChanged: 드래그 중")
+            }
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED-> {
+                        Log.d(TAG, "onStateChanged: 접음")
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING-> {
+                        Log.d(TAG, "onStateChanged: 드래그")
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED-> {
+                        Log.d(TAG, "onStateChanged: 펼침")
+                        clientViewModel.getClientListAll("1")
+
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN-> {
+                        Log.d(TAG, "onStateChanged: 숨기기")
+                    }
+                    BottomSheetBehavior.STATE_SETTLING-> {
+                        Log.d(TAG, "onStateChanged: 고정됨")
+                    }
+                }
+            }
+        })
+    }
+
+    private val TAG = "하단"
 
 
 }
