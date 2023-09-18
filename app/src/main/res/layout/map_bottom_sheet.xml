@@ -54,39 +54,43 @@
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/mapBottomSheetTabAll"
                     android:layout_width="78dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="전체"
+                    android:textColor="@color/primary20"
                     android:textSize="12sp"
                     app:cornerRadius="16dp"
-                    app:strokeColor="@color/primary20" />
+                    app:strokeColor="@color/primary20"
+                    tools:background="@drawable/btn_round_nofill_primary20" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/mapBottomSheetTabBookMark"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="즐겨찾기"
+                    android:textColor="@color/primary20"
                     android:textSize="12sp"
                     app:cornerRadius="16dp"
-                    app:strokeColor="@color/primary20" />
+                    app:strokeColor="@color/primary20"
+                    tools:background="@drawable/btn_round_nofill_primary20" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/mapBottomSheetTabVisit"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_round_nofill_primary20"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="오늘 방문"
                     android:textSize="12sp"
                     app:cornerRadius="16dp"
-                    app:strokeColor="@color/primary20" />
+                    app:strokeColor="@color/primary20"
+                    android:textColor="@color/primary20" />
             </LinearLayout>
 
             <LinearLayout

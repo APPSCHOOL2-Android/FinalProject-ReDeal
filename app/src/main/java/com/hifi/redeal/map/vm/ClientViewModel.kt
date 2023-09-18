@@ -3,14 +3,18 @@ package com.hifi.redeal.map.vm
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.hifi.redeal.R
 import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.repository.ClientRepository
 
 class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
     var clientDataListAll = MutableLiveData<MutableList<ClientDataClass>>()
+    val selectedButtonId = MutableLiveData<Int>()
+
     init{
         clientDataListByKeyWord.value = mutableListOf<ClientDataClass>()
+        selectedButtonId.value = R.id.mapBottomSheetTabAll
     }
 
     fun getClientListByKeyword(userIdx : String, keyword:String){
@@ -45,8 +49,19 @@ class ClientViewModel : ViewModel() {
     }
 
     fun resetClientListByKeyword(){
+        clientDataListAll.value= mutableListOf<ClientDataClass>()
+    }
+
+    fun resetClientList(){
         clientDataListByKeyWord.value= mutableListOf<ClientDataClass>()
     }
+
+
+    fun setSelectedButton(buttonId: Int) {
+        selectedButtonId.value = buttonId
+    }
+
+
 
 
 }

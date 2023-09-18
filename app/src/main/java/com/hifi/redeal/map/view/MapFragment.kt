@@ -32,6 +32,7 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMapBinding
 import com.hifi.redeal.databinding.RowMapClientListBinding
 import com.hifi.redeal.map.adapter.MapBottomSheetRecyclerViewAdapter
+import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.repository.ClientRepository
 import com.hifi.redeal.map.vm.ClientViewModel
 import com.kakao.vectormap.KakaoMap
@@ -64,7 +65,7 @@ class MapFragment : Fragment() {
     var REQUIRED_PERMISSIONS = arrayOf<String>(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
-    var clientType = 0 // 0 :전체, 1:즐겨찾기 2: 방문
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,7 +99,28 @@ class MapFragment : Fragment() {
                 }
             }
 
+            selectedButtonId.observe(mainActivity) { selectedButtonId ->
+
+                fragmentMapBinding.mapBottomSheet.run {
+                    // 모든 버튼의 원래 스타일로 초기화
+                    mapBottomSheetTabAll.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    mapBottomSheetTabAll.setTextColor(ContextCompat.getColor(mainActivity, R.color.primary20))
+
+                    mapBottomSheetTabBookMark.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    mapBottomSheetTabBookMark.setTextColor(ContextCompat.getColor(mainActivity, R.color.primary20))
+
+                    mapBottomSheetTabVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
+                    mapBottomSheetTabVisit.setTextColor(ContextCompat.getColor(mainActivity, R.color.primary20))
+
+                    // 선택된 버튼의 스타일 변경
+                    val selectedButton = mainActivity.findViewById<Button>(selectedButtonId)
+                    selectedButton.setBackgroundResource(R.drawable.btn_round_primary20)
+                    selectedButton.setTextColor(ContextCompat.getColor(mainActivity, R.color.white))
+                }
+
+            }
         }
+
 
 
         fragmentMapBinding.run {
@@ -169,11 +191,22 @@ class MapFragment : Fragment() {
             }
 
             mapBottomSheet.run {
+                // 클릭된 버튼 ID를 뷰모델로 업데이트
+                mapBottomSheetTabAll.setOnClickListener {
+                    clientViewModel.resetClientList()
+                    clientViewModel.getClientListAll("1")
+                    clientViewModel.setSelectedButton(R.id.mapBottomSheetTabAll)
+                }
 
+                mapBottomSheetTabBookMark.setOnClickListener {
+                    clientViewModel.clientDataListAll.value = clientViewModel.clientDataListAll.value?.filter { it.isBookmark==true } as MutableList<ClientDataClass>
+                    clientViewModel.setSelectedButton(R.id.mapBottomSheetTabBookMark)
+                }
+
+                mapBottomSheetTabVisit.setOnClickListener {
+                    clientViewModel.setSelectedButton(R.id.mapBottomSheetTabVisit)
+                }
             }
-
-
-
 
         }
 
@@ -347,6 +380,7 @@ class MapFragment : Fragment() {
     }
 
     private fun persistentBottomSheetEvent() {
+        val TAG = "하단"
         behavior = BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout)
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -378,7 +412,9 @@ class MapFragment : Fragment() {
         })
     }
 
-    private val TAG = "하단"
+
+
+
 
 
 }
