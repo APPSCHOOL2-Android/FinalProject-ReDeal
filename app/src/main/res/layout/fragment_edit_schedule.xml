@@ -218,7 +218,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
-                    android:hint="일정 제목"
                     android:textColor="@color/text10"
                     android:textColorHighlight="@color/primary20"
                     android:textColorLink="@color/primary20"
@@ -239,7 +238,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanumsquareneo_regular"
-                    android:hint="일정 내용"
+                    android:textAlignment="viewStart"
                     android:textColor="@color/text10"
                     android:textColorHighlight="@color/primary20"
                     android:textSize="16sp" />

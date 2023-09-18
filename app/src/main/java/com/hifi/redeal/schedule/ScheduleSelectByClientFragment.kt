@@ -90,7 +90,11 @@ class ScheduleSelectByClientFragment : Fragment() {
             val selectScheduleClientBookmarkView = selectScheduleClientItemBinding.selectScheduleClientBookmarkView
             init{
                 selectClientBtn.setOnClickListener {
-                    scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
+                    if(scheduleVM.editScheduleData.value != null){
+                        val temp = scheduleVM.editScheduleData.value
+                        temp!!.clientIdx = userClientSimpleDataList[bindingAdapterPosition].clientIdx
+                        scheduleVM.editScheduleData.postValue(temp)
+                    }
                     scheduleVM.getUserSelectClientInfo(userIdx, userClientSimpleDataList[bindingAdapterPosition].clientIdx)
                     mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
                 }

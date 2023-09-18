@@ -49,7 +49,6 @@ class ScheduleRepository {
                 .get()
                 .addOnCompleteListener(callback1)
         }
-
         fun setUserSchedule(userIdx: String, scheduleData: ScheduleData, callback1: (Task<Void>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
@@ -58,6 +57,17 @@ class ScheduleRepository {
                 .document("${scheduleData.scheduleIdx}")
                 .set(scheduleData, SetOptions.merge()) // SetOptions.merge() : 없으면 추가, 있다면 덮어쓴다.
                 .addOnCompleteListener(callback1)
+
+        }
+        fun setUserSchedule(userIdx: String, scheduleData: ScheduleData, callback1: (Task<Void>) -> Unit, callback2: (Task<Void>) -> Unit){
+            val db = Firebase.firestore
+            db.collection("userData")
+                .document(userIdx)
+                .collection("scheduleData")
+                .document("${scheduleData.scheduleIdx}")
+                .set(scheduleData, SetOptions.merge()) // SetOptions.merge() : 없으면 추가, 있다면 덮어쓴다.
+                .addOnCompleteListener(callback1)
+                .addOnCompleteListener(callback2)
         }
         fun getUserAllSchedule(userIdx: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore

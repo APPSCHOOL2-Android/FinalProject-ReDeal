@@ -25,7 +25,7 @@ class UnvisitedScheduleFragment : Fragment() {
     lateinit var fragmentUnvisitedScheduleBinding: FragmentUnvisitedScheduleBinding
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
-    var userIdx = 1L
+    var userIdx = "1"
     var scheduleIdx = 0L
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -159,10 +159,11 @@ class UnvisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setMessage("해당 일정을 완료 취소 처리 합니다.")
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
-                                    ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
-                                        scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
-                                    }
+                                    ScheduleRepository.setUserSchedule(userIdx, updateScheduleData,{
+                                        scheduleVM.getSelectClientLastVisitDate(userIdx, scheduleVM.selectScheduleData.value!!.clientIdx)
+                                    },{
+                                        scheduleVM.getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                    })
                                 }
                                 cancelBuilder.setPositiveButton("취소",null)
                                 cancelBuilder.show()
@@ -172,10 +173,11 @@ class UnvisitedScheduleFragment : Fragment() {
                                 completeBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
-                                    ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
-                                        scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
-                                    }
+                                    ScheduleRepository.setUserSchedule(userIdx, updateScheduleData,{
+                                        scheduleVM.getSelectClientLastVisitDate(userIdx, scheduleVM.selectScheduleData.value!!.clientIdx)
+                                    },{
+                                        scheduleVM.getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                    })
                                 }
                                 completeBuilder.setPositiveButton("취소",null)
                                 completeBuilder.show()
@@ -183,7 +185,7 @@ class UnvisitedScheduleFragment : Fragment() {
 
                         }
                         R.id.scheduleEditMenu -> {
-                            Log.d("ttt", "수정버튼")
+                            mainActivity.replaceFragment(MainActivity.EDIT_SCHEDULE_FRAGMENT, true, null)
                         }
                         R.id.scheduleDelMenu -> {
                             val deleteBuilder = AlertDialog.Builder(requireActivity())

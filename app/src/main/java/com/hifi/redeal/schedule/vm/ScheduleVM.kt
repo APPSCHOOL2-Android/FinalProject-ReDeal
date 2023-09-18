@@ -1,5 +1,6 @@
 package com.hifi.redeal.schedule.vm
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
@@ -31,6 +32,8 @@ class ScheduleVM: ViewModel() {
     var selectScheduleIdx = 0L
     var selectScheduleData = MutableLiveData<ScheduleData>()
 
+    var editScheduleData = MutableLiveData<ScheduleData>()
+
     // 사용자가 선택한 데이터
     var selectedScheduleIsVisit = true
     var selectDate = LocalDate.now()
@@ -40,8 +43,13 @@ class ScheduleVM: ViewModel() {
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     }
 
+    fun setEditScheduleData(){
+        editScheduleData.postValue(selectScheduleData.value)
+    }
+
     fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String){
         ScheduleRepository.getSelectScheduleInfo(userIdx, scheduleIdx){
+            Log.d("ttt","${it.result}")
             val tempSelectScheduleData = ScheduleData(
                 it.result["scheduleIdx"] as Long,
                 it.result["clientIdx"] as Long,
@@ -58,15 +66,19 @@ class ScheduleVM: ViewModel() {
     }
     fun getSelectClientLastVisitDate (userIdx: String, clientIdx: Long){
         ScheduleRepository.getSelectClientLastVisitDate(userIdx, clientIdx){
-            for(c1 in it.result){
-                val lastTime = c1["scheduleFinishTime"] as Timestamp
-                clientLastVisitDate.postValue(lastTime)
+            if(it.result.isEmpty){
+                clientLastVisitDate.postValue(null)
+            } else {
+                for(c1 in it.result){
+                    val lastTime = c1["scheduleFinishTime"] as Timestamp
+                    clientLastVisitDate.postValue(lastTime)
+                }
             }
         }
     }
 
-    fun getClientInfo(userIdx: Long, clientIdx: Long) {
-        ScheduleRepository.getClientInfo("$userIdx", clientIdx){
+    fun getClientInfo(userIdx: String, clientIdx: Long) {
+        ScheduleRepository.getClientInfo(userIdx, clientIdx){
             for(c1 in it.result){
                 val clientName = c1["clientName"] as String
                 val clientManagerName = c1["clientManagerName"] as String

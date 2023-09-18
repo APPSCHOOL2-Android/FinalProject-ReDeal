@@ -1,5 +1,6 @@
 package com.hifi.redeal.schedule
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -24,8 +25,7 @@ class VisitedScheduleFragment : Fragment() {
     lateinit var fragmentVisitedScheduleBinding: FragmentVisitedScheduleBinding
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
-    var userIdx = 1L
-    var scheduleIdx = 0L
+    var userIdx = "1"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +44,7 @@ class VisitedScheduleFragment : Fragment() {
         mainActivity = activity as MainActivity
 
     }
+
     private fun setViewModel(){
 
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
@@ -51,9 +52,6 @@ class VisitedScheduleFragment : Fragment() {
         scheduleVM.run{
 
             selectScheduleData.observe(requireActivity()){ scheduleInfo ->
-
-                getClientInfo(userIdx,scheduleInfo.clientIdx)
-                getSelectClientLastVisitDate("$userIdx", scheduleInfo.clientIdx)
 
                 fragmentVisitedScheduleBinding.run{
                     var date = Date(scheduleInfo.scheduleDeadlineTime.toDate().time).toString().replace("-",".")
@@ -89,6 +87,9 @@ class VisitedScheduleFragment : Fragment() {
                         }
                     }
                 }
+
+                getClientInfo(userIdx,scheduleInfo.clientIdx)
+                getSelectClientLastVisitDate(userIdx, scheduleInfo.clientIdx)
             }
 
             selectClientData.observe(requireActivity()){
@@ -122,32 +123,36 @@ class VisitedScheduleFragment : Fragment() {
             clientLastVisitDate.observe(requireActivity()){ timestamp ->
                 fragmentVisitedScheduleBinding.run{
 
-                    var date = Date(timestamp.toDate().time).toString().replace("-",".")
-                    clientLastVisitedDate.text = date
+                    if(timestamp != null){
+                        var date = Date(timestamp.toDate().time).toString().replace("-",".")
+                        clientLastVisitedDate.text = date
+                        val calendar = Calendar.getInstance()
+                        calendar.timeInMillis = timestamp.toDate().time
 
-                    val calendar = Calendar.getInstance()
-                    calendar.timeInMillis = timestamp.toDate().time
-
-                    val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
-                    val minute = calendar.get(Calendar.MINUTE)
-                    if(hour < 10){
-                        if(minute < 10){
-                            clientLastVisitedTime.text = "0$hour : 0$minute"
+                        val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24시간 형식
+                        val minute = calendar.get(Calendar.MINUTE)
+                        if(hour < 10){
+                            if(minute < 10){
+                                clientLastVisitedTime.text = "0$hour : 0$minute"
+                            } else {
+                                clientLastVisitedTime.text = "0$hour : $minute"
+                            }
                         } else {
-                            clientLastVisitedTime.text = "0$hour : $minute"
+                            if(minute < 10){
+                                clientLastVisitedTime.text = "$hour : 0$minute"
+                            } else {
+                                clientLastVisitedTime.text = "$hour : $minute"
+                            }
                         }
                     } else {
-                        if(minute < 10){
-                            clientLastVisitedTime.text = "$hour : 0$minute"
-                        } else {
-                            clientLastVisitedTime.text = "$hour : $minute"
-                        }
+                        clientLastVisitedDate.text = "기록 없음"
+                        clientLastVisitedTime.text = ""
                     }
 
                 }
             }
 
-            getSelectScheduleInfo("$userIdx", "${scheduleVM.selectScheduleIdx}")
+            getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleIdx}")
 
         }
     }
@@ -170,10 +175,11 @@ class VisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setMessage("해당 일정을 완료 취소 처리 합니다.")
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
-                                    ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
-                                        scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
-                                    }
+                                    ScheduleRepository.setUserSchedule(userIdx, updateScheduleData,{
+                                        scheduleVM.getSelectClientLastVisitDate(userIdx, scheduleVM.selectScheduleData.value!!.clientIdx)
+                                    },{
+                                        scheduleVM.getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                    })
                                 }
                                 cancelBuilder.setPositiveButton("취소",null)
                                 cancelBuilder.show()
@@ -183,10 +189,11 @@ class VisitedScheduleFragment : Fragment() {
                                 completeBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
-                                    ScheduleRepository.setUserSchedule("$userIdx", updateScheduleData){
-                                        scheduleVM.getSelectClientLastVisitDate("$userIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
-                                        scheduleVM.getSelectScheduleInfo("$userIdx", "$scheduleIdx")
-                                    }
+                                    ScheduleRepository.setUserSchedule(userIdx, updateScheduleData,{
+                                        scheduleVM.getSelectClientLastVisitDate(userIdx, scheduleVM.selectScheduleData.value!!.clientIdx)
+                                    },{
+                                        scheduleVM.getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                    })
                                 }
                                 completeBuilder.setPositiveButton("취소",null)
                                 completeBuilder.show()
@@ -200,7 +207,7 @@ class VisitedScheduleFragment : Fragment() {
                             val deleteBuilder = AlertDialog.Builder(requireActivity())
                             deleteBuilder.setMessage("해당 일정을 삭제 처리합니다.")
                             deleteBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
-                                ScheduleRepository.delSelectSchedule("$userIdx", "${updateScheduleData.scheduleIdx}"){
+                                ScheduleRepository.delSelectSchedule(userIdx, "${updateScheduleData.scheduleIdx}"){
                                     mainActivity.removeFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT)
                                 }
                             }
