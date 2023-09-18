@@ -392,6 +392,7 @@ class MapFragment : Fragment() {
                 when(newState) {
                     BottomSheetBehavior.STATE_COLLAPSED-> {
                         Log.d(TAG, "onStateChanged: 접음")
+                        clientViewModel.selectedButtonId.value=R.id.mapBottomSheetTabAll
                     }
                     BottomSheetBehavior.STATE_DRAGGING-> {
                         Log.d(TAG, "onStateChanged: 드래그")
