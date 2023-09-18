@@ -271,7 +271,7 @@ class EditScheduleFragment : Fragment() {
                         } else {
                             // 키보드가 닫혀 있는 상태
                             if (isKeyboardOpen) {
-                                clearFocus()
+                                requireActivity().currentFocus?.clearFocus()
                                 isKeyboardOpen = false
                             }
                         }
@@ -298,7 +298,7 @@ class EditScheduleFragment : Fragment() {
                             // 키보드가 닫혀 있는 상태
                             if (isKeyboardOpen) {
                                 // 키보드가 내려갈 때 포커스를 제거합니다.
-                                clearFocus()
+                                requireActivity().currentFocus?.clearFocus()
                                 isKeyboardOpen = false
                             }
                         }
@@ -353,8 +353,6 @@ class EditScheduleFragment : Fragment() {
         // 중간 날짜 셋팅
         val selectMonth = if(scheduleVM.selectDate.month.value < 10) "0${scheduleVM.selectDate.month.value}" else scheduleVM.selectDate.month.value.toString()
         val selectDay = if(scheduleVM.selectDate.dayOfMonth < 10) "0${scheduleVM.selectDate.dayOfMonth}" else scheduleVM.selectDate.dayOfMonth.toString()
-
-        Log.d("ttt","${scheduleVM.selectDate}")
 
         fragmentEditScheduleBinding.editScheduleBtnSelectCalendar.text ="${scheduleVM.selectDate.year}.${selectMonth}.${selectDay}"
     }
