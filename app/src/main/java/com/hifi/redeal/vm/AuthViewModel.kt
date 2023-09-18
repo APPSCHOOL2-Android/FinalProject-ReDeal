@@ -1,8 +1,10 @@
 package com.hifi.redeal.vm
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.hifi.redeal.model.UserDataClass
@@ -37,7 +39,9 @@ class AuthViewModel : ViewModel() {
     }
 
     // AuthJoinFragment의 계정 등록 함수
-    fun registerUser(email: String, password: String, name: String) {
+    fun registerUser(email: String, password: String, name: String): LiveData<AuthResult> {
+        val registrationResult = MutableLiveData<AuthResult>()
+
         AuthRepository.registerUser(email, password) { authResult ->
             val user = authResult.user
             if (user != null) {
@@ -45,17 +49,21 @@ class AuthViewModel : ViewModel() {
                 Log.d("testloginUserVM", "사용자가 성공적으로 등록되었습니다.")
                 // IDX를 가져오는 로그를 추가
 
-               getNextIdx { idx ->
-                   Log.d("getNextIdx", "현재 IDX: $idx")
+                getNextIdx { idx ->
+                    Log.d("getNextIdx", "현재 IDX: $idx")
                     // IDX를 얻은 후 Firestore에 추가
                     addUserToFirestore(user.uid, UserDataClass(idx, email, password, name))
                 }
-
-           } else {
+            } else {
                 // 사용자가 null인 경우 처리
                 Log.d("testloginUserVM", "사용자가 null입니다.")
             }
+            // 사용자 등록 결과를 LiveData에 넣어줍니다.
+            registrationResult.value = authResult
         }
+
+        // LiveData를 반환합니다.
+        return registrationResult
     }
 
     // 파이어스토어에 사용자 정보 추가

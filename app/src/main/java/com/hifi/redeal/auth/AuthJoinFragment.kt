@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
@@ -27,7 +28,6 @@ class AuthJoinFragment : Fragment() {
         fragmentAuthJoinBinding = FragmentAuthJoinBinding.inflate(inflater)
         mainActivity = activity as MainActivity
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
-
 
         fragmentAuthJoinBinding.run {
             toolbarAuthJoin.setNavigationOnClickListener {
@@ -77,11 +77,19 @@ class AuthJoinFragment : Fragment() {
                 }
 
                 // Firebase Authentication을 사용하여 사용자 등록
-                authViewModel.registerUser(email, password, name)
-                
+                val registrationLiveData = authViewModel.registerUser(email, password, name)
+
+                registrationLiveData.observe(viewLifecycleOwner, Observer { authResult ->
+                    val user = authResult.user
+                    if (user != null) {
+                        // 등록 성공 시 처리
+                        showRegistrationSuccessDialog()
                         mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, true, null)
                         Log.d("AuthJoinFragment", "replaceFragment 호출됨")
-
+                    } else {
+                        showErrorMessageDialog("가입 실패")
+                    }
+                })
 
             }
         }
