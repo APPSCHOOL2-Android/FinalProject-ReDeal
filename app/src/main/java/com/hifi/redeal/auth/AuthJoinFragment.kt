@@ -1,6 +1,5 @@
 package com.hifi.redeal.auth
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,12 +39,12 @@ class AuthJoinFragment : Fragment() {
             }
 
 //            buttonJoinIdCheck.setOnClickListener{
-//                sendVerificationCode()
+//                sendEmailVerificationLink()
 //            }
 
             buttonJoinComplete.setOnClickListener {
                 val email = textInputEditTextJoinUserId.text.toString()
-                val verificationCode = textInputEditTextJoinIdCheck.text.toString()
+                //  val verificationCode = textInputEditTextJoinIdCheck.text.toString()
                 val password = textInputEditTextJoinUserPw.text.toString()
                 val name = textInputEditTextJoinUserName.text.toString()
                 val passwordCheck = textInputEditTextJoinUserPwCheck.text.toString()
@@ -106,9 +105,9 @@ class AuthJoinFragment : Fragment() {
         return fragmentAuthJoinBinding.root
     }
 
-    // 이메일로 인증코드를 보내는 함수
-//    private fun verifyEmail() {
-//        val email = textInputEditTextJoinUserId.text.toString()
+//    //  이메일로 인증코드를 보내는 함수
+//    private fun sendEmailVerificationLink() {
+//        val email = fragmentAuthJoinBinding.textInputEditTextJoinUserId.text.toString()
 //
 //        if (email.isEmpty()) {
 //            // 이메일 주소를 입력하지 않은 경우 처리
@@ -116,18 +115,49 @@ class AuthJoinFragment : Fragment() {
 //            return
 //        }
 //
+//        // ActionCodeSettings 객체 초기화
+//        val actionCodeSettings = ActionCodeSettings.newBuilder()
+//            .setUrl("https://hifi.page.link/authentication")
+//            .setHandleCodeInApp(true)
+//            .setAndroidPackageName(
+//                "com.hifi.redeal",
+//                false,
+//                "12"
+//            )
+//            .build()
+//
 //        // Firebase Authentication을 사용하여 이메일로 인증 코드를 보냅니다.
-//        auth.sendSignInLinkToEmail(email, null)
+//        auth.sendSignInLinkToEmail(email, actionCodeSettings)
 //            .addOnCompleteListener { task ->
 //                if (task.isSuccessful) {
 //                    // 인증 코드를 성공적으로 보냈을 때의 처리
-//                    // 사용자에게 이메일이 성공적으로 전송되었음을 알리는 메시지를 보여줄 수 있습니다.
+//                    Log.e("AuthJoinFragment", "인증 코드 전송 완료")
 //                } else {
 //                    // 인증 코드를 보내는 데 실패한 경우 처리
 //                    val exception = task.exception
 //                    if (exception != null) {
 //                        // 오류 처리를 추가할 수 있습니다.
 //                        Log.e("AuthJoinFragment", "인증 코드 보내기 실패: ${exception.message}")
+//                    }
+//                }
+//            }
+//
+//        // Firebase에서 확인 작업을 진행
+//        auth.checkActionCode(email)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    // 확인이 성공적으로 완료된 경우
+//                    Log.d("AuthJoinFragment", "이메일 확인 성공")
+//
+//                    // 여기에서 추가 작업을 수행할 수 있습니다.
+//                    // 예를 들어, 사용자를 로그인 상태로 변경하거나 회원가입 프로세스를 계속 진행할 수 있습니다.
+//
+//                } else {
+//                    // 확인 작업이 실패한 경우
+//                    val exception = task.exception
+//                    if (exception != null) {
+//                        // 오류 처리를 추가할 수 있습니다.
+//                        Log.e("AuthJoinFragment", "이메일 확인 오류: ${exception.message}")
 //                    }
 //                }
 //            }
