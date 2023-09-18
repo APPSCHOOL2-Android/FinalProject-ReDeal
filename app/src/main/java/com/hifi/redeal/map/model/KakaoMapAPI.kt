@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
  
-interface KakaoAPI {
+interface KakaoMapAPI {
     @GET("v2/local/search/address.json")
     fun getSearchAddr(
         @Header("Authorization") key: String,

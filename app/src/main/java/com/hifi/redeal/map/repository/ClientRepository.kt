@@ -7,7 +7,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.BuildConfig
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.map.model.KakaoAPI
+import com.hifi.redeal.map.model.KakaoMapAPI
 import com.hifi.redeal.map.model.Place
 import com.hifi.redeal.map.model.ResultSearchAddr
 import retrofit2.Call
@@ -32,7 +32,7 @@ class ClientRepository {
                 .baseUrl(MainActivity.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-            val api = retrofit.create(KakaoAPI::class.java)   // 통신 인터페이스를 객체로 생성
+            val api = retrofit.create(KakaoMapAPI::class.java)   // 통신 인터페이스를 객체로 생성
             val call = api.getSearchAddr("KakaoAK "+ BuildConfig.KAKAO_REST_API_KEY, address)   // 검색 조건 입력
 
             // API 서버에 요청
