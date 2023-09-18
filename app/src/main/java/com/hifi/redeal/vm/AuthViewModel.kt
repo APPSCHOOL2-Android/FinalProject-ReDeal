@@ -38,14 +38,17 @@ class AuthViewModel : ViewModel() {
 
     // AuthLoginFragment의 로그인 함수
     fun loginUser(email: String, password: String) {
-        AuthRepository.loginUser(email, password) {
-            val userUid = it.user?.email
+        AuthRepository.loginUser(email, password) { authResult ->
+            val userUid = authResult.user?.uid
             Log.d("testloginUserVM", "User UID: $userUid")
             if (userUid != null) {
                 AuthRepository.getUserInfoByUserId(userUid) { currentUser ->
                     if (currentUser != null) {
                         val loginUser = currentUser
                         userData.value = loginUser
+                        Log.d("testloginUserVM", "User UID: $userUid")
+                        // 로그인 성공 시 UID를 SharedPreferences에 저장
+                        saveUidToSharedPreferences(authResult.user!!.uid)
                     } else {
                         // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
                         Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
@@ -64,16 +67,14 @@ class AuthViewModel : ViewModel() {
             if (user != null) {
                 // 사용자가 성공적으로 등록된 경우
                 Log.d("testloginUserVM", "사용자가 성공적으로 등록되었습니다.")
-                // IDX를 가져오는 로그를 추가
 
+                // IDX를 가져오는 로그
                 getNextIdx { idx ->
                     Log.d("getNextIdx", "현재 IDX: $idx")
                     // IDX를 얻은 후 Firestore에 추가
                     addUserToFirestore(user.uid, UserDataClass(idx, email, password, name))
                 }
 
-                // UID를 SharedPreferences에 저장
-                saveUidToSharedPreferences(user.uid)
             } else {
                 // 사용자가 null인 경우 처리
                 Log.d("testloginUserVM", "사용자가 null입니다.")
@@ -94,16 +95,17 @@ class AuthViewModel : ViewModel() {
             "name" to newUser.userName
         )
 
-        firestore.collection("userData").document(uid).set(userData) // UID를 문서 ID로 사용합니다.
-            .addOnSuccessListener { documentReference ->
+        // 리포지토리의 addUserToFirestore 함수
+        AuthRepository.addUserToFirestore(uid, userData) { uid ->
+            if (uid != null) {
                 // Firestore에 사용자 정보 추가 성공
                 Log.d("FirestoreSuccess", "Firestore에 사용자 정보 추가 성공")
-            }
-            .addOnFailureListener { e ->
+            } else {
                 // Firestore에 사용자 정보 추가 실패
-                Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패: ${e.message}")
-                showErrorMessageDialog("Firestore에 사용자 정보 추가 실패: ${e.message}")
+                Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패")
+                showErrorMessageDialog("Firestore에 사용자 정보 추가 실패")
             }
+        }
     }
 
     // 파이어베이스에서 IDX를 가져와서 인덱스 계산하여 +1

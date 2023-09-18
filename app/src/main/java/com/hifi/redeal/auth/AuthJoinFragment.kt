@@ -18,11 +18,9 @@ import com.hifi.redeal.vm.AuthViewModel
 
 class AuthJoinFragment : Fragment() {
 
-    private lateinit var fragmentAuthJoinBinding: FragmentAuthJoinBinding
-    private lateinit var mainActivity: MainActivity
-    private lateinit var authViewModel: AuthViewModel
-    // FirebaseAuth 객체 선언
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    lateinit var fragmentAuthJoinBinding: FragmentAuthJoinBinding
+    lateinit var mainActivity: MainActivity
+    lateinit var authViewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +28,8 @@ class AuthJoinFragment : Fragment() {
     ): View? {
         fragmentAuthJoinBinding = FragmentAuthJoinBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-        authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
-        authViewModel.initContext(requireContext()) // Context 초기화, Preference에 UID 넣기 위함
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        authViewModel.initContext(requireContext()) // Context 초기화
 
         fragmentAuthJoinBinding.run {
             toolbarAuthJoin.setNavigationOnClickListener {

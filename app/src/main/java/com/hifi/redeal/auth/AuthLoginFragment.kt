@@ -1,13 +1,12 @@
 package com.hifi.redeal.auth
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
 import com.hifi.redeal.vm.AuthViewModel
 
@@ -24,6 +23,8 @@ class AuthLoginFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentAuthLoginBinding = FragmentAuthLoginBinding.inflate(inflater)
         mainActivity = activity as MainActivity
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        authViewModel.initContext(requireContext()) // Context 초기화
 
         // UI 요소에 대한 리스너 설정
         setupUiListeners()

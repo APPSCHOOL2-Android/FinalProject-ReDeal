@@ -28,47 +28,39 @@ class AuthRepository {
                         // Firebase Authentication 예외 처리
                         when (exception) {
                             is FirebaseAuthInvalidCredentialsException -> {
-                                Log.d(
-                                    "testaaa",
-                                    "Invalid credentials: ${exception.localizedMessage}"
+                                Log.d("testRefologinUser", "Invalid credentials: ${exception.localizedMessage}"
                                 )
                             }
 
                             is FirebaseAuthInvalidUserException -> {
-                                Log.d("testaaa", "Invalid user: ${exception.localizedMessage}")
+                                Log.d("testRefologinUser", "Invalid user: ${exception.localizedMessage}")
                             }
-
                             else -> {
                                 Log.d(
-                                    "testaaa",
+                                    "testRefologinUser",
                                     "Authentication failed: ${exception.localizedMessage}"
                                 )
                             }
                         }
                     } else {
-                        Log.d("testaaa", "Authentication failed: ${exception?.localizedMessage}")
+                        Log.d("testRefologinUser", "Authentication failed: ${exception?.localizedMessage}")
                     }
                 }
             }
         }
 
         // 사용자 정보를 Firestore에 추가하고 사용자 UID를 콜백으로 처리
-        fun addUserToFirestore(user: FirebaseUser?, userData: Map<String, Any>, callback: (String?) -> Unit) {
-            if (user != null) {
-                firestore.collection("userData").add(userData)
-                    .addOnSuccessListener { documentReference ->
-                        // Firestore에 사용자 정보 추가 성공 시 사용자 UID를 반환
-                        callback(user.uid)
-                    }
-                    .addOnFailureListener { e ->
-                        // Firestore에 사용자 정보 추가 실패
-                        Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패: ${e.message}")
-                        callback(null)
-                    }
-            } else {
-                // 사용자가 null인 경우 처리
-                callback(null)
-            }
+        fun addUserToFirestore(uid: String, userData: Map<String, Any>, callback: (String?) -> Unit) {
+            firestore.collection("userData").document(uid).set(userData)
+                .addOnSuccessListener {
+                    // Firestore에 사용자 정보 추가 성공 시 사용자 UID를 반환
+                    callback(uid)
+                }
+                .addOnFailureListener { e ->
+                    // Firestore에 사용자 정보 추가 실패
+                    Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패: ${e.message}")
+                    callback(null)
+                }
         }
 
         fun registerUser(email: String, password: String, callback1: (AuthResult) -> Unit) {
