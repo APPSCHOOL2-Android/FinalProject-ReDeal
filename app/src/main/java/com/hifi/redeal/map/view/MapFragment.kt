@@ -171,7 +171,7 @@ class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCame
                 }
 
                 override fun getZoomLevel(): Int {
-                    return 21
+                    return 17
                 }
             })
 
