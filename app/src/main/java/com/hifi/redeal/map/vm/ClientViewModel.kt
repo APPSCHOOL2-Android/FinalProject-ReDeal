@@ -1,5 +1,6 @@
 package com.hifi.redeal.map.vm
 
+import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,9 @@ import com.hifi.redeal.map.repository.ClientRepository
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.LabelTextStyle
 
 class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
@@ -62,14 +66,18 @@ class ClientViewModel : ViewModel() {
                 tempList.add(item!!)
             }
 
-            tempList.forEach {
-                ClientRepository.searchAddr(it.clientAddress!!) {
+            tempList.forEach {c ->
+                ClientRepository.searchAddr(c.clientAddress!!) {
                     val lat = it!!.get(0).y.toDouble()
                     val long = it!!.get(0).x.toDouble()
                     val latLng = LatLng.from(lat, long)
+
+                    val style = LabelStyles.from(LabelStyle.from(R.drawable.blue_marker).setTextStyles(
+                        LabelTextStyle.from(30, R.color.primary20, 1, Color.WHITE)));
+
                     labelList.add(
                         LabelOptions.from(latLng)
-                            .setStyles(R.drawable.blue_marker)
+                            .setStyles(style).setTexts(c.clientName)
                     )
                     clientDataListLabel.value = labelList
                     Log.d("라벨3", clientDataListLabel.value.toString())
