@@ -1,5 +1,8 @@
 package com.hifi.redeal.vm
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +14,7 @@ import com.hifi.redeal.model.UserDataClass
 import com.hifi.redeal.repository.AuthRepository
 
 class AuthViewModel : ViewModel() {
+
     private val firestore = FirebaseFirestore.getInstance()
     val userData = MutableLiveData<UserDataClass>()
 
@@ -18,6 +22,19 @@ class AuthViewModel : ViewModel() {
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
         "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "/", "?"
     )
+
+    // Context 초기화
+    @SuppressLint("StaticFieldLeak")
+    private lateinit var context: Context
+
+    // SharedPreferences 초기화
+    private val sharedPreferences: SharedPreferences by lazy {
+        context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+    }
+
+    fun initContext(context: Context) {
+        this.context = context
+    }
 
     // AuthLoginFragment의 로그인 함수
     fun loginUser(email: String, password: String) {
@@ -54,6 +71,9 @@ class AuthViewModel : ViewModel() {
                     // IDX를 얻은 후 Firestore에 추가
                     addUserToFirestore(user.uid, UserDataClass(idx, email, password, name))
                 }
+
+                // UID를 SharedPreferences에 저장
+                saveUidToSharedPreferences(user.uid)
             } else {
                 // 사용자가 null인 경우 처리
                 Log.d("testloginUserVM", "사용자가 null입니다.")
@@ -61,7 +81,6 @@ class AuthViewModel : ViewModel() {
             // 사용자 등록 결과를 LiveData에 넣어줍니다.
             registrationResult.value = authResult
         }
-
         // LiveData를 반환합니다.
         return registrationResult
     }
@@ -114,6 +133,14 @@ class AuthViewModel : ViewModel() {
             }
     }
 
+    // UID를 SharedPreferences에 저장
+    private fun saveUidToSharedPreferences(uid: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("user_uid", uid)
+        editor.apply()
+        // 저장 후에 로그로 확인
+        Log.d("saveUidToSharedPreferences", "UID 저장 완료: $uid")
+    }
 
     fun isEmailValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

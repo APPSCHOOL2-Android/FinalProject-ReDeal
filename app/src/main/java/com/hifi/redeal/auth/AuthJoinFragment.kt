@@ -1,5 +1,6 @@
 package com.hifi.redeal.auth
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthJoinBinding
@@ -20,6 +22,8 @@ class AuthJoinFragment : Fragment() {
     private lateinit var fragmentAuthJoinBinding: FragmentAuthJoinBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var authViewModel: AuthViewModel
+    // FirebaseAuth 객체 선언
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,14 +32,20 @@ class AuthJoinFragment : Fragment() {
         fragmentAuthJoinBinding = FragmentAuthJoinBinding.inflate(inflater)
         mainActivity = activity as MainActivity
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        authViewModel.initContext(requireContext()) // Context 초기화, Preference에 UID 넣기 위함
 
         fragmentAuthJoinBinding.run {
             toolbarAuthJoin.setNavigationOnClickListener {
                 mainActivity.removeFragment(MainActivity.AUTH_JOIN_FRAGMENT)
             }
 
+//            buttonJoinIdCheck.setOnClickListener{
+//                sendVerificationCode()
+//            }
+
             buttonJoinComplete.setOnClickListener {
                 val email = textInputEditTextJoinUserId.text.toString()
+                val verificationCode = textInputEditTextJoinIdCheck.text.toString()
                 val password = textInputEditTextJoinUserPw.text.toString()
                 val name = textInputEditTextJoinUserName.text.toString()
                 val passwordCheck = textInputEditTextJoinUserPwCheck.text.toString()
@@ -96,6 +106,32 @@ class AuthJoinFragment : Fragment() {
         return fragmentAuthJoinBinding.root
     }
 
+    // 이메일로 인증코드를 보내는 함수
+//    private fun verifyEmail() {
+//        val email = textInputEditTextJoinUserId.text.toString()
+//
+//        if (email.isEmpty()) {
+//            // 이메일 주소를 입력하지 않은 경우 처리
+//            // 사용자에게 이메일 주소를 입력하라는 메시지를 보여줄 수 있습니다.
+//            return
+//        }
+//
+//        // Firebase Authentication을 사용하여 이메일로 인증 코드를 보냅니다.
+//        auth.sendSignInLinkToEmail(email, null)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    // 인증 코드를 성공적으로 보냈을 때의 처리
+//                    // 사용자에게 이메일이 성공적으로 전송되었음을 알리는 메시지를 보여줄 수 있습니다.
+//                } else {
+//                    // 인증 코드를 보내는 데 실패한 경우 처리
+//                    val exception = task.exception
+//                    if (exception != null) {
+//                        // 오류 처리를 추가할 수 있습니다.
+//                        Log.e("AuthJoinFragment", "인증 코드 보내기 실패: ${exception.message}")
+//                    }
+//                }
+//            }
+//    }
 
     // 가입 성공 다이얼로그를 보여주는 함수
     private fun showRegistrationSuccessDialog() {
