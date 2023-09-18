@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Material3.BottomSheet"
+    android:id="@+id/mapBottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:backgroundTint="@color/background"
     android:orientation="vertical"
     app:behavior_hideable="false"
     app:behavior_peekHeight="32dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    tools:context=".map.view.MapBottomSheetFragment">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/mapBottomSheetDragBar"
@@ -102,6 +102,12 @@
                     android:layout_height="257dp"
                     android:gravity="center"
                     android:text="거래내역이 존재하지 않습니다." />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mapBottomSheetRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>
