@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayoutAuthFindPw">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditTextJoinUserId"
+            android:id="@+id/textInputEditTextFindPwUserId"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="60dp"
