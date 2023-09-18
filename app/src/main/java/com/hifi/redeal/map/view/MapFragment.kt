@@ -35,29 +35,32 @@ import com.hifi.redeal.map.adapter.MapBottomSheetRecyclerViewAdapter
 import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.repository.ClientRepository
 import com.hifi.redeal.map.vm.ClientViewModel
+import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 
 
-class MapFragment : Fragment() {
+class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCameraMoveStartListener {
     lateinit var fragmentMapBinding: FragmentMapBinding
     lateinit var mainActivity: MainActivity
     lateinit var behavior: BottomSheetBehavior<LinearLayout>
-
-
     // 거래처 주소
     lateinit var clientViewModel: ClientViewModel
-    var currentAddress: String? = null
 
+
+    var currentAddress: String? = null
     // 카카오 맵
     lateinit var kakaoMapTemp: KakaoMap
     private var centerPointLabel: Label? = null
+    private var labelLayer: LabelLayer? = null
+
 
     // 현재 위치
     var locationListener: LocationListener? = null
@@ -144,15 +147,18 @@ class MapFragment : Fragment() {
                     Log.d("지도2", "성공")
                     kakaoMapTemp = kakaoMap
 
-                    centerPointLabel = kakaoMapTemp.labelManager!!.layer
+                    kakaoMap?.setOnCameraMoveStartListener(this@MapFragment)
+                    kakaoMap?.setOnCameraMoveEndListener(this@MapFragment)
+                    centerPointLabel = kakaoMap.labelManager!!.layer
                         .addLabel(
-                            LabelOptions.from(kakaoMapTemp.cameraPosition!!.position)
-                                .setStyles(R.drawable.ic_launcher_background)
+                            LabelOptions.from(kakaoMap.cameraPosition!!.position)
+                                .setStyles(R.drawable.red_dot_marker)
                         )
+
                 }
 
                 override fun getZoomLevel(): Int {
-                    return 2000
+                    return 21
                 }
             })
 
@@ -283,11 +289,14 @@ class MapFragment : Fragment() {
 
     private fun moveCamera(position: LatLng) {
         kakaoMapTemp!!.moveCamera(
-            CameraUpdateFactory.newCenterPosition(position),
-            CameraAnimation.from(
-                1500
-            )
+            CameraUpdateFactory.newCenterPosition(position)
         )
+        //        centerPointLabel = kakaoMapTemp.labelManager!!.layer
+//            .addLabel(
+//                LabelOptions.from(kakaoMapTemp.cameraPosition!!.position)
+//                    .setStyles(R.drawable.red_dot_marker)
+//            )
+
     }
 
     fun moveClientAddress(addr: String) {
@@ -322,35 +331,35 @@ class MapFragment : Fragment() {
                     getMyLocation(location2)
                 }
 
-                locationListener = object : LocationListener {
-                    // 위치가 새롭게 측정되면 호출되는 메서드
-                    override fun onLocationChanged(p0: Location) {
-                        getMyLocation(p0)
-                    }
-                }
-
-                // GPS Provider가 사용 가능하다면 측정을 요청한다.
-                if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER) == true) {
-                    // 첫 번째 : 요청할 프로바이더
-                    // 두 번째 : 측정할 시간 주기. 0을 넣어주면 가장 짧은 주기마다 측정을 한다. (단위 ms)
-                    // 세 번째 : 측정할 거리 단위. 0을 넣어주면 가장 짧은 거리마다 측정을 한다. (단위 m)
-                    lm.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        0,
-                        0f,
-                        locationListener!!
-                    )
-                }
-
-                // Network Provider가 사용 가능하다면 측정을 요청한다.
-                if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == true) {
-                    lm.requestLocationUpdates(
-                        LocationManager.NETWORK_PROVIDER,
-                        0,
-                        0f,
-                        locationListener!!
-                    )
-                }
+//                locationListener = object : LocationListener {
+//                    // 위치가 새롭게 측정되면 호출되는 메서드
+//                    override fun onLocationChanged(p0: Location) {
+//                        getMyLocation(p0)
+//                    }
+//                }
+//
+//                // GPS Provider가 사용 가능하다면 측정을 요청한다.
+//                if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER) == true) {
+//                    // 첫 번째 : 요청할 프로바이더
+//                    // 두 번째 : 측정할 시간 주기. 0을 넣어주면 가장 짧은 주기마다 측정을 한다. (단위 ms)
+//                    // 세 번째 : 측정할 거리 단위. 0을 넣어주면 가장 짧은 거리마다 측정을 한다. (단위 m)
+//                    lm.requestLocationUpdates(
+//                        LocationManager.GPS_PROVIDER,
+//                        0,
+//                        0f,
+//                        locationListener!!
+//                    )
+//                }
+//
+//                // Network Provider가 사용 가능하다면 측정을 요청한다.
+//                if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == true) {
+//                    lm.requestLocationUpdates(
+//                        LocationManager.NETWORK_PROVIDER,
+//                        0,
+//                        0f,
+//                        locationListener!!
+//                    )
+//                }
 
 
             } catch (e: java.lang.NullPointerException) {
@@ -400,6 +409,7 @@ class MapFragment : Fragment() {
                     BottomSheetBehavior.STATE_EXPANDED-> {
                         Log.d(TAG, "onStateChanged: 펼침")
                         clientViewModel.getClientListAll("1")
+//                        showIconLabel("test")
 
                     }
                     BottomSheetBehavior.STATE_HIDDEN-> {
@@ -413,9 +423,21 @@ class MapFragment : Fragment() {
         })
     }
 
+    override fun onCameraMoveEnd(
+        kakaoMap: KakaoMap,
+        cameraPosition: CameraPosition,
+        gestureType: GestureType
+    ) {
+        centerPointLabel = kakaoMap.labelManager!!.layer
+            .addLabel(
+                LabelOptions.from(kakaoMap.cameraPosition!!.position)
+                    .setStyles(R.drawable.red_dot_marker)
+            )
 
+    }
 
-
-
+    override fun onCameraMoveStart(kakaoMap: KakaoMap, gestureType: GestureType) {
+        centerPointLabel?.remove()
+    }
 
 }
