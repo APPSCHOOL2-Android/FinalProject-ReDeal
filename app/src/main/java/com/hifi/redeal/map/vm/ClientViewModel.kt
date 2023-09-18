@@ -8,7 +8,7 @@ import com.hifi.redeal.map.repository.ClientRepository
 
 class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
-
+    var clientDataListAll = MutableLiveData<MutableList<ClientDataClass>>()
     init{
         clientDataListByKeyWord.value = mutableListOf<ClientDataClass>()
     }
@@ -17,7 +17,7 @@ class ClientViewModel : ViewModel() {
 
         val tempList = mutableListOf<ClientDataClass>()
 
-        ClientRepository.getClientListByUser(userIdx, keyword){
+        ClientRepository.getClientListByUser(userIdx){
                 for (snapshot in it.result.documents) {
                    Log.d("검색 테스트1",snapshot.toObject(ClientDataClass::class.java).toString())
                     if (snapshot.getString("clientName")!!.contains(keyword)) {
@@ -29,8 +29,21 @@ class ClientViewModel : ViewModel() {
             clientDataListByKeyWord.value = tempList
         }
 
+    }
+
+    fun getClientListAll(userIdx : String){
+        val tempList = mutableListOf<ClientDataClass>()
+        ClientRepository.getClientListByUser(userIdx){
+            for (snapshot in it.result.documents) {
+                Log.d("거래처 테스트1",snapshot.toObject(ClientDataClass::class.java).toString())
+                var item = snapshot.toObject(ClientDataClass::class.java)
+                tempList.add(item!!)
+            }
+            clientDataListAll.value = tempList
+        }
 
     }
+
     fun resetClientList(){
         clientDataListByKeyWord.value= mutableListOf<ClientDataClass>()
     }
