@@ -141,7 +141,7 @@ class MapFragment : Fragment() {
             mapSearchView.run {
                 addTransitionListener { searchView, previousState, newState ->
                     if (newState == SearchView.TransitionState.SHOWING) {
-                        clientViewModel.resetClientList()
+                        clientViewModel.resetClientListByKeyword()
                     } else {
                         Log.d("지도주소", currentAddress.toString())
                         if (currentAddress != null) {

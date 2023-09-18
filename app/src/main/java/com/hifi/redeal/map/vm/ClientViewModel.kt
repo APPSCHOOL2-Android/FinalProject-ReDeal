@@ -44,7 +44,7 @@ class ClientViewModel : ViewModel() {
 
     }
 
-    fun resetClientList(){
+    fun resetClientListByKeyword(){
         clientDataListByKeyWord.value= mutableListOf<ClientDataClass>()
     }
 
