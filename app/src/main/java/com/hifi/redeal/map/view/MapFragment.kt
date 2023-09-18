@@ -59,7 +59,9 @@ class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCame
     // 카카오 맵
     lateinit var kakaoMapTemp: KakaoMap
     private var centerPointLabel: Label? = null
+    private lateinit var labels: Array<Label>
     private var labelLayer: LabelLayer? = null
+    private val selectedList: List<Label> = ArrayList()
 
 
     // 현재 위치
@@ -101,6 +103,12 @@ class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCame
                     }
                 }
             }
+
+            clientDataListLabel.observe(mainActivity){
+                Log.d("라벨 테스트2",clientViewModel.clientDataListLabel.value.toString())
+                labels = kakaoMapTemp.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
+            }
+
 
             selectedButtonId.observe(mainActivity) { selectedButtonId ->
 
@@ -154,6 +162,11 @@ class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCame
                             LabelOptions.from(kakaoMap.cameraPosition!!.position)
                                 .setStyles(R.drawable.red_dot_marker)
                         )
+                    clientViewModel.getClientListLabel("1")
+
+
+
+
 
                 }
 
@@ -312,6 +325,7 @@ class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCame
     }
 
 
+
     fun moveCurrentLocation() {
         val permissionCheck = ContextCompat
             .checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION)
@@ -421,6 +435,15 @@ class MapFragment : Fragment(),KakaoMap.OnCameraMoveEndListener, KakaoMap.OnCame
                 }
             }
         })
+    }
+
+    private fun getSelectedPoints(): Array<LatLng?>? {
+        val count: Int = selectedList.size
+        val points = arrayOfNulls<LatLng>(count)
+        for (i in selectedList.indices) {
+            points[i] = selectedList.get(i).getPosition()
+        }
+        return points
     }
 
     override fun onCameraMoveEnd(
