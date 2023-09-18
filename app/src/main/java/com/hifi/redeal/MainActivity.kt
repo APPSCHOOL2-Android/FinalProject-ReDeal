@@ -1,5 +1,10 @@
 package com.hifi.redeal
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
@@ -24,6 +29,15 @@ class MainActivity : AppCompatActivity() {
     var newFragment:Fragment? = null
     var oldFragment:Fragment? = null
 
+    val permissionList = arrayOf(
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.READ_PHONE_STATE,
+        Manifest.permission.READ_CALL_LOG,
+        Manifest.permission.FOREGROUND_SERVICE,
+        Manifest.permission.USE_FULL_SCREEN_INTENT
+    )
+    val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
+    val NOTIFICATION_CHANNEL1_NAME = "리딜"
     companion object{
         val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
         val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
@@ -37,6 +51,9 @@ class MainActivity : AppCompatActivity() {
 
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        requestPermissions(permissionList, 10)
+        addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
 
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
@@ -109,5 +126,33 @@ class MainActivity : AppCompatActivity() {
     // Fragment를 BackStack에서 제거한다.
     fun removeFragment(name:String){
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    // Notification Channel을 등록하는 메서드
+    // 첫 번째 : 코드에서 채널을 관리하기 위한 이름
+    // 두 번째 : 사용자에게 노출 시킬 이름
+    fun addNotificationChannel(id: String, name:String){
+        // 안드로이드 8.0 이상일 때만 동작하게 한다.
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            // 알림 메시지를 관리하는 객체를 추출한다.
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            // id를 통해 NotificationChannel 객체를 추출한다.
+            // 채널이 등록된 적이 없다면 null을 반환한다.
+            val channel = notificationManager.getNotificationChannel(id)
+            // 채널이 등록된 적이 없다면...
+            if(channel == null){
+                // 채널 객체를 생성한다.
+                val newChannel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+                // 단말기에 LED 램프가 있다면 램프를 사용하도록 설정한다.
+                newChannel.enableLights(true)
+                // LED 램프의 색상을 설정한다.
+                newChannel.lightColor = Color.BLUE
+                // 진동을 사용할 것인가?
+                newChannel.enableVibration(true)
+                // 채널을 등록한다.
+                notificationManager.createNotificationChannel(newChannel)
+            }
+
+        }
     }
 }
