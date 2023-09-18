@@ -17,26 +17,45 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ClientRepository {
-    companion object{
+    companion object {
         fun getClientListByUser(userIdx: String, callback1: (Task<QuerySnapshot>) -> Unit) {
             val database = Firebase.firestore
 
-            val clientDataRef = database.collection("userData").document(userIdx).collection("clientData")
+            val clientDataRef =
+                database.collection("userData").document(userIdx).collection("clientData")
 
             clientDataRef.get().addOnCompleteListener(callback1)
 
         }
 
-        fun searchAddr(address: String,callback: (List<Place>?) -> Unit) {
+        fun getScheduleListByClientAndUser(
+            userIdx: String,
+            clientIdx: Long,
+            callback1: (Task<QuerySnapshot>) -> Unit
+        ) {
+            val database = Firebase.firestore
+
+            val scheduleDataRef =
+                database.collection("userData").document(userIdx).collection("scheduleData")
+            .whereEqualTo("clientIdx", clientIdx).orderBy("scheduleFinishTime")
+
+            scheduleDataRef.get().addOnCompleteListener(callback1)
+
+        }
+
+        fun searchAddr(address: String, callback: (List<Place>?) -> Unit) {
             val retrofit = Retrofit.Builder()   // Retrofit 구성
                 .baseUrl(MainActivity.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             val api = retrofit.create(KakaoMapAPI::class.java)   // 통신 인터페이스를 객체로 생성
-            val call = api.getSearchAddr("KakaoAK "+ BuildConfig.KAKAO_REST_API_KEY, address)   // 검색 조건 입력
+            val call = api.getSearchAddr(
+                "KakaoAK " + BuildConfig.KAKAO_REST_API_KEY,
+                address
+            )   // 검색 조건 입력
 
             // API 서버에 요청
-            call.enqueue(object: Callback<ResultSearchAddr> {
+            call.enqueue(object : Callback<ResultSearchAddr> {
                 override fun onResponse(
                     call: Call<ResultSearchAddr>,
                     response: Response<ResultSearchAddr>
@@ -59,7 +78,10 @@ class ClientRepository {
 
         }
 
+
     }
+
 }
+
 
 
