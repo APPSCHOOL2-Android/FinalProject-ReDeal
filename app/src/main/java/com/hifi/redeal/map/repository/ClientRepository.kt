@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ClientRepository {
     companion object{
-        fun getClientListByUser(userIdx: String, address : String,callback1: (Task<QuerySnapshot>) -> Unit) {
+        fun getClientListByUser(userIdx: String, callback1: (Task<QuerySnapshot>) -> Unit) {
             val database = Firebase.firestore
 
             val clientDataRef = database.collection("userData").document(userIdx).collection("clientData")
