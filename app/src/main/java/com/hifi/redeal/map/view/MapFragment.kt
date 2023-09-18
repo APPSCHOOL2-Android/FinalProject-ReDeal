@@ -8,16 +8,22 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -75,6 +81,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     var REQUIRED_PERMISSIONS = arrayOf<String>(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+
 
 
     override fun onCreateView(
@@ -222,6 +229,26 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
 
             mapBottomSheet.run {
+
+                val distanceAdapter = ArrayAdapter(mainActivity, R.layout.item_map_bottom_sheet_distance, mutableListOf("주변 4km","주변 8km"))
+                (mapBottomSheetDistanceList.editText as AutoCompleteTextView).setAdapter(distanceAdapter)
+                // AutoCompleteTextView의 값이 변경될 때마다 호출되는 리스너를 추가
+                mapBottomSheetDistanceList.editText?.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                    override fun afterTextChanged(s: Editable?) {
+
+                    }
+                })
+
                 mapBottomSheetRecyclerView.run {
                     adapter = MapBottomSheetRecyclerViewAdapter()
                     layoutManager = LinearLayoutManager(context)
@@ -246,6 +273,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
 
                 mapBottomSheetTabVisit.setOnClickListener {
+//                    clientViewModel.getClientListTodayVisit("1")
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabVisit)
                 }
             }
