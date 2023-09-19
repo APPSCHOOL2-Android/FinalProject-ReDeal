@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:top="12dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:bottom="12dp"
+        android:drawable="@drawable/person_add_24px"/>
+</layer-list>
