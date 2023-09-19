@@ -109,6 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/nanumsquareneo_regular"
                 android:minHeight="20dp"
                 android:text="서울 특별시 강남구 역삼동 123-45 번지"
                 android:textColor="@color/text10"

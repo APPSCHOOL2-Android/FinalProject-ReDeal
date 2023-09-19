@@ -26,8 +26,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true // 추가
     }
 
 
@@ -59,8 +57,8 @@ android {
 dependencies {
 
     // MVVM
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.2"
-    implementation "androidx.lifecycle:lifecycle-livedata:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
 
     implementation 'androidx.core:core-ktx:1.9.0'
 
