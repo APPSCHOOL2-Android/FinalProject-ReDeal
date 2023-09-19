@@ -1,5 +1,11 @@
 package com.hifi.redeal
 
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import com.hifi.redeal.auth.AuthFindPwFragment
+import com.hifi.redeal.auth.AuthJoinFragment
+import com.hifi.redeal.auth.AuthLoginFragment
+import kotlin.concurrent.thread
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -56,6 +62,9 @@ class MainActivity : AppCompatActivity() {
         val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
         val SCHEDULE_SELECT_BY_CLIENT_FRAGMENT = "ScheduleSelectByClientFragment"
         val EDIT_SCHEDULE_FRAGMENT = "EditScheduleFragment"
+      val AUTH_LOGIN_FRAGMENT = "AuthLoginFragment"
+        val AUTH_JOIN_FRAGMENT = "AuthJoinFragment"
+        val AUTH_FIND_PW_FRAGMENT = "AuthFindPwFragment"
     }
 
     lateinit var navController: NavController
@@ -75,10 +84,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
-        
-         requestPermissions(permissionList, 10)
+
+      requestPermissions(permissionList, 10)
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
+
+    }
+
+    fun replaceFragment(name: String, addToBackStack: Boolean, bundle: Bundle?) {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
@@ -99,11 +112,13 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
         // newFragment 에 Fragment가 들어있으면 oldFragment에 넣어준다.
+
         if(newFragment != null){
             oldFragment = newFragment
         }
 
         // 새로운 Fragment를 담을 변수
+
         newFragment = when(name){
             SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
             UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
@@ -111,21 +126,16 @@ class MainActivity : AppCompatActivity() {
             MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             SCHEDULE_SELECT_BY_CLIENT_FRAGMENT -> ScheduleSelectByClientFragment()
             EDIT_SCHEDULE_FRAGMENT -> EditScheduleFragment()
+            AUTH_LOGIN_FRAGMENT -> AuthLoginFragment()
+            AUTH_JOIN_FRAGMENT -> AuthJoinFragment()
+            AUTH_FIND_PW_FRAGMENT -> AuthFindPwFragment()
             else -> Fragment()
         }
 
         newFragment?.arguments = bundle
 
+
         if(newFragment != null) {
-
-            // oldFragment -> newFragment로 이동
-            // oldFramgent : exit
-            // newFragment : enter
-
-            // oldFragment <- newFragment 로 되돌아가기
-            // oldFragment : reenter
-            // newFragment : return
-
             // 애니메이션 설정
             if(oldFragment != null){
                 oldFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
@@ -133,11 +143,11 @@ class MainActivity : AppCompatActivity() {
                 oldFragment?.enterTransition = null
                 oldFragment?.returnTransition = null
             }
-
             newFragment?.exitTransition = null
             newFragment?.reenterTransition = null
             newFragment?.enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
             newFragment?.returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+
 
             // Fragment를 교채한다.
             fragmentTransaction.replace(R.id.mainContainer, newFragment!!)
@@ -146,9 +156,20 @@ class MainActivity : AppCompatActivity() {
                 // Fragment를 Backstack에 넣어 이전으로 돌아가는 기능이 동작할 수 있도록 한다.
                 fragmentTransaction.addToBackStack(name)
             }
-
+            
             // 교체 명령이 동작하도록 한다.
             fragmentTransaction.commit()
+        }
+    }
+
+    // 입력 요소에 포커스를 주는 메서드
+    fun showSoftInput(view: View) {
+        view.requestFocus()
+
+        val inputMethodManger = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        thread {
+            SystemClock.sleep(200)
+            inputMethodManger.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    
+
+    <resources>
+
+      <style name="AuthMainToolbarTitleTextAppearance" parent="@style/TextAppearance.AppCompat.Large">
+          <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
+          <item name="android:textSize">20dp</item>
+      </style>
+
     <style name="bottom_navigation_view_item_text_appearance" parent="TextAppearance.Material3.TitleSmall">
         <item name="android:fontFamily">@font/nanumsquareneo_regular</item>
         <item name="android:textSize">11sp</item>
