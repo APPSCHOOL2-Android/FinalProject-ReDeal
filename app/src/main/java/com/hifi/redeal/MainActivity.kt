@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
-        replaceFragment(MAP_FRAGMENT,false,null)
+        //replaceFragment(MAP_FRAGMENT,false,null)
 
         supportFragmentManager.addOnBackStackChangedListener {
             for (fragment in supportFragmentManager.fragments) {
