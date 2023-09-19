@@ -48,7 +48,7 @@ class ScheduleSelectByClientFragment : Fragment() {
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            userClientSimpleDataListVM.observe(mainActivity){
+            userClientSimpleDataListVM.observe(viewLifecycleOwner){
                 userClientSimpleDataList = it
                 fragmentScheduleSelectByClientBinding.recyclerViewAllResult.adapter?.notifyDataSetChanged()
             }
