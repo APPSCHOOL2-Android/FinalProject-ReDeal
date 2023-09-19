@@ -1,5 +1,6 @@
 package com.hifi.redeal
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
@@ -7,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.databinding.ActivityMainBinding
-import com.hifi.redeal.map.fragment.MapFragment
-import com.hifi.redeal.map.fragment.MapSearchRegionFragment
+import com.hifi.redeal.map.view.MapFragment
+import com.hifi.redeal.map.view.MapSearchRegionFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 
 class MainActivity : AppCompatActivity() {
@@ -18,8 +19,18 @@ class MainActivity : AppCompatActivity() {
     var newFragment: Fragment? = null
     var oldFragment:Fragment? = null
 
+    // 확인할 권한 목록
+    val permissionList = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.INTERNET
+    )
+
+
 
     companion object{
+        const val BASE_URL = "https://dapi.kakao.com/"
+
         val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
         val MAP_FRAGMENT = "MapFragment"
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
@@ -28,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        requestPermissions(permissionList, 0)
 //        replaceFragment(MAKE_SCHEDULE_FRAGMENT,false,null)
         replaceFragment(MAP_FRAGMENT,false,null)
 
@@ -87,4 +100,6 @@ class MainActivity : AppCompatActivity() {
     fun removeFragment(name:String){
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
+
+
 }
