@@ -1,4 +1,4 @@
-package com.hifi.redeal.repository
+package com.hifi.redeal.auth.repository
 
 import android.util.Log
 import com.google.firebase.auth.AuthResult
@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.hifi.redeal.model.UserDataClass
+import com.hifi.redeal.auth.model.UserDataClass
 
 class AuthRepository {
     companion object {
