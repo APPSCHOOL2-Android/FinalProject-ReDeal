@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".auth.AuthLoginFragment" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewAuthTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginEnd="100dp"
+                android:fontFamily="@font/nanumsquareneo_extrabold"
+                android:text="리딜"
+                android:textColor="@color/primary20"
+                android:textSize="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewAuthTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="100dp"
+                android:fontFamily="@font/nanumsquareneo_extrabold"
+                android:text="Remember a deal"
+                android:textColor="@color/primary20"
+                android:textSize="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewAuthTitle" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutLoginUserId"
+                android:layout_width="330dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginEnd="40dp"
+                android:background="@color/background"
+                android:hint="아이디"
+                android:textColorHint="@color/text50"
+                android:transitionGroup="true"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewAuthTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEditTextLoginUserId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="60dp"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="text|textEmailAddress"
+                    android:padding="1dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text30" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutLoginUserPw"
+                android:layout_width="330dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="40dp"
+                android:background="@color/background"
+                android:hint="비밀번호"
+                android:textColorHint="@color/text50"
+                android:transitionGroup="true"
+                app:endIconMode="password_toggle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLoginUserId"
+                tools:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEditTextLoginUserPw"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="60dp"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="text|textPassword"
+                    android:padding="1dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/text30" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonAuthLogin"
+                android:layout_width="330dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/nanumsquareneo_bold"
+                android:text="로그인"
+                android:textSize="18dp"
+                app:backgroundTint="@color/primary20"
+                app:cornerRadius="6dp"
+                app:elevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLoginUserPw" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkboxAuthAutoLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="31dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="14dp"
+                android:checked="true"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="자동 로그인"
+                android:textColor="@color/text30"
+                android:textSize="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonAuthLogin" />
+
+            <TextView
+                android:id="@+id/textViewAuthJoin"
+                android:layout_width="60dp"
+                android:layout_height="31dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="130dp"
+                android:clickable="true"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|center_horizontal"
+                android:text="회원가입"
+                android:textColor="@color/text30"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonAuthLogin" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/barLogin1"
+                android:layout_width="1dp"
+                android:layout_height="22dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="19dp"
+                app:dividerColor="@color/text30"
+                app:layout_constraintStart_toEndOf="@+id/textViewAuthJoin"
+                app:layout_constraintTop_toBottomOf="@+id/buttonAuthLogin" />
+
+            <TextView
+                android:id="@+id/textViewAuthFindPw"
+                android:layout_width="80dp"
+                android:layout_height="31dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="14dp"
+                android:clickable="true"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|center_horizontal"
+                android:text="비밀번호 찾기"
+                android:textColor="@color/text30"
+                android:textSize="12dp"
+                app:layout_constraintStart_toEndOf="@+id/barLogin1"
+                app:layout_constraintTop_toBottomOf="@+id/buttonAuthLogin"
+                tools:clickable="true" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonAuthGoogleLogin"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                android:layout_width="330dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="70dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="구글 계정으로 시작하기"
+                android:textColor="@color/text30"
+                app:cornerRadius="7dp"
+                app:elevation="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonAuthLogin" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

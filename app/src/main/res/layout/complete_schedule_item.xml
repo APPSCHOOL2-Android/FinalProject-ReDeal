@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/completeScheduleClinetState"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/client_state_circle_trading" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/completeScheduleClientInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:textColor="@color/text70"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/completeScheduleClientBookmarkView"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/completeScheduleName"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:maxLines="1"
+                android:text="판매 자료 엑셀 정리 후 보내기"
+                android:textColor="@color/text80"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/completeScheduleTime"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="end"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="14 : 30"
+                android:textColor="@color/primary90"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/completeScheduleRetryImageView"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_round_primary90"
+                app:srcCompat="@drawable/replay_24px" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/text80"
+        android:orientation="vertical"></LinearLayout>
+
+</LinearLayout>
