@@ -8,6 +8,7 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,7 +44,7 @@ class AddRecordMemoFragment : Fragment() {
     private var mInitialized: Boolean = false
 
     private var mediaPlayer: MediaPlayer? = null
-    // private val handler = Handler()
+    private val handler = Handler()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -115,17 +116,17 @@ class AddRecordMemoFragment : Fragment() {
 
                 val fileUri = Uri.fromFile(recordFileLocation)
                 Snackbar.make(requireView(), "$name 저장 완료", Snackbar.LENGTH_LONG).show()
-                // mediaPlayer = MediaPlayer.create(requireContext(), fileUri)
-                // mediaPlayer?.duration?.let { fragmentAddRecordMemoBinding.audioSeekBar?.max = it }
-                // fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = "0:00"
-                fragmentAddRecordMemoBinding.totalDurationTimeTextView.text = getTotalDuration(mediaPlayer)
+                val durationMediaPlayer = MediaPlayer.create(requireContext(), fileUri)
+                durationMediaPlayer?.duration?.let { fragmentAddRecordMemoBinding.audioSeekBar?.max = it }
+                fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = "0:00"
+                fragmentAddRecordMemoBinding.totalDurationTimeTextView.text = getTotalDuration(durationMediaPlayer)
                 if (mainActivity.REQUEST_INTENTS.contains(activity?.intent?.action)) {
                     // Recorder was started via a request for audio; set result and finish
                     activity?.setResult(Activity.RESULT_OK, Intent().setData(fileUri))
                     activity?.finish()
                 } else {
                     // todo : 저장 완료 후 동작 코드
-                    resetRecorder(true)
+                    // resetRecorder(true)
                 }
             }
         }
@@ -212,18 +213,16 @@ class AddRecordMemoFragment : Fragment() {
             mediaPlayer?.release()
         }
         val fileUri = Uri.fromFile(recordFileLocation)
-        Log.d("testaaa", "$fileUri")
-//        mediaPlayer = MediaPlayer.create(requireContext(), fileUri)
-//        // ragmentAddRecordMemoBinding.audioSeekBar?.progress = 0
-//        // updateSeekBar()
-//        mediaPlayer?.start()
-//
-//        mediaPlayer?.setOnCompletionListener {
-//            // Release the MediaPlayer after playback is completed
-//            releaseMediaPlayer()
-//            // handler.removeCallbacksAndMessages(null)
-//            Log.d("testaaa", "flag1")
-//        }
+        mediaPlayer = MediaPlayer.create(requireContext(), fileUri)
+        fragmentAddRecordMemoBinding.audioSeekBar?.progress = 0
+        updateSeekBar()
+        mediaPlayer?.start()
+
+        mediaPlayer?.setOnCompletionListener {
+            // Release the MediaPlayer after playback is completed
+            releaseMediaPlayer()
+            handler.removeCallbacksAndMessages(null)
+        }
     }
 
     private fun releaseMediaPlayer() {
@@ -244,12 +243,9 @@ class AddRecordMemoFragment : Fragment() {
     }
 
     private fun updateSeekBar() {
-        mediaPlayer?.currentPosition?.let { currentPosition ->
-            fragmentAddRecordMemoBinding.audioSeekBar?.progress = currentPosition
-        }
-
-//        handler.postDelayed({
-//            updateSeekBar()
-//        }, 1000)
+        fragmentAddRecordMemoBinding.audioSeekBar?.progress = mediaPlayer?.currentPosition!!
+        handler.postDelayed({
+            updateSeekBar()
+        }, 1000)
     }
 }
