@@ -163,8 +163,9 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 moveCurrentLocation()
             }
 
-            
+
             mapSearchView.run {
+                Log.d("상태",currentTransitionState.toString())
                 addTransitionListener { searchView, previousState, newState ->
                     if (newState == SearchView.TransitionState.SHOWING) {
                         clientViewModel.resetClientListByKeyword()
@@ -401,6 +402,17 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
+
+            rowMapClientListBinding.root.setOnClickListener {
+                val position = allViewHolder.adapterPosition
+                currentAddress =
+                    clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!
+                moveClientAddress(currentAddress.toString())
+                BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout).state =
+                    BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+
 
             return allViewHolder
         }
