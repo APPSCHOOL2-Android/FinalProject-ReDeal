@@ -19,6 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "KAKAO_REST_API_KEY", "\"${properties['kakao.rest.api.key']}\""
+        buildConfigField "String", "REGION_REST_API_KEY", "\"${properties['region.rest.api.key']}\""
         manifestPlaceholders["KAKAO_API_KEY"] = properties['kakao.key']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
