@@ -53,11 +53,11 @@ class RecordMemoRepository {
                 }
         }
 
-        fun getPhotoMemoImgUrl(userIdx: Long, filename: String, callback: (String) -> Unit) {
+        fun getRecordMemoRecordUrl(userIdx: Long, audioFilePath: String, callback: (Uri) -> Unit) {
             val storage = FirebaseStorage.getInstance()
-            val fileRef = storage.reference.child("user${userIdx}/$filename")
+            val fileRef = storage.reference.child("user${userIdx}/$audioFilePath")
             fileRef.downloadUrl.addOnCompleteListener{
-                callback(it.result.toString())
+                callback(it.result)
             }
         }
 

@@ -21,6 +21,7 @@
         app:title="음성 메모" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:dividerColor="@color/primary20"
@@ -28,32 +29,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recordMemoToolbar" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recordMemoRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_height="0dp"
+        android:transitionGroup="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recordMemoToolbar">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="24dp"
-            android:paddingLeft="24dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="24dp"
-            android:paddingRight="24dp"
-            android:paddingBottom="20dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@id/recordMemoToolbar"
+        tools:itemCount="1"
+        tools:listitem="@layout/row_record_memo" />
 
     <ImageButton
         android:id="@+id/addRecordMemoBtn"

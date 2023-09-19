@@ -52,6 +52,7 @@ class AddRecordMemoFragment : Fragment() {
 
     private val handler = Handler()
     private var audioFileUri: Uri? = null
+    private var clientIdx = 1L
 
     private lateinit var audioLauncher: ActivityResultLauncher<Intent>
     override fun onCreateView(
@@ -61,6 +62,7 @@ class AddRecordMemoFragment : Fragment() {
         fragmentAddRecordMemoBinding = FragmentAddRecordMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        clientIdx = arguments?.getLong("clientIdx")?:1L
         audioLauncher = recordingSetting()
         prepareRecorder()
         fragmentAddRecordMemoBinding.run{
@@ -95,15 +97,12 @@ class AddRecordMemoFragment : Fragment() {
                 clickRecordAudio(audioLauncher)
             }
             addRecordMemoAddBtn.setOnClickListener{
-                Log.d("testaaa", "${audioFileUri}")
-                Log.d("testaaa", "${audioFileName}")
-                Log.d("testaaa", "${recordFileLocation}")
                 val recordMemoContext = addRecordMemoTextInputEditText.text.toString()
                 addRecordMemoAddBtn.isEnabled = false
                 addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_loading_container)
                 addRecordMemoAddBtn.text = "등록 중 ..."
                 addRecordMemoAddBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary20))
-                RecordMemoRepository.addRecordMemo(1,1,recordMemoContext,audioFileUri!!, audioFileName!!){
+                RecordMemoRepository.addRecordMemo(1,clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }
             }
