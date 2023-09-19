@@ -1,9 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
+
     <resources>
 
-        <style name="AuthMainToolbarTitleTextAppearance" parent="@style/TextAppearance.AppCompat.Large">
-            <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
-            <item name="android:textSize">20dp</item>
-        </style>
+      <style name="AuthMainToolbarTitleTextAppearance" parent="@style/TextAppearance.AppCompat.Large">
+          <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
+          <item name="android:textSize">20dp</item>
+      </style>
 
-    </resources>
+    <style name="bottom_navigation_view_item_text_appearance" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/nanumsquareneo_regular</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="bottom_bar_account_list_item_text_appearance" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="account_list_toolbar_title_text_appearance" parent="@style/TextAppearance.AppCompat.Large">
+        <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/primary20</item>
+    </style>
+
+    <style name="account_detail_toolbar_title_text_appearance" parent="account_list_toolbar_title_text_appearance">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="tab_item_text_appearance_account_list_sort" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- AccountEditFragment AutoCompleteTextView style within TextInputLayout -->
+
+    <style name="Widget.App.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.ExposedDropdownMenu</item>
+<!--        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>-->
+        <item name="hintTextColor">@color/primary20</item>
+        <item name="endIconTint">@color/black</item>
+    </style>
+
+    <style name="ThemeOverlay.App.ExposedDropdownMenu" parent="">
+        <item name="colorPrimary">@color/primary20</item>
+        <item name="colorOnSurface">@color/primary95</item>
+        <item name="colorError">@color/calendarRed</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.App.BodyLarge</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.App.BodySmall</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.Material3.AutoCompleteTextView.OutlinedBox</item>
+    </style>
+
+    <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/nanumsquareneo_regular</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.App.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+<!--    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">-->
+<!--        <item name="cornerFamily">cut</item>-->
+<!--        <item name="cornerSize">4dp</item>-->
+<!--    </style>-->
+
+    <!-- AccountEditFragment AutoCompleteTextView style within TextInputLayout -->
+
+    <style name="Widget.App.TextInputEditText.OutlinedBox" parent="@style/Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="colorControlActivated">@color/primary20</item>
+        <item name="android:textColorHighlight">@color/primary80</item>
+    </style>
+
+    <style name="text_input_layout_style_account_edit">
+        <item name="hintTextColor">@color/primary20</item>
+        <item name="boxStrokeColor">@color/primary20</item>
+    </style>
+
+    <style name="text_input_edit_text_style_account_edit">
+        <item name="android:textColorHint">@color/text30</item>
+        <item name="android:textColor">@color/text10</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:theme">@style/Widget.App.TextInputEditText.OutlinedBox</item>
+    </style>
+    
+    <style name="tab_item_chip_style_account_list" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textAppearance">@style/tab_item_text_appearance_account_list_sort</item>
+        <item name="android:textColor">@color/tab_item_text_color_account_list_sort</item>
+        <item name="android:textColorSecondary">@color/primary20</item>
+        <item name="chipBackgroundColor">@color/background</item>
+        <item name="chipEndPadding">0dp</item>
+        <item name="chipMinHeight">0dp</item>
+        <item name="chipStartPadding">0dp</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="closeIcon">@drawable/arrow_drop_down_24px</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="rippleColor">#00FCFCFC</item>
+        <item name="closeIconTint">@color/primary20</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="textStartPadding">0dp</item>
+    </style>
+    
+</resources>

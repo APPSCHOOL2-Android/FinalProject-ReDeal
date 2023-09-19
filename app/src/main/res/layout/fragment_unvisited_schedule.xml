@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:transitionGroup="true"
+    tools:context=".schedule.UnvisitedScheduleFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/unvisitedScheduleToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Theme.ReDeal.ToolbarTheme"
+        app:menu="@menu/schedule_menu"
+        app:navigationIcon="@drawable/arrow_back_ios_24px"
+        app:title="미방문 일정"
+        app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+        app:titleTextColor="@color/primary20" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/primary20"
+        android:orientation="vertical"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="12dp"
+        android:orientation="vertical"
+        android:transitionGroup="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/scheduleClientState"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/client_state_circle_trading" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:gravity="center|start">
+
+                <TextView
+                    android:id="@+id/unvisitedClientInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="라이온 김대리"
+                    android:textColor="@color/text10"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/unvisitedClientBookmark"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/btn_round_primary20"
+                    android:scaleType="center"
+                    android:src="@drawable/card_account_detail_24px_primary99" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="작성일"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/scheduleWriteDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="2023.08.12"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/scheduleWriteTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="16 : 37"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="마감기한"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/scheduleDeadLineDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="2023.09.13"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/scheduleDeadLineTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="end"
+                android:text="14 : 30"
+                android:textColor="@color/primary20"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/scheduleDataTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="판매 자료 액셀 정리 후 보내기"
+            android:textColor="@color/text10"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/scheduleDataContents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/schedule_content_backround"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:gravity="left|center_vertical"
+            android:minHeight="42dp"
+            android:padding="12dp"
+            android:text="박과장님한테 자료 받아서 처리할 예정"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
