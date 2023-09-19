@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/accountDetailMenuItemShare"
+        android:icon="@drawable/share_24px"
+        android:title="공유"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/accountDetailMenuItemEdit"
+        android:icon="@drawable/edit_24px"
+        android:title="수정"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/accountDetailMenuItemDelete"
+        android:icon="@drawable/delete_24px_primary20"
+        android:title="삭제"
+        app:showAsAction="always" />
+</menu>
