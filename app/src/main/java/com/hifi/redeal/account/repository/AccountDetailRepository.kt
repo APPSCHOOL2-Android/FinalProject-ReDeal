@@ -4,9 +4,9 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.hifi.redeal.account.model.ClientData
-import com.hifi.redeal.account.model.ContactData
-import com.hifi.redeal.account.model.ScheduleData
+import com.hifi.redeal.account.repository.model.ClientData
+import com.hifi.redeal.account.repository.model.ContactData
+import com.hifi.redeal.account.repository.model.ScheduleData
 
 class AccountDetailRepository {
     val db = Firebase.firestore

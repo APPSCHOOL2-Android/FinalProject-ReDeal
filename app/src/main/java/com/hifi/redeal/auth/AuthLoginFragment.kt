@@ -53,7 +53,7 @@ class AuthLoginFragment : Fragment() {
 
         // 로그인 버튼 클릭 시 로그인 처리 함수 호출
         fragmentAuthLoginBinding.buttonAuthLogin.setOnClickListener {
-            mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, false)
+            mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, true)
             //handleLoginButtonClick()
         }
 

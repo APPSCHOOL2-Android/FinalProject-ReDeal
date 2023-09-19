@@ -3,7 +3,7 @@ package com.hifi.redeal.account.vm
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.hifi.redeal.account.model.ClientData
+import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.AccountListRepository
 
 class AccountListViewModel: ViewModel() {
@@ -21,6 +21,8 @@ class AccountListViewModel: ViewModel() {
 
     val clientList = MutableLiveData<List<ClientData>>()
 
+    val filterCntList = MutableLiveData<List<Int>>()
+
     fun getClientList(userId: Long) {
         val filter = selectedTabItemPosState.value ?: -1
 
@@ -28,8 +30,9 @@ class AccountListViewModel: ViewModel() {
 
         val descending = tabItemDescListSort[sortBy]
 
-        accountListRepository.getClientList(userId, filter, sortBy, descending) {
-            clientList.value = it
+        accountListRepository.getClientList(userId, filter, sortBy, descending) { filteredClientList, cntList ->
+            filterCntList.value = cntList
+            clientList.value = filteredClientList
         }
     }
 }

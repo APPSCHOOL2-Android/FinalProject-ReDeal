@@ -60,7 +60,7 @@ class ScheduleManageFragment : Fragment(){
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            scheduleListVM.observe(requireActivity()){
+            scheduleListVM.observe(viewLifecycleOwner){
                 scheduleList = it
                 setScheduleListLayout(scheduleList)
             }

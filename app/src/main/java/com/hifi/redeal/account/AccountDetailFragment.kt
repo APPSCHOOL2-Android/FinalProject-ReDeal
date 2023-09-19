@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.account.model.ClientData
+import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.AccountDetailRepository
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
@@ -40,7 +40,7 @@ class AccountDetailFragment : Fragment() {
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
-        accountDetailRepository.getClient(1, clientIdx) { client ->
+        accountDetailRepository.getClient(mainActivity.userId, clientIdx) { client ->
             if (client != null) {
                 accountDetailViewInit(client)
             }
@@ -52,7 +52,27 @@ class AccountDetailFragment : Fragment() {
 //                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
 //                }
 //            })
-            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
+//            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
+            bottomNavigationViewAccountDetail.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.transactionFragment -> {
+                        val bundle = Bundle()
+                        bundle.putLong("clientIdx", clientIdx)
+                        mainActivity.replaceFragment(MainActivity.TRANSACTION_FRAGMENT, true, bundle)
+                    }
+                    R.id.recordMemoFragment -> {
+                        val bundle = Bundle()
+                        bundle.putLong("clientIdx", clientIdx)
+                        mainActivity.replaceFragment(MainActivity.RECORD_MEMO_FRAGMENT, true, bundle)
+                    }
+                    R.id.photoMemoFragment -> {
+                        val bundle = Bundle()
+                        bundle.putLong("clientIdx", clientIdx)
+                        mainActivity.replaceFragment(MainActivity.PHOTO_MEMO_FRAGMENT, true, bundle)
+                    }
+                }
+                true
+            }
         }
 
         return fragmentAccountDetailBinding.root
@@ -64,7 +84,8 @@ class AccountDetailFragment : Fragment() {
                 title = client.clientName
 
                 setNavigationOnClickListener {
-                    findNavController().popBackStack()
+                    mainActivity.removeFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT)
+//                    findNavController().popBackStack()
                 }
 
                 setOnMenuItemClickListener {
@@ -75,16 +96,18 @@ class AccountDetailFragment : Fragment() {
                         R.id.accountDetailMenuItemEdit -> {
                             val bundle = Bundle()
                             bundle.putLong("clientIdx", clientIdx)
-                            mainActivity.navigateTo(R.id.accountEditFragment, bundle)
+                            mainActivity.replaceFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT, true, bundle)
+//                            mainActivity.navigateTo(R.id.accountEditFragment, bundle)
                         }
                         R.id.accountDetailMenuItemDelete -> {
                             AlertDialog.Builder(mainActivity)
                                 .setTitle("거래처 삭제")
                                 .setMessage("거래처 정보를 삭제하시겠습니까?")
                                 .setPositiveButton("확인") { _, _ ->
-                                    accountDetailRepository.deleteClient(1, clientIdx) {
+                                    accountDetailRepository.deleteClient(mainActivity.userId, clientIdx) {
                                         Snackbar.make(root, "거래처가 삭제되었습니다", Snackbar.LENGTH_SHORT).show()
-                                        findNavController().popBackStack()
+                                        mainActivity.removeFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT)
+//                                        findNavController().popBackStack()
                                     }
                                 }
                                 .setNegativeButton("취소", null)
@@ -138,7 +161,7 @@ class AccountDetailFragment : Fragment() {
                     imageViewAccountDetailFavorite.setImageResource(R.drawable.star_fill_24px)
                     client.isBookmark = true
                 }
-                accountDetailRepository.updateBookmark(1, clientIdx, client.isBookmark ?: false)
+                accountDetailRepository.updateBookmark(mainActivity.userId, clientIdx, client.isBookmark ?: false)
             }
 
             textViewAccountDetailShortDescription.text = client.clientExplain

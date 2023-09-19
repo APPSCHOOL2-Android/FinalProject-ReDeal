@@ -15,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.account.model.ClientData
+import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.RowFooterAccountListBinding
 import com.hifi.redeal.databinding.RowItemAccountListBinding
@@ -98,11 +98,12 @@ class AccountListAdapter(
         fun bind(clientData: ClientData) {
             rowItemAccountListBinding.run {
                 root.setOnClickListener {
-                    accountListViewModel.accountListRepository.incClientViewCount(1, clientData.clientIdx ?: 0, clientData.viewCount ?: 0)
+                    accountListViewModel.accountListRepository.incClientViewCount(mainActivity.userId, clientData.clientIdx ?: 0, clientData.viewCount ?: 0)
 
                     val bundle = Bundle()
                     bundle.putLong("clientIdx", clientData.clientIdx ?: 0)
-                    mainActivity.navigateTo(R.id.accountDetailFragment, bundle)
+                    mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
+//                    mainActivity.navigateTo(R.id.accountDetailFragment, bundle)
                 }
 
                 textViewRowItemAccountListAccountName.text = clientData.clientName
