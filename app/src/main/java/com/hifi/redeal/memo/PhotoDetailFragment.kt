@@ -71,7 +71,7 @@ class PhotoDetailFragment : Fragment() {
                 }
             }
             detailImageView.run{
-                setImageResource(R.drawable.test_image1)
+                setImageResource(R.drawable.empty_photo)
                 setOnTouchListener { _, event ->
                     gestureDetector.onTouchEvent(event)
                     true

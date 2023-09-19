@@ -74,7 +74,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/add_voice_file_container"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:padding="16dp"
             android:text="녹음 또는 파일을 첨부해주세요"
