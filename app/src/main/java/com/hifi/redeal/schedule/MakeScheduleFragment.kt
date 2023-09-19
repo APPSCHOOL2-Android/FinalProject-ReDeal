@@ -65,7 +65,7 @@ class MakeScheduleFragment : Fragment() {
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            userSelectClientSimpleData.observe(requireActivity()){
+            userSelectClientSimpleData.observe(viewLifecycleOwner){
                 val clientName = it.clientName
                 val clientManagerName = it.clientManagerName
                 val clientState = it.clientState

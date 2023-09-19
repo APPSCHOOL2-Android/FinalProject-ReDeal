@@ -51,7 +51,7 @@ class VisitedScheduleFragment : Fragment() {
 
         scheduleVM.run{
 
-            selectScheduleData.observe(requireActivity()){ scheduleInfo ->
+            selectScheduleData.observe(viewLifecycleOwner){ scheduleInfo ->
 
                 fragmentVisitedScheduleBinding.run{
                     var date = Date(scheduleInfo.scheduleDeadlineTime.toDate().time).toString().replace("-",".")
@@ -92,7 +92,7 @@ class VisitedScheduleFragment : Fragment() {
                 getSelectClientLastVisitDate(userIdx, scheduleInfo.clientIdx)
             }
 
-            selectClientData.observe(requireActivity()){
+            selectClientData.observe(viewLifecycleOwner){
                 fragmentVisitedScheduleBinding.run{
 
                     visitedScheduleClientState.visibility = View.VISIBLE
@@ -120,7 +120,7 @@ class VisitedScheduleFragment : Fragment() {
                 }
             }
 
-            clientLastVisitDate.observe(requireActivity()){ timestamp ->
+            clientLastVisitDate.observe(viewLifecycleOwner){ timestamp ->
                 fragmentVisitedScheduleBinding.run{
 
                     if(timestamp != null){
