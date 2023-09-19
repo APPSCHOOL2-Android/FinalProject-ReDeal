@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         val TRANSACTION_FRAGMENT = "TransactionFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
+        const val REGION_BASE_URL = "http://api.vworld.kr/"
     }
 
     val REQUEST_INTENTS = listOf(
@@ -166,6 +167,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
+        replaceFragment(MAP_FRAGMENT,false,null)
 
         supportFragmentManager.addOnBackStackChangedListener {
             for (fragment in supportFragmentManager.fragments) {
