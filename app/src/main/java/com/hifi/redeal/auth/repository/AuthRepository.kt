@@ -98,7 +98,7 @@ class AuthRepository {
                             val documentSnapshot = querySnapshot.documents[0]
                             val userIdx = documentSnapshot.getLong("userIdx") ?: 0
                             val userName = documentSnapshot.getString("userName") ?: ""
-                            val userData = UserDataClass(userIdx, loginUserEmail, "", userName)
+                            val userData = UserDataClass(userIdx, loginUserEmail,  userName)
                             callback1(userData)
                         } else {
                             // 검색 결과가 비어있으면 null을 반환합니다.

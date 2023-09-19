@@ -70,7 +70,7 @@ class AuthViewModel : ViewModel() {
                 getNextIdx { idx ->
                     Log.d("getNextIdx", "현재 IDX: $idx")
                     // IDX를 얻은 후 Firestore에 추가
-                    addUserToFirestore(user.uid, UserDataClass(idx, email, password, name))
+                    addUserToFirestore(user.uid, UserDataClass(idx, email, name))
                 }
 
             } else {
