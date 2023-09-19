@@ -26,7 +26,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddRecordMemoBinding
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.repository.RecordMemoRepository
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
@@ -124,6 +123,9 @@ class AddRecordMemoFragment : Fragment() {
     private fun prepareRecorder() {
         isSaveFile = false
         audioFileUri = null
+        fragmentAddRecordMemoBinding.addRecordMemoAddBtn.isEnabled = false
+        fragmentAddRecordMemoBinding.addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_loading_container)
+        fragmentAddRecordMemoBinding.addRecordMemoAddBtn.text = "파일을 등록 해주세요."
         stopAudioPlayback()
         fragmentAddRecordMemoBinding.recordChronometer.base = SystemClock.elapsedRealtime()
         mediaRecorder = MediaRecorder()
@@ -174,6 +176,10 @@ class AddRecordMemoFragment : Fragment() {
                 fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = getCurrentDuration(0)
                 fragmentAddRecordMemoBinding.audioSeekBar.progress = 0
                 fragmentAddRecordMemoBinding.totalDurationTimeTextView.text = getTotalDuration(durationMediaPlayer)
+
+                fragmentAddRecordMemoBinding.addRecordMemoAddBtn.isEnabled = true
+                fragmentAddRecordMemoBinding.addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_container)
+                fragmentAddRecordMemoBinding.addRecordMemoAddBtn.text = "포토 메모 등록"
                 Snackbar.make(requireView(), "$audioFileName 저장 완료", Snackbar.LENGTH_LONG).show()
                 fragmentAddRecordMemoBinding.addRecordFileTextView.text = "$audioFileName.mp4"
                 dialog.dismiss()
@@ -187,7 +193,7 @@ class AddRecordMemoFragment : Fragment() {
         builder.create().show()
     }
     private fun setRecordingLocation(recordingName: String) {
-        recordFileLocation = File("${mainActivity.getExternalFilesDir(null)}/recordings", "$recordingName.mp4")
+        recordFileLocation = File(getRecordingStorageDirectory(), "$recordingName.mp4");
     }
 
     private fun stopAudioPlayback() {
@@ -257,6 +263,10 @@ class AddRecordMemoFragment : Fragment() {
                     audioFileName = getFileNameFromUri(it.data?.data!!)?:"이름 불러오기 실패"
                     fragmentAddRecordMemoBinding.addRecordFileTextView.text = audioFileName
                     fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = PREVIEW_VIEW
+
+                    fragmentAddRecordMemoBinding.addRecordMemoAddBtn.isEnabled = true
+                    fragmentAddRecordMemoBinding.addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_container)
+                    fragmentAddRecordMemoBinding.addRecordMemoAddBtn.text = "포토 메모 등록"
                 }
             }
         }
@@ -284,5 +294,11 @@ class AddRecordMemoFragment : Fragment() {
             cursor.close()
         }
         return null
+    }
+
+    fun getRecordingStorageDirectory() : File{
+        val dir = File(mainActivity.getExternalFilesDir(null), "recordings")
+        dir.mkdirs()
+        return dir
     }
 }
