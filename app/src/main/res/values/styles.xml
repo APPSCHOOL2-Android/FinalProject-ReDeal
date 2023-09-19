@@ -22,6 +22,10 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="tab_item_text_appearance_account_list_sort" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <!-- AccountEditFragment AutoCompleteTextView style within TextInputLayout -->
 
@@ -77,6 +81,24 @@
         <item name="android:textSize">16sp</item>
         <item name="android:padding">12dp</item>
         <item name="android:theme">@style/Widget.App.TextInputEditText.OutlinedBox</item>
+    </style>
+    
+    <style name="tab_item_chip_style_account_list" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textAppearance">@style/tab_item_text_appearance_account_list_sort</item>
+        <item name="android:textColor">@color/tab_item_text_color_account_list_sort</item>
+        <item name="android:textColorSecondary">@color/primary20</item>
+        <item name="chipBackgroundColor">@color/background</item>
+        <item name="chipEndPadding">0dp</item>
+        <item name="chipMinHeight">0dp</item>
+        <item name="chipStartPadding">0dp</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="closeIcon">@drawable/arrow_drop_down_24px</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="rippleColor">#00FCFCFC</item>
+        <item name="closeIconTint">@color/primary20</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="textStartPadding">0dp</item>
     </style>
     
 </resources>

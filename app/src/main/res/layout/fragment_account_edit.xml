@@ -19,7 +19,6 @@
             android:background="@color/background"
             android:minHeight="?attr/actionBarSize"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
-            app:title="새로운 거래처 등록"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
         <View
@@ -94,7 +93,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="거래처명"
-                    style="@style/text_input_edit_text_style_account_edit"/>
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:hint="우편번호를 검색해주세요"
                     style="@style/text_input_edit_text_style_account_edit"
-                    android:inputType="none"/>
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -189,6 +189,7 @@
                 style="@style/text_input_layout_style_account_edit">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditFaxNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Fax"
@@ -225,7 +226,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="담당자"
-                    style="@style/text_input_edit_text_style_account_edit"/>
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -277,7 +279,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="거래처 한 줄 설명"
-                    style="@style/text_input_edit_text_style_account_edit"/>
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

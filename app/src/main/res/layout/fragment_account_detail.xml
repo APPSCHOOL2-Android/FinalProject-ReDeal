@@ -20,7 +20,6 @@
             android:minHeight="?attr/actionBarSize"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:menu="@menu/toolbar_menu_account_detail"
-            app:title="ABC Ltd."
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
         <View
@@ -41,10 +40,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+<!--            <com.kakao.vectormap.MapView-->
+<!--                android:id="@+id/mapViewAccountDetail"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                app:layout_constraintDimensionRatio="12:7"-->
+<!--                app:layout_constraintTop_toTopOf="parent"/>-->
+
             <View
-                android:id="@+id/mapFragmentContainer"
+                android:id="@+id/mapViewAccountDetail"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="12:7"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <View
@@ -52,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/primary20"
-                app:layout_constraintTop_toBottomOf="@id/mapFragmentContainer"/>
+                app:layout_constraintTop_toBottomOf="@id/mapViewAccountDetail"/>
 
             <TextView
                 android:id="@+id/textViewAccountDetail1"
@@ -97,7 +104,6 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
-                app:srcCompat="@drawable/star_fill_24px"
                 app:layout_constraintTop_toTopOf="@id/divider3"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -105,7 +111,6 @@
                 android:id="@+id/imageViewAccountDetailState"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                app:srcCompat="@drawable/circle_big_24px_primary20"
                 app:layout_constraintStart_toStartOf="@id/textViewAccountDetail1"
                 app:layout_constraintEnd_toStartOf="@id/textViewAccountDetailState"
                 app:layout_constraintTop_toTopOf="@id/textViewAccountDetailState"
@@ -116,7 +121,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="거래 중"
                 android:textSize="10sp"
                 android:textColor="@color/text50"
                 android:fontFamily="@font/nanumsquareneo_regular"
@@ -129,7 +133,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="4 시간 전"
                 android:textSize="10sp"
                 android:textColor="@color/text50"
                 android:fontFamily="@font/nanumsquareneo_regular"
@@ -142,7 +145,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="2023.09.06"
                 android:textSize="10sp"
                 android:textColor="@color/text50"
                 android:fontFamily="@font/nanumsquareneo_regular"
@@ -158,8 +160,8 @@
                 android:layout_marginEnd="16dp"
                 android:padding="4dp"
                 app:srcCompat="@drawable/call_24px"
-                app:layout_constraintTop_toTopOf="@id/textViewAccountDetailAccountName"
-                app:layout_constraintBottom_toBottomOf="@id/textViewAccountDetailAccountName"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetailShortDescription"
+                app:layout_constraintBottom_toBottomOf="@id/textViewAccountDetailShortDescription"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
@@ -174,13 +176,12 @@
                 android:layout_marginEnd="12dp"/>
 
             <TextView
-                android:id="@+id/textViewAccountDetailAccountName"
+                android:id="@+id/textViewAccountDetailShortDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="24dp"
-                android:text="샘플 데이터를 판매하는 거래처"
                 android:textSize="16sp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
@@ -194,18 +195,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="대표 번호   031 - 231 - 1234"
+                android:text="대표 번호   "
                 android:textSize="12sp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
-                app:layout_constraintStart_toStartOf="@id/textViewAccountDetailAccountName"
-                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailAccountName"/>
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetailShortDescription"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailShortDescription"/>
 
             <TextView
                 android:id="@+id/textViewAccountDetailFaxNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fax. 02)1231-1234"
+                android:text="Fax. "
                 android:textSize="12sp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
@@ -217,7 +218,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="서울특별시 강남구 역삼동 123-45번지"
                 android:textSize="12sp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
@@ -251,7 +251,6 @@
                 android:id="@+id/textViewAccountDetailRepresentative"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="이소은 대리"
                 android:textSize="16sp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
@@ -277,7 +276,6 @@
                 android:id="@+id/textViewAccountDetailDirectNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="010 - 2321 - 1234"
                 android:textSize="16sp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
@@ -329,19 +327,15 @@
                 app:layout_constraintTop_toBottomOf="@id/divider5"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <EditText
-                android:id="@+id/editTextAccountDetailMemoContent"
+            <TextView
+                android:id="@+id/textViewAccountDetailMemoContent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:paddingVertical="12dp"
                 android:paddingHorizontal="8dp"
-                android:text="시간 약속 철저한 거래처시간 약속 철저한 거래처시간 약속 철저한 거래처"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textSize="16sp"
                 android:textColor="@color/text10"

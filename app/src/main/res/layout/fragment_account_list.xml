@@ -69,6 +69,8 @@
         app:layout_constraintTop_toBottomOf="@id/textViewAccountListUserName"
         app:layout_constraintBottom_toBottomOf="@id/imageViewAccountListUserThumb"/>
 
+
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutAccountListState"
         android:layout_width="wrap_content"
@@ -109,50 +111,58 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <include
-        android:id="@+id/layoutAccountListSortReference"
-        layout="@layout/tab_item_layout_account_list_sort"
-        app:layout_constraintStart_toStartOf="@id/imageViewAccountListUserThumb"
-        app:layout_constraintTop_toBottomOf="@id/imageViewAccountListUserThumb"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupAccountList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"/>
+        app:chipSpacingHorizontal="4dp"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:checkedChip="@id/chipAccountListSortReference"
+        app:layout_constraintStart_toStartOf="@id/imageViewAccountListUserThumb"
+        app:layout_constraintTop_toBottomOf="@id/imageViewAccountListUserThumb">
 
-    <include
-        android:id="@+id/layoutAccountListSortVisit"
-        layout="@layout/tab_item_layout_account_list_sort"
-        app:layout_constraintStart_toEndOf="@id/layoutAccountListSortReference"
-        app:layout_constraintTop_toTopOf="@id/layoutAccountListSortReference"
-        android:layout_marginStart="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"/>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAccountListSortReference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="조회순"
+            style="@style/tab_item_chip_style_account_list"
+            app:closeIconVisible="true"/>
 
-    <include
-        android:id="@+id/layoutAccountListSortContact"
-        layout="@layout/tab_item_layout_account_list_sort"
-        app:layout_constraintStart_toEndOf="@id/layoutAccountListSortVisit"
-        app:layout_constraintTop_toTopOf="@id/layoutAccountListSortVisit"
-        android:layout_marginStart="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"/>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAccountListSortVisit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="방문순"
+            style="@style/tab_item_chip_style_account_list" />
 
-    <include
-        android:id="@+id/layoutAccountListSortRegister"
-        layout="@layout/tab_item_layout_account_list_sort"
-        app:layout_constraintStart_toEndOf="@id/layoutAccountListSortContact"
-        app:layout_constraintTop_toTopOf="@id/layoutAccountListSortContact"
-        android:layout_marginStart="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"/>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAccountListSortContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="연락순"
+            style="@style/tab_item_chip_style_account_list" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAccountListSortRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="등록순"
+            style="@style/tab_item_chip_style_account_list" />
+
+    </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAccountList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toStartOf="@id/layoutAccountListSortReference"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/chipGroupAccountList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutAccountListSortReference"
+        app:layout_constraintTop_toBottomOf="@id/chipGroupAccountList"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/row_item_account_list"/>
     
