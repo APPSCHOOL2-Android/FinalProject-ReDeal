@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:transitionGroup="true"
+    tools:context=".schedule.EditScheduleFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/editScheduleAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/editScheduleToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:clickable="true"
+            android:minHeight="?attr/actionBarSize"
+            app:itemIconTint="@color/primary20"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:navigationIconTint="@color/primary20"
+            app:title="일정 수정"
+            app:titleCentered="false"
+            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+            app:titleTextColor="@color/primary20" />
+
+        <View
+            android:id="@+id/editScheduleToolbarDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/editScheduleBtnVisit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_round_nofill_primary20"
+                    android:elegantTextHeight="false"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:minWidth="100dip"
+                    android:minHeight="28dip"
+                    android:text="방문 일정"
+                    android:textColor="@color/primary20"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/editScheduleBtnNotVisit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/btn_round_nofill_primary20"
+                    android:elegantTextHeight="false"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:minWidth="100dip"
+                    android:minHeight="28dip"
+                    android:text="미방문 일정"
+                    android:textColor="@color/primary20"
+                    android:textSize="16sp"
+                    app:cornerRadius="5dp"
+                    app:strokeColor="@color/primary20" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/editScheduleClientState"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/editScheduleClientInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/nanumsquareneo_bold"
+                    android:text="거래처를 선택해주세요."
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/editScheduleClientBookmark"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/editScheduleBtnSelectAccount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:background="@drawable/btn_round_primary20"
+                        android:padding="4dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/card_account_detail_24px_primary99" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquareneo_bold"
+                    android:text="일정 선택"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/editScheduleBtnSelectCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_round_nofill_primary20"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:minWidth="120dip"
+                    android:minHeight="28dip"
+                    android:text="2023.09.08"
+                    android:textColor="@color/primary20"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/editScheduleBtnSelectTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_round_nofill_primary20"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:minWidth="80dip"
+                    android:minHeight="28dip"
+                    android:padding="4dp"
+                    android:text="오후 2:30"
+                    android:textColor="@color/primary20"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <com.kizitonwose.calendarview.CalendarView
+                android:id="@+id/editScheduleCalendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:transitionGroup="true"
+                android:visibility="gone"
+                app:cv_dayViewResource="@layout/calendar_day_layout"
+                app:cv_hasBoundaries="true"
+                app:cv_inDateStyle="allMonths"
+                app:cv_monthHeaderResource="@layout/calendar_month_header_layout"
+                app:cv_orientation="horizontal"
+                app:cv_outDateStyle="endOfRow"
+                app:cv_scrollMode="paged">
+
+            </com.kizitonwose.calendarview.CalendarView>
+
+            <com.hifi.redeal.schedule.CustomTimePicker
+                android:id="@+id/editScheduleTimePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:timePickerMode="spinner"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/primary20"
+                android:orientation="vertical"></LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editScheduleLayoutScheduleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:boxStrokeColor="@color/primary20"
+                app:hintTextColor="@color/primary20">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editScheduleEditTextScheduleTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:textColor="@color/text10"
+                    android:textColorHighlight="@color/primary20"
+                    android:textColorLink="@color/primary20"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editScheduleLayoutScheduleContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:boxStrokeColor="@color/primary20"
+                app:hintTextColor="@color/primary20">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editScheduleEditTextScheduleContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/text10"
+                    android:textColorHighlight="@color/primary20"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/editScheduleBtnComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/btn_round_primary20"
+        android:fontFamily="@font/nanumsquareneo_bold"
+        android:text="일정 수정"
+        android:textColor="@color/primary99"
+        android:textSize="20sp" />
+
+</LinearLayout>
+
