@@ -69,17 +69,6 @@ class ScheduleSelectByClientFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
-                onBackPressedCallback.remove()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-    }
-
 
     inner class ClientListAdapter(): RecyclerView.Adapter<ClientListAdapter.ClientViewHodel>(){
         inner class ClientViewHodel(selectScheduleClientItemBinding: SelectScheduleClientItemBinding): ViewHolder(selectScheduleClientItemBinding.root){

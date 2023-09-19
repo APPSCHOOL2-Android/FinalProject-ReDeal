@@ -48,6 +48,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.hifi.redeal.transaction.TransactionFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         val AUTH_FIND_PW_FRAGMENT = "AuthFindPwFragment"
         val MAP_FRAGMENT = "MapFragment"
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
+        val TRANSACTION_FRAGMENT = "TransactionFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
     }
@@ -127,13 +129,15 @@ class MainActivity : AppCompatActivity() {
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
-        navController = navHostFragment.navController
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
+//        navController = navHostFragment.navController
+//
+//        navController.addOnDestinationChangedListener{ controller, destination, arguments ->
+//            activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
+//        }
 
-        navController.addOnDestinationChangedListener{ controller, destination, arguments ->
-            activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
-        }
+        replaceFragment(TRANSACTION_FRAGMENT, true, null)
 
     }
 
@@ -169,9 +173,9 @@ class MainActivity : AppCompatActivity() {
             AUTH_LOGIN_FRAGMENT -> AuthLoginFragment()
             AUTH_JOIN_FRAGMENT -> AuthJoinFragment()
             AUTH_FIND_PW_FRAGMENT -> AuthFindPwFragment()
-            MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
+            TRANSACTION_FRAGMENT -> TransactionFragment()
             else -> Fragment()
         }
 
