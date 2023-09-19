@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/transactionHistoryFragment"
+        android:id="@+id/transactionFragment"
         android:icon="@drawable/work_history_24px_primary10"
         android:title="거래 내역"
         android:menuCategory="secondary"/>
     <item
-        android:id="@+id/voiceMemoFragment"
+        android:id="@+id/recordMemoFragment"
         android:icon="@drawable/record_voice_over_24px"
         android:menuCategory="secondary"
         android:title="음성 메모" />

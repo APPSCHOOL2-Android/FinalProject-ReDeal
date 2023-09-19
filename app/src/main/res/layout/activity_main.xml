@@ -8,7 +8,6 @@
     tools:context=".MainActivity" >
 
     <androidx.fragment.app.FragmentContainerView
-                                                 
         android:id="@+id/navHostFragmentMain"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
@@ -22,15 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:background="@color/primary20"
+        android:visibility="gone"
         app:itemActiveIndicatorStyle="@null"
+        app:itemBackground="@color/primary20"
         app:itemIconSize="28dp"
         app:itemIconTint="@color/bottom_navigation_view_item_tint"
-        app:itemTextColor="@color/bottom_navigation_view_item_tint"
-        app:itemBackground="@color/primary20"
-        app:labelVisibilityMode="labeled"
         app:itemTextAppearanceActive="@style/bottom_navigation_view_item_text_appearance"
         app:itemTextAppearanceInactive="@style/bottom_navigation_view_item_text_appearance"
-        app:menu="@menu/bottom_menu_main"
-        android:visibility="visible"/>
+        app:itemTextColor="@color/bottom_navigation_view_item_tint"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu_main" />
 
 </LinearLayout>

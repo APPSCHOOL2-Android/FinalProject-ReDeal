@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
@@ -50,6 +52,7 @@ class AccountDetailFragment : Fragment() {
 //                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
 //                }
 //            })
+            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
         }
 
         return fragmentAccountDetailBinding.root

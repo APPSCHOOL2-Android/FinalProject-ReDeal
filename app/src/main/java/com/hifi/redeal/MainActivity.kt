@@ -48,6 +48,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -78,6 +79,10 @@ class MainActivity : AppCompatActivity() {
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
 
     companion object{
+        val ACCOUNT_LIST_FRAGMENT = "AccountListFragment"
+        val ACCOUNT_DETAIL_FRAGMENT = "AccountDetailFragment"
+        val ACCOUNT_EDIT_FRAGMENT = "AccountEditFragment"
+        val ADDRESS_SEARCH_FRAGMENT = "AddressSearchFragment"
         val PHOTO_MEMO_FRAGMENT = "PhotoMemoFragment"
         val RECORD_MEMO_FRAGMENT = "RecrodMemoFragment"
         val ADD_PHOTO_MEMO_FRAGMENT = "AddPhotoMemoFragment"
@@ -107,14 +112,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
 
     val navOptions = NavOptions.Builder()
-        .setEnterAnim(R.anim.slide_out_right)
-        .setExitAnim(R.anim.slide_in_left)
+        .setEnterAnim(R.anim.slide_in_right)
+        .setExitAnim(R.anim.slide_out_left)
         .setPopEnterAnim(R.anim.slide_in_left)
         .setPopExitAnim(R.anim.slide_out_right)
         .build()
 
     val mainBottomBarShowFragmentList = arrayOf(
         R.id.accountListFragment,
+        R.id.scheduleManageFragment,
+        R.id.unvisitedScheduleFragment,
+        R.id.visitedScheduleFragment,
+        R.id.mapFragment,
     )
 
 
@@ -135,11 +144,52 @@ class MainActivity : AppCompatActivity() {
             activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
         }
 
+        activityMainBinding.run {
+            bottomNavigationViewMain.setupWithNavController(navController)
+        }
     }
 
+    fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle? = null) {
+        val fragmentId = when(name){
+            ACCOUNT_LIST_FRAGMENT -> R.id.accountListFragment
+            ACCOUNT_DETAIL_FRAGMENT -> R.id.accountDetailFragment
+            ACCOUNT_EDIT_FRAGMENT -> R.id.accountEditFragment
+            ADDRESS_SEARCH_FRAGMENT -> R.id.addressSearchFragment
+            SELECT_FRAGMENT -> R.id.selectFragment
+            PHOTO_MEMO_FRAGMENT -> R.id.photoMemoFragment
+            ADD_PHOTO_MEMO_FRAGMENT -> R.id.addPhotoMemoFragment
+            PHOTO_DETAIL_FRAGMENT -> R.id.photoDetailFragment
+            RECORD_MEMO_FRAGMENT -> R.id.recordMemoFragment
+            ADD_RECORD_MEMO_FRAGMENT -> R.id.addRecordMemoFragment
+            SCHEDULE_MANAGE_FRAGMENT -> R.id.scheduleManageFragment
+            UNVISITED_SCHEDULE_FRAGMENT -> R.id.unvisitedScheduleFragment
+            VISITED_SCHEDULE_FRAGMENT -> R.id.visitedScheduleFragment
+            MAKE_SCHEDULE_FRAGMENT -> R.id.makeScheduleFragment
+            SCHEDULE_SELECT_BY_CLIENT_FRAGMENT -> R.id.scheduleSelectByClientFragment
+            EDIT_SCHEDULE_FRAGMENT -> R.id.editScheduleFragment
+            AUTH_LOGIN_FRAGMENT -> R.id.authLoginFragment
+            AUTH_JOIN_FRAGMENT -> R.id.authJoinFragment
+            AUTH_FIND_PW_FRAGMENT -> R.id.authFindPwFragment
+            MAP_FRAGMENT -> R.id.mapFragment
+            MAP_SEARCH_REGION_FRAGMENT -> R.id.mapSearchRegionFragment
+            else -> R.id.accountListFragment
+        }
+
+        if (!addToBackStack) {
+            val popUpFragmentId = navController.currentDestination?.id ?: R.id.authLoginFragment
+
+            val popUpNavOptions = NavOptions.Builder()
+                .setPopUpTo(popUpFragmentId, true)
+                .build()
+
+            navController.navigate(fragmentId, bundle, popUpNavOptions)
+        } else {
+            navigateTo(fragmentId, bundle)
+        }
+    }
 
     // 지정한 Fragment를 보여주는 메서드
-    fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle?){
+    fun replaceFragment2(name:String, addToBackStack:Boolean, bundle:Bundle?){
 
         SystemClock.sleep(200)
 
@@ -169,7 +219,6 @@ class MainActivity : AppCompatActivity() {
             AUTH_LOGIN_FRAGMENT -> AuthLoginFragment()
             AUTH_JOIN_FRAGMENT -> AuthJoinFragment()
             AUTH_FIND_PW_FRAGMENT -> AuthFindPwFragment()
-            MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
             else -> Fragment()
@@ -205,8 +254,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Fragment를 BackStack에서 제거한다.
-    fun removeFragment(name:String){
+    fun removeFragment2(name:String){
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    fun removeFragment(name:String) {
+        navController.popBackStack()
     }
 
     // 입력 요소에 포커스를 주는 메서드
