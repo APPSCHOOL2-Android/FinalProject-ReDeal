@@ -124,17 +124,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
         requestPermissions(permissionList, 10)
-        addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
-        scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
+        //addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
+        //scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
-        navController = navHostFragment.navController
-
-        navController.addOnDestinationChangedListener{ controller, destination, arguments ->
-            activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
-        }
-
+        replaceFragment(SELECT_FRAGMENT, false, null)
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
+//        navController = navHostFragment.navController
+//
+//        navController.addOnDestinationChangedListener{ controller, destination, arguments ->
+//            activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
+//        }
     }
 
 
