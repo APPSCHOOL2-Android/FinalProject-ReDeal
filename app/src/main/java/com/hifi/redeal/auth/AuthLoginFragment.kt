@@ -103,30 +103,9 @@ class AuthLoginFragment : Fragment() {
                         val email = document.getString("userEmail")
                         val password = document.getString("userPw")
                         if (!email.isNullOrEmpty() && !password.isNullOrEmpty()) {
-                            // 이메일과 비밀번호를 사용하여 Firebase에 로그인 시도
-                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        // 로그인 성공
-                                        val user = task.result?.user
-                                        val uid = user?.uid
-                                        if (uid != null) {
-                                            // 자동 로그인에 성공했으므로 다음 화면으로 이동
-                                            Log.d("authlogin", "로그인 성공.")
-                                        }
-                                    } else {
-                                        // 로그인 실패
-                                        val exception = task.exception
-                                        if (exception is FirebaseAuthInvalidUserException) {
-                                            // 사용자가 더 이상 존재하지 않을 때 처리
-                                            Log.e("authlogin", "사용자가 더 이상 존재하지 않음")
-                                        } else {
-                                            // 로그인 실패 상황 처리
-                                            Log.e("authlogin", "로그인 실패: ${exception?.message}")
-                                        }
-                                        Toast.makeText(context, "로그인 실패", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
+                                    // 뷰 모델을 사용하여 로그인 시도
+                                    authViewModel.loginUser(email, password)
+
                         }
                     }
                 }
