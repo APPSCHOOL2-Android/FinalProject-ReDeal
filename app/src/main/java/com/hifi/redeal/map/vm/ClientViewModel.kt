@@ -17,6 +17,7 @@ import com.kakao.vectormap.label.LabelTextStyle
 class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
     var clientDataListAll = MutableLiveData<MutableList<ClientDataClass>>()
+    var clientDataListTemp = MutableLiveData<MutableList<ClientDataClass>>()
     var scheduleDataClassListByClient = MutableLiveData<MutableList<ScheduleDataClass>>()
     var clientDataListLabel = MutableLiveData<MutableList<LabelOptions>>()
     val selectedButtonId = MutableLiveData<Int>()
@@ -108,6 +109,7 @@ class ClientViewModel : ViewModel() {
 
 
     }
+
 
     fun resetClientListByKeyword() {
         clientDataListByKeyWord.value = mutableListOf<ClientDataClass>()
