@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.Material3.BottomSheet"
     android:id="@+id/mapBottomSheetLayout"
+    style="@style/Widget.Material3.BottomSheet"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:backgroundTint="@color/background"
     android:orientation="vertical"
     app:behavior_hideable="false"
@@ -87,10 +87,10 @@
                     android:background="@drawable/btn_round_nofill_primary20"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:text="오늘 방문"
+                    android:textColor="@color/primary20"
                     android:textSize="12sp"
                     app:cornerRadius="16dp"
-                    app:strokeColor="@color/primary20"
-                    android:textColor="@color/primary20" />
+                    app:strokeColor="@color/primary20" />
             </LinearLayout>
 
             <LinearLayout
@@ -116,7 +116,6 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>
