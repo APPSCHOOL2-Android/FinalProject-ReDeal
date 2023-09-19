@@ -1,5 +1,6 @@
 package com.hifi.redeal
 
+
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import com.hifi.redeal.auth.AuthFindPwFragment
@@ -16,8 +17,11 @@ import android.os.Bundle
 import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
+import com.hifi.redeal.databinding.ActivityMainBinding
+import com.hifi.redeal.map.view.MapFragment
+import com.hifi.redeal.map.view.MapSearchRegionFragment
+import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.schedule.EditScheduleFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
@@ -51,7 +55,10 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.READ_CALL_LOG,
         Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.USE_FULL_SCREEN_INTENT
+        Manifest.permission.USE_FULL_SCREEN_INTENT,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.INTERNET
     )
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
@@ -62,9 +69,14 @@ class MainActivity : AppCompatActivity() {
         val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
         val SCHEDULE_SELECT_BY_CLIENT_FRAGMENT = "ScheduleSelectByClientFragment"
         val EDIT_SCHEDULE_FRAGMENT = "EditScheduleFragment"
-      val AUTH_LOGIN_FRAGMENT = "AuthLoginFragment"
+        val AUTH_LOGIN_FRAGMENT = "AuthLoginFragment"
         val AUTH_JOIN_FRAGMENT = "AuthJoinFragment"
         val AUTH_FIND_PW_FRAGMENT = "AuthFindPwFragment"
+        val MAKE_SCHEDULE_FRAGMENT = "MakeScheduleFragment"
+        val MAP_FRAGMENT = "MapFragment"
+        val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
+      
+        const val BASE_URL = "https://dapi.kakao.com/"
     }
 
     lateinit var navController: NavController
@@ -80,12 +92,13 @@ class MainActivity : AppCompatActivity() {
         R.id.accountListFragment,
     )
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
-      requestPermissions(permissionList, 10)
+        requestPermissions(permissionList, 10)
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
@@ -118,7 +131,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 새로운 Fragment를 담을 변수
-
         newFragment = when(name){
             SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
             UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
@@ -129,11 +141,14 @@ class MainActivity : AppCompatActivity() {
             AUTH_LOGIN_FRAGMENT -> AuthLoginFragment()
             AUTH_JOIN_FRAGMENT -> AuthJoinFragment()
             AUTH_FIND_PW_FRAGMENT -> AuthFindPwFragment()
+            MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
+            MAP_FRAGMENT -> MapFragment()
+            MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
+
             else -> Fragment()
         }
 
         newFragment?.arguments = bundle
-
 
         if(newFragment != null) {
             // 애니메이션 설정
@@ -143,6 +158,7 @@ class MainActivity : AppCompatActivity() {
                 oldFragment?.enterTransition = null
                 oldFragment?.returnTransition = null
             }
+
             newFragment?.exitTransition = null
             newFragment?.reenterTransition = null
             newFragment?.enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
@@ -156,12 +172,17 @@ class MainActivity : AppCompatActivity() {
                 // Fragment를 Backstack에 넣어 이전으로 돌아가는 기능이 동작할 수 있도록 한다.
                 fragmentTransaction.addToBackStack(name)
             }
-            
+
             // 교체 명령이 동작하도록 한다.
             fragmentTransaction.commit()
         }
     }
 
+    // Fragment를 BackStack에서 제거한다.
+    fun removeFragment(name:String){
+        supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+    
     // 입력 요소에 포커스를 주는 메서드
     fun showSoftInput(view: View) {
         view.requestFocus()
@@ -173,10 +194,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Fragment를 BackStack에서 제거한다.
-    fun removeFragment(name:String){
-        supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-    }
 
     // Notification Channel을 등록하는 메서드
     // 첫 번째 : 코드에서 채널을 관리하기 위한 이름
@@ -261,4 +278,6 @@ class MainActivity : AppCompatActivity() {
 
         return dateFormat.format(date)
     }
+
+
 }

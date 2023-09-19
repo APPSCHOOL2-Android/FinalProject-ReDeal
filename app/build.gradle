@@ -2,8 +2,10 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id("com.google.gms.google-services")
-
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.hifi.redeal'
@@ -15,14 +17,26 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "KAKAO_REST_API_KEY", "\"${properties['kakao.rest.api.key']}\""
+        manifestPlaceholders["KAKAO_API_KEY"] = properties['kakao.key']
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildFeatures {
+        buildConfig = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true // 추가
     }
+
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
         }
     }
     compileOptions {
@@ -33,31 +47,22 @@ android {
         jvmTarget = '1.8'
     }
 
-
     viewBinding {
         enabled = true
     }
 }
 
 dependencies {
-    // Firebase BOM을 사용하여 버전을 일치시킴
-    implementation platform("com.google.firebase:firebase-bom:32.2.3")
-
-    // firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation 'com.google.firebase:firebase-auth-ktx'
 
     // MVVM
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.2"
     implementation "androidx.lifecycle:lifecycle-livedata:2.6.2"
 
     implementation 'androidx.core:core-ktx:1.9.0'
+
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
-    implementation 'com.google.firebase:firebase-auth-ktx:22.1.1'
 
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
@@ -74,12 +79,15 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.2.3')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx:24.7.1")
-    
-    implementation 'com.kakao.maps.open:android:2.6.0'
+    implementation 'com.google.firebase:firebase-auth-ktx'
     
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+    implementation 'com.kakao.maps.open:android:2.5.0'
+    implementation "com.kakao.sdk:v2-all:2.16.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
 
 
 }

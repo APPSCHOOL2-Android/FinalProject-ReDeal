@@ -441,5 +441,4 @@ class EditScheduleFragment : Fragment() {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
     }
-
 }

@@ -190,7 +190,6 @@
 
             </com.kizitonwose.calendarview.CalendarView>
 
-
             <com.hifi.redeal.schedule.CustomTimePicker
                 android:id="@+id/editScheduleTimePicker"
                 android:layout_width="match_parent"

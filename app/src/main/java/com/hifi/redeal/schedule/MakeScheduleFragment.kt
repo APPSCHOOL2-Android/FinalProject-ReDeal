@@ -42,7 +42,7 @@ class MakeScheduleFragment : Fragment() {
     lateinit var scheduleVM: ScheduleVM
     private var userIdx = "1" // 추후 사용자의 idx 저장
     private var clientIdx = 0L
-
+  
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
