@@ -2,6 +2,7 @@ package com.hifi.redeal
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_MEDIA_LOCATION,
         Manifest.permission.INTERNET,
         Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.MANAGE_EXTERNAL_STORAGE
     )
 
     val REQUEST_INTENTS = listOf(
