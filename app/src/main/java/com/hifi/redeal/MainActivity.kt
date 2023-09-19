@@ -44,10 +44,17 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.hifi.redeal.account.AccountDetailFragment
+import com.hifi.redeal.account.AccountEditFragment
+import com.hifi.redeal.account.AccountListFragment
+import com.hifi.redeal.account.AddressSearchFragment
+import com.hifi.redeal.transaction.TransactionFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -59,6 +66,8 @@ class MainActivity : AppCompatActivity() {
 
     var newFragment:Fragment? = null
     var oldFragment:Fragment? = null
+
+    var userId = 1L
 
     val permissionList = arrayOf(
         Manifest.permission.POST_NOTIFICATIONS,
@@ -78,6 +87,10 @@ class MainActivity : AppCompatActivity() {
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
 
     companion object{
+        val ACCOUNT_LIST_FRAGMENT = "AccountListFragment"
+        val ACCOUNT_DETAIL_FRAGMENT = "AccountDetailFragment"
+        val ACCOUNT_EDIT_FRAGMENT = "AccountEditFragment"
+        val ADDRESS_SEARCH_FRAGMENT = "AddressSearchFragment"
         val PHOTO_MEMO_FRAGMENT = "PhotoMemoFragment"
         val RECORD_MEMO_FRAGMENT = "RecrodMemoFragment"
         val ADD_PHOTO_MEMO_FRAGMENT = "AddPhotoMemoFragment"
@@ -95,6 +108,7 @@ class MainActivity : AppCompatActivity() {
         val AUTH_FIND_PW_FRAGMENT = "AuthFindPwFragment"
         val MAP_FRAGMENT = "MapFragment"
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
+        val TRANSACTION_FRAGMENT = "TransactionFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
     }
@@ -104,19 +118,22 @@ class MainActivity : AppCompatActivity() {
         MediaStore.Audio.Media.RECORD_SOUND_ACTION
     )
 
-    lateinit var navController: NavController
+//    lateinit var navController: NavController
+//
+//    val navOptions = NavOptions.Builder()
+//        .setEnterAnim(R.anim.slide_in_right)
+//        .setExitAnim(R.anim.slide_out_left)
+//        .setPopEnterAnim(R.anim.slide_in_left)
+//        .setPopExitAnim(R.anim.slide_out_right)
+//        .build()
 
-    val navOptions = NavOptions.Builder()
-        .setEnterAnim(R.anim.slide_out_right)
-        .setExitAnim(R.anim.slide_in_left)
-        .setPopEnterAnim(R.anim.slide_in_left)
-        .setPopExitAnim(R.anim.slide_out_right)
-        .build()
-
-    val mainBottomBarShowFragmentList = arrayOf(
-        R.id.accountListFragment,
-    )
-
+//    val mainBottomBarShowFragmentList = arrayOf(
+//        R.id.accountListFragment,
+//        R.id.scheduleManageFragment,
+//        R.id.unvisitedScheduleFragment,
+//        R.id.visitedScheduleFragment,
+//        R.id.mapFragment,
+//    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,10 +141,95 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
         requestPermissions(permissionList, 10)
-        //addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
-        //scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
+        addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
+        scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
-        replaceFragment(SELECT_FRAGMENT, false, null)
+        activityMainBinding.run {
+            bottomNavigationViewMain.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.accountListFragment -> {
+                        replaceFragment(ACCOUNT_LIST_FRAGMENT, true)
+                    }
+                    R.id.scheduleManageFragment -> {
+                        replaceFragment(SCHEDULE_MANAGE_FRAGMENT, true)
+                    }
+                    R.id.mapFragment -> {
+                        replaceFragment(MAP_FRAGMENT, true)
+                    }
+                    R.id.transactionFragment -> {
+                        replaceFragment(TRANSACTION_FRAGMENT, true)
+                    }
+                    R.id.selectFragment -> {
+                        replaceFragment(SELECT_FRAGMENT, true)
+                    }
+                }
+                true
+            }
+        }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            for (fragment in supportFragmentManager.fragments) {
+                if (fragment.isVisible) {
+                    activityMainBinding.bottomNavigationViewMain.isVisible = (fragment is AccountListFragment
+                            || fragment is ScheduleManageFragment
+                            || fragment is UnvisitedScheduleFragment
+                            || fragment is VisitedScheduleFragment
+                            || fragment is MapFragment)
+
+                    when (fragment) {
+                        is AccountListFragment -> {
+                            activityMainBinding.bottomNavigationViewMain.run {
+                                menu.forEach {
+                                    if (it.itemId == R.id.accountListFragment) {
+                                        it.isChecked = true
+                                    }
+                                }
+                            }
+                        }
+                        is ScheduleManageFragment -> {
+                            activityMainBinding.bottomNavigationViewMain.run {
+                                menu.forEach {
+                                    if (it.itemId == R.id.scheduleManageFragment) {
+                                        it.isChecked = true
+                                    }
+                                }
+                            }
+                        }
+                        is MapFragment -> {
+                            activityMainBinding.bottomNavigationViewMain.run {
+                                menu.forEach {
+                                    if (it.itemId == R.id.mapFragment) {
+                                        it.isChecked = true
+                                    }
+                                }
+                            }
+                        }
+                        is TransactionFragment -> {
+                            activityMainBinding.bottomNavigationViewMain.run {
+                                menu.forEach {
+                                    if (it.itemId == R.id.transactionFragment) {
+                                        it.isChecked = true
+                                    }
+                                }
+                            }
+                        }
+                        is SelectFragment -> {
+                            activityMainBinding.bottomNavigationViewMain.run {
+                                menu.forEach {
+                                    if (it.itemId == R.id.selectFragment) {
+                                        it.isChecked = true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return@addOnBackStackChangedListener
+                }
+            }
+        }
+
+        replaceFragment(AUTH_LOGIN_FRAGMENT, true)
+
 //        val navHostFragment =
 //            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
 //        navController = navHostFragment.navController
@@ -135,11 +237,53 @@ class MainActivity : AppCompatActivity() {
 //        navController.addOnDestinationChangedListener{ controller, destination, arguments ->
 //            activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
 //        }
+//
+//        activityMainBinding.run {
+//            bottomNavigationViewMain.setupWithNavController(navController)
+//        }
     }
 
+//    fun replaceFragment2(name:String, addToBackStack:Boolean, bundle:Bundle? = null) {
+//        val fragmentId = when(name){
+//            ACCOUNT_LIST_FRAGMENT -> R.id.accountListFragment
+//            ACCOUNT_DETAIL_FRAGMENT -> R.id.accountDetailFragment
+//            ACCOUNT_EDIT_FRAGMENT -> R.id.accountEditFragment
+//            ADDRESS_SEARCH_FRAGMENT -> R.id.addressSearchFragment
+//            SELECT_FRAGMENT -> R.id.selectFragment
+//            PHOTO_MEMO_FRAGMENT -> R.id.photoMemoFragment
+//            ADD_PHOTO_MEMO_FRAGMENT -> R.id.addPhotoMemoFragment
+//            PHOTO_DETAIL_FRAGMENT -> R.id.photoDetailFragment
+//            RECORD_MEMO_FRAGMENT -> R.id.recordMemoFragment
+//            ADD_RECORD_MEMO_FRAGMENT -> R.id.addRecordMemoFragment
+//            SCHEDULE_MANAGE_FRAGMENT -> R.id.scheduleManageFragment
+//            UNVISITED_SCHEDULE_FRAGMENT -> R.id.unvisitedScheduleFragment
+//            VISITED_SCHEDULE_FRAGMENT -> R.id.visitedScheduleFragment
+//            MAKE_SCHEDULE_FRAGMENT -> R.id.makeScheduleFragment
+//            SCHEDULE_SELECT_BY_CLIENT_FRAGMENT -> R.id.scheduleSelectByClientFragment
+//            EDIT_SCHEDULE_FRAGMENT -> R.id.editScheduleFragment
+//            AUTH_LOGIN_FRAGMENT -> R.id.authLoginFragment
+//            AUTH_JOIN_FRAGMENT -> R.id.authJoinFragment
+//            AUTH_FIND_PW_FRAGMENT -> R.id.authFindPwFragment
+//            MAP_FRAGMENT -> R.id.mapFragment
+//            MAP_SEARCH_REGION_FRAGMENT -> R.id.mapSearchRegionFragment
+//            else -> R.id.accountListFragment
+//        }
+//
+//        if (!addToBackStack) {
+//            val popUpFragmentId = navController.currentDestination?.id ?: R.id.authLoginFragment
+//
+//            val popUpNavOptions = NavOptions.Builder()
+//                .setPopUpTo(popUpFragmentId, true)
+//                .build()
+//
+//            navController.navigate(fragmentId, bundle, popUpNavOptions)
+//        } else {
+//            navigateTo(fragmentId, bundle)
+//        }
+//    }
 
     // 지정한 Fragment를 보여주는 메서드
-    fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle?){
+    fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle? = null){
 
         SystemClock.sleep(200)
 
@@ -154,6 +298,10 @@ class MainActivity : AppCompatActivity() {
 
         // 새로운 Fragment를 담을 변수
         newFragment = when(name){
+            ACCOUNT_LIST_FRAGMENT -> AccountListFragment()
+            ACCOUNT_DETAIL_FRAGMENT -> AccountDetailFragment()
+            ACCOUNT_EDIT_FRAGMENT -> AccountEditFragment()
+            ADDRESS_SEARCH_FRAGMENT -> AddressSearchFragment()
             SELECT_FRAGMENT -> SelectFragment()
             PHOTO_MEMO_FRAGMENT -> PhotoMemoFragment()
             ADD_PHOTO_MEMO_FRAGMENT -> AddPhotoMemoFragment()
@@ -169,9 +317,9 @@ class MainActivity : AppCompatActivity() {
             AUTH_LOGIN_FRAGMENT -> AuthLoginFragment()
             AUTH_JOIN_FRAGMENT -> AuthJoinFragment()
             AUTH_FIND_PW_FRAGMENT -> AuthFindPwFragment()
-            MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
+            TRANSACTION_FRAGMENT -> TransactionFragment()
             else -> Fragment()
         }
 
@@ -208,6 +356,10 @@ class MainActivity : AppCompatActivity() {
     fun removeFragment(name:String){
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
+
+//    fun removeFragment2(name:String) {
+//        navController.popBackStack()
+//    }
 
     // 입력 요소에 포커스를 주는 메서드
     fun showSoftInput(view: View) {
@@ -249,9 +401,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun navigateTo(fragmentId: Int, bundle: Bundle? = null) {
-        navController.navigate(fragmentId, bundle, navOptions)
-    }
+//    fun navigateTo(fragmentId: Int, bundle: Bundle? = null) {
+//        navController.navigate(fragmentId, bundle, navOptions)
+//    }
 
     fun intervalBetweenDateText(beforeDate: String): String {
         val nowFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getTime())

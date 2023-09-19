@@ -13,17 +13,20 @@ import android.webkit.WebViewClient
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddressSearchBinding
 
 class AddressSearchFragment : Fragment() {
 
+    lateinit var mainActivity: MainActivity
     lateinit var fragmentAddressSearchBinding: FragmentAddressSearchBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainActivity = activity as MainActivity
         fragmentAddressSearchBinding = FragmentAddressSearchBinding.inflate(layoutInflater)
 
         fragmentAddressSearchBinding.run {
@@ -47,7 +50,8 @@ class AddressSearchFragment : Fragment() {
         @JavascriptInterface
         fun processDATA(data: String){
             setFragmentResult("addressSearchResult", bundleOf("address" to data))
-            findNavController().popBackStack()
+            //findNavController().popBackStack()
+            mainActivity.removeFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT)
         }
     }
 }
