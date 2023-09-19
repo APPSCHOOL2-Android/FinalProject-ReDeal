@@ -67,7 +67,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonJoinComplete"
+        android:id="@+id/buttonFindPwComplete"
         android:layout_width="330dp"
         android:layout_height="56dp"
         android:layout_marginStart="40dp"
