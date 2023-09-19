@@ -1,6 +1,5 @@
 package com.hifi.redeal.memo
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,41 +9,52 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddRecordMemoBinding
+import com.hifi.redeal.memo.repository.PhotoMemoRepository
+import com.hifi.redeal.memo.repository.RecordMemoRepository
+import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
 import java.io.File
 import java.io.IOException
-import java.util.UUID
 
 
 class AddRecordMemoFragment : Fragment() {
-
     private lateinit var fragmentAddRecordMemoBinding : FragmentAddRecordMemoBinding
     private lateinit var mainActivity: MainActivity
 
     private val RECORD_VIEW = 0
     private val PREVIEW_VIEW = 1
-    private val LOADING_VIEW = 2
 
-    private lateinit var mediaRecorder: MediaRecorder
-    private var isRecording: Boolean = false
     private lateinit var recordFileLocation: File
-    private var saveFile = false
-    private var mGeneratedName: String? = null
-    private var mInitialized: Boolean = false
+    private lateinit var mediaRecorder: MediaRecorder
 
+    private var audioFileName: String? = null
     private var mediaPlayer: MediaPlayer? = null
+    private var isRecording: Boolean = false
+    private var isSaveFile = false
+    private var isAudioPlaying = false
+
     private val handler = Handler()
+    private var audioFileUri: Uri? = null
+    private var clientIdx = 1L
+
+    private lateinit var audioLauncher: ActivityResultLauncher<Intent>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,9 +62,9 @@ class AddRecordMemoFragment : Fragment() {
         fragmentAddRecordMemoBinding = FragmentAddRecordMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        clientIdx = arguments?.getLong("clientIdx")?:1L
+        audioLauncher = recordingSetting()
         prepareRecorder()
-        mInitialized = true
-
         fragmentAddRecordMemoBinding.run{
             addRecordMemoToolbar.run{
                 setNavigationOnClickListener {
@@ -83,104 +93,103 @@ class AddRecordMemoFragment : Fragment() {
             audioPlayBtn.setOnClickListener {
                 playAudio()
             }
+            addRecordFileBtn.setOnClickListener {
+                clickRecordAudio(audioLauncher)
+            }
+            addRecordMemoAddBtn.setOnClickListener{
+                val recordMemoContext = addRecordMemoTextInputEditText.text.toString()
+                addRecordMemoAddBtn.isEnabled = false
+                addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_loading_container)
+                addRecordMemoAddBtn.text = "등록 중 ..."
+                addRecordMemoAddBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary20))
+                RecordMemoRepository.addRecordMemo(1,clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
+                    mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
+                }
+            }
         }
         return fragmentAddRecordMemoBinding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        resetRecorder(true)
+        audioFileUri = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW;
+    }
+
+    private fun prepareRecorder() {
+        isSaveFile = false
+        audioFileUri = null
+        stopAudioPlayback()
+        fragmentAddRecordMemoBinding.recordChronometer.base = SystemClock.elapsedRealtime()
+        mediaRecorder = MediaRecorder()
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+        audioFileName = "record_${System.currentTimeMillis()}"
+        setRecordingLocation(audioFileName!!)
+        mediaRecorder.setOutputFile(recordFileLocation.getAbsolutePath())
+
+        try {
+            mediaRecorder.prepare()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     private fun confirmAndSave() {
         val builder = AlertDialog.Builder(activity)
         val recordingNameEditor = EditText(activity)
-        recordingNameEditor.setText(mGeneratedName)
+        recordingNameEditor.setText(audioFileName)
+        recordingNameEditor.setPadding(40)
         recordingNameEditor.selectAll()
         builder.setView(recordingNameEditor)
 
-        builder.setTitle("저장")
-        builder.setNeutralButton("확인"){ dialog: DialogInterface, i: Int ->
-            val name = recordingNameEditor.text.toString()
+        builder.setTitle("파일 이름 입력")
+        builder.setNeutralButton("확인"){ dialog: DialogInterface, _: Int ->
+            val tempName = recordingNameEditor.text.toString()
             fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = PREVIEW_VIEW;
-            if (name.isNotEmpty()) {
-                // Set the recording's new location, close the dialog, and save
+            if (tempName.isNotEmpty()) {
                 val oldLocation = recordFileLocation
-                setRecordingLocation(name)
+                setRecordingLocation(tempName)
 
                 if (!oldLocation.renameTo(recordFileLocation)) {
-                    Toast.makeText(activity, "저장 실패", Toast.LENGTH_LONG).show()
-
-                    // Couldn't rename; work with the previous name
+                    Toast.makeText(activity, "중복된 이름이 있습니다.", Toast.LENGTH_LONG).show()
                     recordFileLocation = oldLocation
                 }
 
-                dialog.dismiss()
+                isSaveFile = true
 
-                saveFile = true
+                audioFileName = tempName
 
-                val fileUri = Uri.fromFile(recordFileLocation)
-                Snackbar.make(requireView(), "$name 저장 완료", Snackbar.LENGTH_LONG).show()
-                val durationMediaPlayer = MediaPlayer.create(requireContext(), fileUri)
-                durationMediaPlayer?.duration?.let { fragmentAddRecordMemoBinding.audioSeekBar?.max = it }
-                fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = "0:00"
+                audioFileUri = Uri.fromFile(recordFileLocation)
+                val durationMediaPlayer = MediaPlayer.create(requireContext(), audioFileUri)
+                fragmentAddRecordMemoBinding.audioSeekBar.max = durationMediaPlayer?.duration!!
+                fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = getCurrentDuration(0)
+                fragmentAddRecordMemoBinding.audioSeekBar.progress = 0
                 fragmentAddRecordMemoBinding.totalDurationTimeTextView.text = getTotalDuration(durationMediaPlayer)
-                if (mainActivity.REQUEST_INTENTS.contains(activity?.intent?.action)) {
-                    // Recorder was started via a request for audio; set result and finish
-                    activity?.setResult(Activity.RESULT_OK, Intent().setData(fileUri))
-                    activity?.finish()
-                } else {
-                    // todo : 저장 완료 후 동작 코드
-                    // resetRecorder(true)
-                }
+                Snackbar.make(requireView(), "$audioFileName 저장 완료", Snackbar.LENGTH_LONG).show()
+                fragmentAddRecordMemoBinding.addRecordFileTextView.text = "$audioFileName.mp4"
+                dialog.dismiss()
             }
         }
 
         builder.setNegativeButton("취소"){ dialogInterface: DialogInterface, i: Int ->
-            fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW;
+            fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW
             resetRecorder(true)
         }
         builder.create().show()
     }
-
-    private fun prepareRecorder() {
-        saveFile = false
-
-        fragmentAddRecordMemoBinding.recordChronometer.base = SystemClock.elapsedRealtime()
-
-        // Make sure we're not recording music playing in the background; ask the MediaPlaybackService to pause playback
-        stopAudioPlayback()
-
-        mediaRecorder = MediaRecorder()
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-        mGeneratedName = UUID.randomUUID().toString()
-        setRecordingLocation(mGeneratedName!!)
-        mediaRecorder.setOutputFile(recordFileLocation.getAbsolutePath())
-
-        try {
-            mediaRecorder.prepare()
-            Log.d("testaaa", "prepare")
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-            Log.d("testaaa", "IllegalStateException")
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Log.d("testaaa", "IOException")
-        }
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-
-        resetRecorder(mInitialized && isVisibleToUser)
-    }
-
     private fun setRecordingLocation(recordingName: String) {
-        recordFileLocation = File(getRecordingStorageDirectory(), "$recordingName.mp4")
+        recordFileLocation = File("${mainActivity.getExternalFilesDir(null)}/recordings", "$recordingName.mp4")
     }
 
-    fun getRecordingStorageDirectory():File {
-        val dir = File(mainActivity.getExternalFilesDir(null), "recordings")
-        dir.mkdirs();
-        return dir;
-    }
     private fun stopAudioPlayback() {
         val i = Intent("com.android.music.musicservicecommand")
         i.putExtra("command", "pause")
@@ -190,11 +199,14 @@ class AddRecordMemoFragment : Fragment() {
 
     private fun resetRecorder(prepare: Boolean) {
         mediaRecorder.release()
-
+        releaseMediaPlayer()
         isRecording = false
+        fragmentAddRecordMemoBinding.addRecordFileTextView.text = "새로 파일을 등록하거나 녹음 하실 수 있어요"
 
-        if (!saveFile) {
-            deleteRecording()
+        if (!isSaveFile) {
+            if (recordFileLocation.exists()) {
+                recordFileLocation.delete()
+            }
         }
 
         if (prepare) {
@@ -202,50 +214,75 @@ class AddRecordMemoFragment : Fragment() {
         }
     }
 
-    private fun deleteRecording() {
-        if (recordFileLocation.exists()) {
-            recordFileLocation.delete()
-        }
-    }
 
-    fun playAudio() {
-        if(mediaPlayer?.isPlaying != null && mediaPlayer?.isPlaying!!){
-            mediaPlayer?.release()
-        }
-        val fileUri = Uri.fromFile(recordFileLocation)
-        mediaPlayer = MediaPlayer.create(requireContext(), fileUri)
-        fragmentAddRecordMemoBinding.audioSeekBar?.progress = 0
-        updateSeekBar()
-        mediaPlayer?.start()
-
-        mediaPlayer?.setOnCompletionListener {
-            // Release the MediaPlayer after playback is completed
+    private fun playAudio() {
+        if(isAudioPlaying){
             releaseMediaPlayer()
-            handler.removeCallbacksAndMessages(null)
+        }
+        isAudioPlaying = true
+        mediaPlayer = MediaPlayer.create(requireContext(), audioFileUri)
+        mediaPlayer?.start()
+        updateSeekBar()
+        mediaPlayer?.setOnCompletionListener {
+            releaseMediaPlayer()
         }
     }
 
     private fun releaseMediaPlayer() {
+        handler.removeCallbacksAndMessages(null)
         mediaPlayer?.release()
-        mediaPlayer = null
-    }
-
-    override fun onStop() {
-        super.onStop()
-        releaseMediaPlayer()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = LOADING_VIEW;
-        prepareRecorder();
-        fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW;
+        isAudioPlaying = false
     }
 
     private fun updateSeekBar() {
-        fragmentAddRecordMemoBinding.audioSeekBar?.progress = mediaPlayer?.currentPosition!!
-        handler.postDelayed({
-            updateSeekBar()
-        }, 1000)
+        if (isAudioPlaying) {
+            val currentPosition = mediaPlayer?.currentPosition!!
+            fragmentAddRecordMemoBinding.audioSeekBar.progress = currentPosition
+            fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = getCurrentDuration(currentPosition)
+            handler.postDelayed({ updateSeekBar() }, 20)
+        }
+    }
+
+    private fun recordingSetting(): ActivityResultLauncher<Intent> {
+        val audioContract = ActivityResultContracts.StartActivityForResult()
+        val audioLauncher = registerForActivityResult(audioContract){
+            if(it.resultCode == AppCompatActivity.RESULT_OK){
+                if(it.data?.data != null){
+                    audioFileUri = it.data?.data
+                    val durationMediaPlayer = MediaPlayer.create(requireContext(), audioFileUri)
+                    fragmentAddRecordMemoBinding.audioSeekBar.max = durationMediaPlayer?.duration!!
+                    fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = getCurrentDuration(0)
+                    fragmentAddRecordMemoBinding.audioSeekBar.progress = 0
+                    fragmentAddRecordMemoBinding.totalDurationTimeTextView.text = getTotalDuration(durationMediaPlayer)
+                    audioFileName = getFileNameFromUri(it.data?.data!!)?:"이름 불러오기 실패"
+                    fragmentAddRecordMemoBinding.addRecordFileTextView.text = audioFileName
+                    fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = PREVIEW_VIEW
+                }
+            }
+        }
+
+        return audioLauncher
+    }
+
+    private fun clickRecordAudio(recordingLauncher: ActivityResultLauncher<Intent>) {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "audio/*"
+        recordingLauncher.launch(intent)
+    }
+
+    private fun getFileNameFromUri(uri: Uri): String? {
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DISPLAY_NAME)
+        val cursor = requireActivity().contentResolver.query(uri, filePathColumn, null, null, null)
+        cursor?.let {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndex(filePathColumn[0])
+                val fileName = it.getString(columnIndex)
+                cursor.close()
+                return fileName
+            }
+            cursor.close()
+        }
+        return null
     }
 }

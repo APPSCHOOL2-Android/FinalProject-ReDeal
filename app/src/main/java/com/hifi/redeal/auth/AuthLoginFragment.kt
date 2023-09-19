@@ -13,6 +13,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.auth.vm.AuthViewModel
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
 
 class AuthLoginFragment : Fragment() {
@@ -69,7 +70,8 @@ class AuthLoginFragment : Fragment() {
 
         // 로그인 버튼 클릭 시 로그인 처리 함수 호출
         fragmentAuthLoginBinding.buttonAuthLogin.setOnClickListener {
-            handleLoginButtonClick()
+            mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, true)
+            //handleLoginButtonClick()
         }
 
         // 이메일 입력 텍스트 클릭 시 소프트 키보드 표시

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
@@ -36,6 +37,7 @@ class ScheduleManageFragment : Fragment(){
     lateinit var mainActivity: MainActivity
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
     lateinit var scheduleVM: ScheduleVM
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     var userIdx = "1" // 추후 사용자의 idx 저장
     var scheduleList = mutableListOf<ScheduleTotalData>()
@@ -56,11 +58,22 @@ class ScheduleManageFragment : Fragment(){
         return fragmentScheduleManageBinding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                mainActivity.removeFragment(MainActivity.SCHEDULE_MANAGE_FRAGMENT)
+                onBackPressedCallback.remove()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
     private fun setViewModel(){
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            scheduleListVM.observe(requireActivity()){
+            scheduleListVM.observe(viewLifecycleOwner){
                 scheduleList = it
                 setScheduleListLayout(scheduleList)
             }

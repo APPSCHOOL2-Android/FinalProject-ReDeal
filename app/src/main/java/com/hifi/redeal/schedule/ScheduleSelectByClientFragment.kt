@@ -48,7 +48,7 @@ class ScheduleSelectByClientFragment : Fragment() {
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
-            userClientSimpleDataListVM.observe(mainActivity){
+            userClientSimpleDataListVM.observe(viewLifecycleOwner){
                 userClientSimpleDataList = it
                 fragmentScheduleSelectByClientBinding.recyclerViewAllResult.adapter?.notifyDataSetChanged()
             }
@@ -67,17 +67,6 @@ class ScheduleSelectByClientFragment : Fragment() {
                 addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
-                onBackPressedCallback.remove()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
 

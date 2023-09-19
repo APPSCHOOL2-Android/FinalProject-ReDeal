@@ -32,12 +32,14 @@ class AddPhotoMemoFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var albumLauncher: ActivityResultLauncher<Intent>
     private var uriList = mutableListOf<Uri>()
+    private var clientIdx = 1L
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         fragmentAddPhotoMemoBinding = FragmentAddPhotoMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
+        clientIdx = arguments?.getLong("clientIdx")?:1L
         albumLauncher = albumSetting()
         fragmentAddPhotoMemoBinding.run {
             addPhotoMemoToolbar.run {
@@ -59,7 +61,7 @@ class AddPhotoMemoFragment : Fragment() {
                 addPhotoMemoBtn.setBackgroundResource(R.drawable.add_button_loading_container)
                 addPhotoMemoBtn.text = "등록 중 ..."
                 addPhotoMemoBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary20))
-                PhotoMemoRepository.addPhotoMemo(1,1,photoMemoContext,uriList){
+                PhotoMemoRepository.addPhotoMemo(1,clientIdx,photoMemoContext,uriList){
                     mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
                 }
             }
