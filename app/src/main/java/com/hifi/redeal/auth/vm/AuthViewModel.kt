@@ -1,4 +1,4 @@
-package com.hifi.redeal.vm
+package com.hifi.redeal.auth.vm
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.hifi.redeal.model.UserDataClass
-import com.hifi.redeal.repository.AuthRepository
+import com.hifi.redeal.auth.model.UserDataClass
+import com.hifi.redeal.auth.repository.AuthRepository
 
 class AuthViewModel : ViewModel() {
 
@@ -85,9 +85,9 @@ class AuthViewModel : ViewModel() {
     private fun addUserToFirestore(uid: String, newUser: UserDataClass) {
         val userData = hashMapOf(
             "userIdx" to newUser.userIdx,
-            "email" to newUser.userEmail,
-            "password" to newUser.userPw,
-            "name" to newUser.userName
+            "userEmail" to newUser.userEmail,
+            "userPw" to newUser.userPw,
+            "userName" to newUser.userName
         )
 
         // 리포지토리의 addUserToFirestore 함수

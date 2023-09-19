@@ -1,4 +1,4 @@
-package com.hifi.redeal.model
+package com.hifi.redeal.auth.model
 
 data class UserDataClass(
     var userIdx: Long, // 유저 인덱스
