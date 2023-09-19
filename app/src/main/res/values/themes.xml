@@ -13,5 +13,22 @@
 
     <style name="Theme.ReDeal.ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
+        <item name="android:textSize">20dp</item>
     </style>
+
+    <style name="Theme.ReDeal.ClientSearchBarTheme" parent="Theme.ReDeal">
+        <item name="colorPrimary">@color/background</item>
+        <item name="strokeColor">@color/primary20</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:radius">1dp</item>
+        <item name="hintTextColor">@color/text30</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.ReDeal.ClientSearchViewTheme" parent="Theme.ReDeal">
+        <item name="colorPrimary">@color/background</item>
+        <item name="hintTextColor">@color/text30</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
 </resources>
