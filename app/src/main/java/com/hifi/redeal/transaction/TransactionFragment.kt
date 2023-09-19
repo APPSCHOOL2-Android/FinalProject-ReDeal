@@ -11,46 +11,131 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
+import com.hifi.redeal.databinding.FragmentTransactionBinding
+import com.hifi.redeal.databinding.RowTransactionBinding
+import com.hifi.redeal.databinding.RowTransactionDepositBinding
+import com.hifi.redeal.schedule.vm.ScheduleVM
+import com.hifi.redeal.transaction.model.TransactionData
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class TransactionFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: TransactionAdapter
+    lateinit var fragmentTransactionBinding : FragmentTransactionBinding
+    lateinit var mainActivity: MainActivity
+    lateinit var transactionVM: TransactionViewModel
+    var clientIdx : Long? = null
+    var userIdx = "1"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_transaction, container, false)
 
+        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+        mainActivity = activity as MainActivity
+
+        clientIdx = arguments?.getLong("clientIdx")
+
+        setViewModel()
+        setClickEvent()
+
+        return fragmentTransactionBinding.root
+
+    }
+
+    private fun setViewModel(){
+        transactionVM = ViewModelProvider(mainActivity)[TransactionViewModel::class.java]
+
+        transactionVM.run{
+            transactionList.observe(mainActivity){
+                fragmentTransactionBinding.transactionListLayout.removeAllViews()
+
+                var lastDate = ""
+                var lastClientName = ""
+                var totalSalesPrice = BigInteger("0") // 총 판매 금액
+                var totalDepositPrice = BigInteger("0") // 총 받은 금액
+
+                it.sortByDescending { it.date }
+                it.forEach { TransactionData ->
+                    if(TransactionData.isDeposit){ // 입금 일 때
+
+                        val transItem = RowTransactionDepositBinding.inflate(layoutInflater)
+
+                        transItem.depositPriceTextView.text = "${formatAmount(TransactionData.transactionItemPrice)} 원"
+                        totalDepositPrice = totalDepositPrice.add(BigInteger(TransactionData.transactionItemPrice))
+
+                        val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+                        val date = sdf.format(TransactionData.date.toDate())
+                        if(date == lastDate){
+                            transItem.textTransactionDate.text = ""
+                        } else {
+                            transItem.textTransactionDate.text = date
+                            lastDate = date
+                        }
+
+                        if(TransactionData.clientName != null && lastClientName != TransactionData.clientName){
+                            transItem.transctionClientNameTextView.text = TransactionData.clientName
+                        }
+
+                        fragmentTransactionBinding.transactionListLayout.addView(transItem.root)
+                    } else { // 출금 일 때
+                        val transItem = RowTransactionBinding.inflate(layoutInflater)
+
+                        val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+                        val date = sdf.format(TransactionData.date.toDate())
+                        if(date == lastDate){
+                            transItem.textTransactionDate.text = ""
+                        } else {
+                            transItem.textTransactionDate.text = date
+                            lastDate = date
+                        }
+
+                        if(TransactionData.clientName != null && lastClientName != TransactionData.clientName){
+                            transItem.transctionClientNameTextView.text = TransactionData.clientName
+                        }
+
+                        transItem.textProductName.text = TransactionData.transactionName
+                        transItem.textProductCount.text = TransactionData.transactionItemCount.toString()
+                        transItem.textUnitPrice.text = TransactionData.transactionItemPrice
+
+
+
+                        fragmentTransactionBinding.transactionListLayout.addView(transItem.root)
+                    }
+                }
+
+            }
+
+            transactionVM.getAllTransactionData(userIdx)
+        }
+
+    }
+
+    private fun setClickEvent(){
         // 왼쪽 버튼 클릭 이벤트 처리
-        val addButtonLeft = rootView.findViewById<ImageButton>(R.id.ImgBtnAddDeposit)
+        val addButtonLeft = fragmentTransactionBinding.ImgBtnAddDeposit
         addButtonLeft.setOnClickListener {
             showDepositDialog()
         }
 
         // 오른쪽 버튼 클릭 이벤트 처리
-        val addButtonRight = rootView.findViewById<ImageButton>(R.id.ImgBtnAddTransaction)
+        val addButtonRight = fragmentTransactionBinding.ImgBtnAddTransaction
         addButtonRight.setOnClickListener {
             showTransactionDialog()
         }
-
-
-        // RecyclerView 초기화
-        recyclerView = rootView.findViewById(R.id.recyclerTransaction)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // 어댑터 초기화
-        adapter = TransactionAdapter(mutableListOf())
-        recyclerView.adapter = adapter
-
-        return rootView
     }
 
     private fun showDepositDialog() {
@@ -75,7 +160,7 @@ class TransactionFragment : Fragment() {
                 val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                 val depositItem = DepositItem(currentDate, deposit)
                 // 어댑터에 데이터 추가
-                adapter.addDeposit(depositItem)
+                //adapter.addDeposit(depositItem)
                 dialog.dismiss()
             }
         }
@@ -118,10 +203,16 @@ class TransactionFragment : Fragment() {
                     amountReceived
                 )
                 // 어댑터에 데이터 추가
-                adapter.addTransaction(transactionItem)
+                //adapter.addTransaction(transactionItem)
                 dialog.dismiss()
             }
         }
+    }
+
+    // 금액을 000,000 형식으로 변환하는 함수
+    private fun formatAmount(amount: String): String {
+        val longAmount = amount.toBigIntegerOrNull() ?: "0" // 금액을 Long으로 변환하고 null이면 0으로 처리
+        return String.format("%,d", longAmount)
     }
 
     inner class TransactionAdapter(private val items: MutableList<Any>) :
@@ -212,12 +303,7 @@ class TransactionFragment : Fragment() {
             dialog.show()
         }
 
-        // 금액을 000,000 형식으로 변환하는 함수
-        private fun formatAmount(amount: String): String {
-            val longAmount = amount.toLongOrNull() ?: 0 // 금액을 Long으로 변환하고 null이면 0으로 처리
-            val formattedAmount = String.format("%,d", longAmount)
-            return "$formattedAmount"
-        }
+
 
         override fun getItemCount(): Int {
             return items.size

@@ -37,6 +37,7 @@ class PhotoMemoFragment : Fragment() {
         fragmentPhotoMemoBinding = FragmentPhotoMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        clientIdx = arguments?.getLong("clientIdx")?:1L
         photoMemoViewModel = ViewModelProvider(this)[PhotoMemoViewModel::class.java]
 
         photoMemoViewModel.run{

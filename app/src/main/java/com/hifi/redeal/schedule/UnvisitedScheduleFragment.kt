@@ -45,7 +45,7 @@ class UnvisitedScheduleFragment : Fragment() {
 
         scheduleVM.run{
 
-            selectScheduleData.observe(requireActivity()){ scheduleInfo ->
+            selectScheduleData.observe(viewLifecycleOwner){ scheduleInfo ->
 
                 getClientInfo(userIdx,scheduleInfo.clientIdx)
 
@@ -108,7 +108,7 @@ class UnvisitedScheduleFragment : Fragment() {
                 }
             }
 
-            selectClientData.observe(requireActivity()){
+            selectClientData.observe(viewLifecycleOwner){
                 fragmentUnvisitedScheduleBinding.run{
 
                     scheduleClientState.visibility = View.VISIBLE

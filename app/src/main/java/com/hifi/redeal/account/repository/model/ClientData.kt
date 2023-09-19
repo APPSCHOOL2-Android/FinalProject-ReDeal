@@ -1,4 +1,4 @@
-package com.hifi.redeal.account.model
+package com.hifi.redeal.account.repository.model
 
 import com.google.firebase.Timestamp
 
