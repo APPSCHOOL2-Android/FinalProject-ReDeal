@@ -1,6 +1,8 @@
 package com.hifi.redeal
 
 
+import android.content.Intent
+import android.provider.MediaStore
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import com.hifi.redeal.auth.AuthFindPwFragment
@@ -18,7 +20,6 @@ import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.transition.MaterialSharedAxis
-import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +31,12 @@ import com.hifi.redeal.schedule.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import com.hifi.redeal.memo.AddPhotoMemoFragment
+import com.hifi.redeal.memo.AddRecordMemoFragment
+import com.hifi.redeal.memo.PhotoDetailFragment
+import com.hifi.redeal.memo.PhotoMemoFragment
+import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.memo.SelectFragment
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -58,11 +65,22 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.USE_FULL_SCREEN_INTENT,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.INTERNET
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_MEDIA_LOCATION,
+        Manifest.permission.INTERNET,
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
+  
     companion object{
+        val PHOTO_MEMO_FRAGMENT = "PhotoMemoFragment"
+        val RECORD_MEMO_FRAGMENT = "RecrodMemoFragment"
+        val ADD_PHOTO_MEMO_FRAGMENT = "AddPhotoMemoFragment"
+        val ADD_RECORD_MEMO_FRAGMENT = "AddRecordMemoFragment"
+        val SELECT_FRAGMENT = "SelectFragment"
+        val PHOTO_DETAIL_FRAGMENT = "PhotoDetailFragment"
         val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
         val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
         val VISITED_SCHEDULE_FRAGMENT = "VisitedScheduleFragment"
@@ -78,6 +96,11 @@ class MainActivity : AppCompatActivity() {
       
         const val BASE_URL = "https://dapi.kakao.com/"
     }
+    
+    val REQUEST_INTENTS = listOf(
+        Intent.ACTION_GET_CONTENT,
+        MediaStore.Audio.Media.RECORD_SOUND_ACTION
+    )
 
     lateinit var navController: NavController
 
@@ -132,6 +155,12 @@ class MainActivity : AppCompatActivity() {
 
         // 새로운 Fragment를 담을 변수
         newFragment = when(name){
+            SELECT_FRAGMENT -> SelectFragment()
+            PHOTO_MEMO_FRAGMENT -> PhotoMemoFragment()
+            ADD_PHOTO_MEMO_FRAGMENT -> AddPhotoMemoFragment()
+            PHOTO_DETAIL_FRAGMENT -> PhotoDetailFragment()
+            RECORD_MEMO_FRAGMENT -> RecordMemoFragment()
+            ADD_RECORD_MEMO_FRAGMENT -> AddRecordMemoFragment()
             SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
             UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
             VISITED_SCHEDULE_FRAGMENT -> VisitedScheduleFragment()
@@ -144,7 +173,6 @@ class MainActivity : AppCompatActivity() {
             MAKE_SCHEDULE_FRAGMENT -> MakeScheduleFragment()
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
-
             else -> Fragment()
         }
 
@@ -164,7 +192,6 @@ class MainActivity : AppCompatActivity() {
             newFragment?.enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
             newFragment?.returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
 
-
             // Fragment를 교채한다.
             fragmentTransaction.replace(R.id.mainContainer, newFragment!!)
 
@@ -182,7 +209,8 @@ class MainActivity : AppCompatActivity() {
     fun removeFragment(name:String){
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
-    
+}
+
     // 입력 요소에 포커스를 주는 메서드
     fun showSoftInput(view: View) {
         view.requestFocus()
