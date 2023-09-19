@@ -40,7 +40,7 @@ class ClientRepository {
 
             val scheduleDataRef =
                 database.collection("userData").document(userIdx).collection("scheduleData")
-            .whereEqualTo("clientIdx", clientIdx).orderBy("scheduleFinishTime")
+                    .whereEqualTo("clientIdx", clientIdx).orderBy("scheduleFinishTime")
 
             scheduleDataRef.get().addOnCompleteListener(callback1)
 
@@ -89,11 +89,12 @@ class ClientRepository {
             val api = retrofit.create(RegionInfoAPI::class.java)   // 통신 인터페이스를 객체로 생성
             val call = api.getSiDo(
                 BuildConfig.REGION_REST_API_KEY,
-                "json")
+                "json"
+            )
 
 
             // API 서버에 요청
-            call.enqueue(object : Callback<ResultSearchRegion>  {
+            call.enqueue(object : Callback<ResultSearchRegion> {
                 override fun onResponse(
                     call: Call<ResultSearchRegion>,
                     response: Response<ResultSearchRegion>
@@ -126,11 +127,87 @@ class ClientRepository {
             val call = api.getSiGunGu(
                 BuildConfig.REGION_REST_API_KEY,
                 admCode,
-                "json")
+                "json"
+            )
 
 
             // API 서버에 요청
-            call.enqueue(object : Callback<ResultSearchRegion>  {
+            call.enqueue(object : Callback<ResultSearchRegion> {
+                override fun onResponse(
+                    call: Call<ResultSearchRegion>,
+                    response: Response<ResultSearchRegion>
+                ) {
+                    // 통신 성공 (검색 결과는 response.body()에 담겨있음)
+                    Log.d("Test2", "Raw: ${response.raw()}")
+                    Log.d("Test2", "Body: ${response.body()}")
+
+                    val result = response.body()?.admVOList?.admVOList
+                    callback(result)
+
+                }
+
+
+                override fun onFailure(call: Call<ResultSearchRegion>, t: Throwable) {
+                    // 통신 실패
+                    Log.w("MainActivity", "통신 실패: ${t.message}")
+                    callback(null)
+                }
+            })
+
+        }
+        fun searchDong(admCode: Int, callback: (List<AdmVO>?) -> Unit) {
+            val retrofit = Retrofit.Builder()   // Retrofit 구성
+                .baseUrl(MainActivity.REGION_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val api = retrofit.create(RegionInfoAPI::class.java)   // 통신 인터페이스를 객체로 생성
+            val call = api.getDong(
+                BuildConfig.REGION_REST_API_KEY,
+                admCode,
+                "json"
+            )
+
+
+            // API 서버에 요청
+            call.enqueue(object : Callback<ResultSearchRegion> {
+                override fun onResponse(
+                    call: Call<ResultSearchRegion>,
+                    response: Response<ResultSearchRegion>
+                ) {
+                    // 통신 성공 (검색 결과는 response.body()에 담겨있음)
+                    Log.d("Test2", "Raw: ${response.raw()}")
+                    Log.d("Test2", "Body: ${response.body()}")
+
+                    val result = response.body()?.admVOList?.admVOList
+                    callback(result)
+
+                }
+
+
+                override fun onFailure(call: Call<ResultSearchRegion>, t: Throwable) {
+                    // 통신 실패
+                    Log.w("MainActivity", "통신 실패: ${t.message}")
+                    callback(null)
+                }
+            })
+
+        }
+
+        fun searchRee(admCode: Int, callback: (List<AdmVO>?) -> Unit) {
+            val retrofit = Retrofit.Builder()   // Retrofit 구성
+                .baseUrl(MainActivity.REGION_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val api = retrofit.create(RegionInfoAPI::class.java)   // 통신 인터페이스를 객체로 생성
+            val call = api.getRee(
+                BuildConfig.REGION_REST_API_KEY,
+                admCode,
+                "json"
+            )
+
+
+            // API 서버에 요청
+            call.enqueue(object : Callback<ResultSearchRegion> {
                 override fun onResponse(
                     call: Call<ResultSearchRegion>,
                     response: Response<ResultSearchRegion>
@@ -157,7 +234,12 @@ class ClientRepository {
 
     }
 
+
+
+
 }
+
+
 
 
 

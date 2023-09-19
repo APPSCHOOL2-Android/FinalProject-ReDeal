@@ -11,8 +11,23 @@ interface RegionInfoAPI {
         @Query("key") key: String,
         @Query("format") format: String
     ): Call<ResultSearchRegion>
+
     @GET("/ned/data/admSiList")
     fun getSiGunGu(
+        @Query("key") key: String,
+        @Query("admCode") admCode: Int,
+        @Query("format") format: String
+    ): Call<ResultSearchRegion>
+
+    @GET("/ned/data/admDongList")
+    fun getDong(
+        @Query("key") key: String,
+        @Query("admCode") admCode: Int,
+        @Query("format") format: String
+    ): Call<ResultSearchRegion>
+
+    @GET("/ned/data/admReeList")
+    fun getRee(
         @Query("key") key: String,
         @Query("admCode") admCode: Int,
         @Query("format") format: String

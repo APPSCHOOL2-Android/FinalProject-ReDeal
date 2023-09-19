@@ -24,10 +24,18 @@ class MapSearchRegionFragment : Fragment() {
         val TAG = "지역"
 
         ClientRepository.searchSiDo {
-            Log.d(TAG,it.toString())
+            Log.d(TAG+"1",it.toString())
         }
 
         ClientRepository.searchSiGunGu(45){
+            Log.d(TAG,it.toString())
+        }
+
+        ClientRepository.searchDong(45790){
+            Log.d(TAG,it.toString())
+        }
+
+        ClientRepository.searchRee(45790420){
             Log.d(TAG,it.toString())
         }
 
