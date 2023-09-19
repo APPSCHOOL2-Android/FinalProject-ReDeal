@@ -2,16 +2,19 @@ package com.hifi.redeal.auth
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.firestore.FirebaseFirestore
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
-import com.hifi.redeal.vm.AuthViewModel
+import com.hifi.redeal.auth.vm.AuthViewModel
 
 class AuthLoginFragment : Fragment() {
 
@@ -32,14 +35,21 @@ class AuthLoginFragment : Fragment() {
         // UI 요소에 대한 리스너 설정
         setupUiListeners()
 
-        // 저장된 UID를 사용한 자동 로그인 시도
-        attemptAutoLogin()
+        // 로그인 시 저장된 체크 상태 확인 및 자동 로그인 시도
+        checkAutoLoginStateAndAttempt()
 
         return fragmentAuthLoginBinding.root
     }
 
     // UI 요소에 리스너를 설정하는 함수
     private fun setupUiListeners() {
+
+        // 체크박스의 상태에 따라 자동 로그인 설정
+        fragmentAuthLoginBinding.checkboxAuthAutoLogin.setOnCheckedChangeListener { _, isChecked ->
+            // 사용자가 체크박스 상태를 변경할 때마다 해당 상태를 저장
+            saveAutoLoginState(isChecked)
+        }
+
         // 회원가입 텍스트 클릭 시 JoinFragment로 교체
         fragmentAuthLoginBinding.textViewAuthJoin.setOnClickListener {
             mainActivity.replaceFragment(MainActivity.AUTH_JOIN_FRAGMENT, true, null)
@@ -59,53 +69,84 @@ class AuthLoginFragment : Fragment() {
         fragmentAuthLoginBinding.textInputEditTextLoginUserId.setOnClickListener {
             mainActivity.showSoftInput(it)
         }
+    }
 
-        // 체크박스의 상태에 따라 자동 로그인 설정
-        fragmentAuthLoginBinding.checkboxAuthAutoLogin.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                // 체크박스가 선택된 경우에만 자동 로그인 활성화
-                enableAutoLogin()
-            } else {
-                // 체크박스가 선택되지 않은 경우에는 자동 로그인 비활성화
-                disableAutoLogin()
-            }
+
+    // 자동 로그인 상태를 확인하고 시도하는 함수
+    private fun checkAutoLoginStateAndAttempt() {
+        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val shouldAttemptAutoLogin = sharedPreferences.getBoolean("auto_login", false)
+
+        if (shouldAttemptAutoLogin) {
+            // 자동 로그인을 시도하려면 여기서 시도하는 코드 추가
+            Log.d("authlogin", "자동 로그인 상태: 활성화")
+            attemptAutoLogin()
         }
     }
 
     private fun attemptAutoLogin() {
         // SharedPreferences에서 UID 가져오기
-        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedUid = sharedPreferences.getString("user_uid", null)
 
         // UID가 저장되어 있다면 자동 로그인 시도
         if (savedUid != null) {
-            FirebaseAuth.getInstance().signInWithCustomToken(savedUid)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // 로그인 성공
-                        val user = task.result?.user
-                        // TODO: 사용자를 앱 내부에 로그인 상태로 유지
-                    } else {
-                        // 로그인 실패
-                        val exception = task.exception
-                        if (exception is FirebaseAuthInvalidUserException) {
-                            // 사용자가 더 이상 존재하지 않음
-                        } else {
-                            // 기타 로그인 실패 상황 처리
+            Log.d("authlogin", "저장된 UID: $savedUid")
+
+            // Firestore에서 이메일과 비밀번호 가져오기
+            val db = FirebaseFirestore.getInstance()
+            db.collection("userData").document(savedUid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val email = document.getString("userEmail")
+                        val password = document.getString("userPw")
+                        if (!email.isNullOrEmpty() && !password.isNullOrEmpty()) {
+                            // 이메일과 비밀번호를 사용하여 Firebase에 로그인 시도
+                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        // 로그인 성공
+                                        val user = task.result?.user
+                                        val uid = user?.uid
+                                        if (uid != null) {
+                                            // 자동 로그인에 성공했으므로 다음 화면으로 이동
+                                            Log.d("authlogin", "로그인 성공.")
+                                        }
+                                    } else {
+                                        // 로그인 실패
+                                        val exception = task.exception
+                                        if (exception is FirebaseAuthInvalidUserException) {
+                                            // 사용자가 더 이상 존재하지 않을 때 처리
+                                            Log.e("authlogin", "사용자가 더 이상 존재하지 않음")
+                                        } else {
+                                            // 로그인 실패 상황 처리
+                                            Log.e("authlogin", "로그인 실패: ${exception?.message}")
+                                        }
+                                        Toast.makeText(context, "로그인 실패", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
                         }
                     }
                 }
+                .addOnFailureListener { e ->
+                    Log.e("authlogin", "Firestore에서 이메일과 비밀번호 가져오기 실패: $e")
+                    Toast.makeText(context, "로그인 실패", Toast.LENGTH_SHORT).show()
+                }
         } else {
-            // 저장된 UID가 없는 경우 일반 로그인 화면을 표시하거나 다른 처리를 수행
+            // 저장된 UID가 없는 경우 일반 로그인 화면을 표시
+            Log.e("authlogin", "저장된 UID 없음")
         }
     }
 
-    private fun enableAutoLogin() {
-        // TODO: 자동 로그인 활성화 코드 추가
-    }
 
-    private fun disableAutoLogin() {
-        // TODO: 자동 로그인 비활성화 코드 추가
+    // 자동 로그인 상태를 저장하는 함수
+    private fun saveAutoLoginState(isChecked: Boolean) {
+        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("auto_login", isChecked)
+        editor.apply()
     }
 
 

@@ -10,11 +10,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthJoinBinding
-import com.hifi.redeal.vm.AuthViewModel
+import com.hifi.redeal.auth.vm.AuthViewModel
 
 class AuthJoinFragment : Fragment() {
 
