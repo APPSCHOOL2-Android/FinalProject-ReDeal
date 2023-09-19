@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.BuildConfig
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.map.model.AdmVO
+import com.hifi.redeal.map.model.AdmVoList
 import com.hifi.redeal.map.model.KakaoMapAPI
 import com.hifi.redeal.map.model.Place
 import com.hifi.redeal.map.model.RegionInfoAPI
@@ -102,7 +103,7 @@ class ClientRepository {
                     Log.d("Test2", "Raw: ${response.raw()}")
                     Log.d("Test2", "Body: ${response.body()}")
 
-                    val result = response.body()?.admVoList?.admVoList
+                    val result = response.body()?.admVOList?.admVOList
                     callback(result)
 
                 }

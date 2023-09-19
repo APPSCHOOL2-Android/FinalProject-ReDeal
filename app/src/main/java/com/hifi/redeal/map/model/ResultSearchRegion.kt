@@ -1,7 +1,7 @@
 package com.hifi.redeal.map.model
 
 data class ResultSearchRegion(
-    val admVoList: AdmVoList
+    val admVOList: AdmVoList
 )
 
 data class AdmVoList(
@@ -9,7 +9,7 @@ data class AdmVoList(
     val error: String,
     val totalCount: String,
     val pageNo: String,
-    val admVoList: List<AdmVO>, // "admVoList"로 정의
+    val admVOList: List<AdmVO>, // "admVoList"로 정의
     val numOfRows: String
 )
 

@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
+        const val REGION_BASE_URL = "http://api.vworld.kr/"
     }
 
     val REQUEST_INTENTS = listOf(
@@ -134,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener{ controller, destination, arguments ->
             activityMainBinding.bottomNavigationViewMain.isVisible = destination.id in mainBottomBarShowFragmentList
         }
+        replaceFragment(MAP_FRAGMENT,false,null)
 
     }
 
