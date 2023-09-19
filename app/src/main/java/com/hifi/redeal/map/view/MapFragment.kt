@@ -5,10 +5,10 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,7 +23,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -51,8 +50,13 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.shape.DotPoints
+import com.kakao.vectormap.shape.Polygon
+import com.kakao.vectormap.shape.Polyline
+import com.kakao.vectormap.shape.PolylineOptions
+import com.kakao.vectormap.shape.PolylineStyles
+import com.kakao.vectormap.shape.PolylineStylesSet
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 
 class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
@@ -73,6 +77,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     private lateinit var labels: Array<Label>
     private var labelLayer: LabelLayer? = null
     private val selectedList: List<Label> = ArrayList()
+    private var circle: Polyline? = null
 
 
     // 현재 위치
@@ -94,12 +99,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
         clientViewModel.run {
-            clientDataListByKeyWord.observe(mainActivity) {
+            clientDataListByKeyWord.observe(viewLifecycleOwner) {
 //                Log.d("검색",it.toString())
                 fragmentMapBinding.mapSearchRecyclerViewResult.adapter?.notifyDataSetChanged()
             }
-            clientDataListAll.observe(mainActivity) {
+            clientDataListAll.observe(viewLifecycleOwner) {
                 Log.d("하단", it.toString())
+
                 fragmentMapBinding.mapBottomSheet.run {
                     mapBottomSheetTextViewEmpty.visibility = View.GONE
                     mapBottomSheetRecyclerView.run {
@@ -109,14 +115,15 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
             }
 
-            clientDataListLabel.observe(mainActivity) {
+            clientDataListLabel.observe(viewLifecycleOwner) {
                 Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
                 labels =
                     kakaoMapTemp.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
+
             }
 
 
-            selectedButtonId.observe(mainActivity) { selectedButtonId ->
+            selectedButtonId.observe(viewLifecycleOwner) { selectedButtonId ->
 
                 fragmentMapBinding.mapBottomSheet.run {
                     // 모든 버튼의 원래 스타일로 초기화
@@ -159,6 +166,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             mapBtnSearchRegion.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT, true, null)
             }
+
             persistentBottomSheetEvent()
 
             mapKakao.start(object : MapLifeCycleCallback() {
@@ -186,11 +194,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                     clientViewModel.getClientListLabel("1")
 
 
+
                 }
 
                 override fun getZoomLevel(): Int {
                     return 17
                 }
+
             })
 
             mapFABMyLocation.setOnClickListener {
@@ -263,6 +273,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 mapBottomSheetTabAll.setOnClickListener {
                     clientViewModel.resetClientList()
                     clientViewModel.getClientListAll("1")
+
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabAll)
                 }
 
@@ -408,9 +419,19 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             val clientIdx = clientViewModel.clientDataListAll.value?.get(position)?.clientIdx
 
             val scheduleTempList = mutableListOf<ScheduleDataClass>()
-            ClientRepository.getScheduleListByClientAndUser("1",clientIdx!!){
+            getScheduleData(clientIdx, scheduleTempList, holder)
+        }
+
+        private fun getScheduleData(
+            clientIdx: Long?,
+            scheduleTempList: MutableList<ScheduleDataClass>,
+            holder: ResultViewHolder
+        ) {
+            ClientRepository.getScheduleListByClientAndUser("1", clientIdx!!) {
                 for (snapshot in it.result.documents) {
-                    if (snapshot.getBoolean("isVisitSchedule")!!.equals(true) && snapshot.getBoolean("isScheduleFinish")!!.equals(true)) {
+                    if (snapshot.getBoolean("isVisitSchedule")!!
+                            .equals(true) && snapshot.getBoolean("isScheduleFinish")!!.equals(true)
+                    ) {
                         Log.d(
                             "일정 테스트3",
                             snapshot.toObject(ScheduleDataClass::class.java).toString()
@@ -420,30 +441,15 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                     }
                 }
                 Log.d("일정 테스트4", scheduleTempList.toString())
-                if(scheduleTempList.isNotEmpty()){
+                if (scheduleTempList.isNotEmpty()) {
                     val dateFormat = SimpleDateFormat("yyyy.MM.dd")
-                    holder.rowMapClientListDateRecent.text = dateFormat.format(scheduleTempList.get(scheduleTempList.size-1).scheduleFinishTime)
-                }else{
+                    holder.rowMapClientListDateRecent.text =
+                        dateFormat.format(scheduleTempList.get(scheduleTempList.size - 1).scheduleFinishTime)
+                } else {
                     holder.rowMapClientListDateRecentLayout.visibility = View.GONE
                 }
             }
-
-
-
-
-//            holder.rowMapClientListDateRecent.text = data.get(position)?
         }
-    }
-
-    fun getScheduleData(userIdx:String,clientIdx:Long){
-
-    }
-
-    private fun moveCamera(position: LatLng) {
-        kakaoMapTemp!!.moveCamera(
-            CameraUpdateFactory.newCenterPosition(position)
-        )
-
     }
 
     fun moveClientAddress(addr: String) {
@@ -522,10 +528,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                         clientViewModel.selectedButtonId.value = R.id.mapBottomSheetTabAll
                     }
 
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                        Log.d(TAG, "onStateChanged: 드래그")
-                    }
-
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         Log.d(TAG, "onStateChanged: 펼침")
                         clientViewModel.getClientListAll("1")
@@ -533,18 +535,18 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
                     }
 
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        Log.d(TAG, "onStateChanged: 숨기기")
-                    }
-
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                        Log.d(TAG, "onStateChanged: 고정됨")
-                    }
                 }
             }
         })
     }
 
+
+    private fun moveCamera(position: LatLng) {
+        kakaoMapTemp!!.moveCamera(
+            CameraUpdateFactory.newCenterPosition(position)
+        )
+
+    }
 
     override fun onCameraMoveEnd(
         kakaoMap: KakaoMap,
@@ -556,7 +558,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 LabelOptions.from(kakaoMap.cameraPosition!!.position)
                     .setStyles(R.drawable.red_dot_marker)
             )
-
     }
 
     override fun onCameraMoveStart(kakaoMap: KakaoMap, gestureType: GestureType) {
