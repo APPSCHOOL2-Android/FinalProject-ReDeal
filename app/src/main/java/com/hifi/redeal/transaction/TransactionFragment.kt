@@ -57,10 +57,10 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setViewModel(){
-        transactionVM = ViewModelProvider(mainActivity)[TransactionViewModel::class.java]
+        transactionVM = ViewModelProvider(requireActivity())[TransactionViewModel::class.java]
 
         transactionVM.run{
-            transactionList.observe(mainActivity){
+            transactionList.observe(viewLifecycleOwner){
                 fragmentTransactionBinding.transactionListLayout.removeAllViews()
 
                 var lastDate = ""

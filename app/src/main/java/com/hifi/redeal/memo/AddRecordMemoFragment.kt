@@ -61,7 +61,8 @@ class AddRecordMemoFragment : Fragment() {
         fragmentAddRecordMemoBinding = FragmentAddRecordMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
-        clientIdx = arguments?.getLong("clientIdx")?:1L
+        clientIdx = arguments?.getLong("clientIdx")!!
+        Log.d("ttt","민국님 코드 $clientIdx")
         audioLauncher = recordingSetting()
         prepareRecorder()
         fragmentAddRecordMemoBinding.run{
