@@ -72,7 +72,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     var currentAddress: String? = null
 
     // 카카오 맵
-    lateinit var kakaoMapTemp: KakaoMap
+    var kakaoMapTemp: KakaoMap? = null
     private var centerPointLabel: Label? = null
     private lateinit var labels: Array<Label>
     private var labelLayer: LabelLayer? = null
@@ -115,12 +115,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
             }
 
-            clientDataListLabel.observe(viewLifecycleOwner) {
-                Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
-                labels =
-                    kakaoMapTemp.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
-
-            }
 
 
             selectedButtonId.observe(viewLifecycleOwner) { selectedButtonId ->
@@ -191,7 +185,14 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                             LabelOptions.from(kakaoMap.cameraPosition!!.position)
                                 .setStyles(R.drawable.red_dot_marker)
                         )
-                    clientViewModel.getClientListLabel("1")
+                    clientViewModel.run {
+                        getClientListLabel("1")
+                        clientDataListLabel.observe(viewLifecycleOwner) {
+                            Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
+                            labels = kakaoMap?.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
+
+                        }
+                    }
 
 
 
