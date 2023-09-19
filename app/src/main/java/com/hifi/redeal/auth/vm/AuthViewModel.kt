@@ -86,7 +86,6 @@ class AuthViewModel : ViewModel() {
         val userData = hashMapOf(
             "userIdx" to newUser.userIdx,
             "userEmail" to newUser.userEmail,
-            "userPw" to newUser.userPw,
             "userName" to newUser.userName
         )
 
