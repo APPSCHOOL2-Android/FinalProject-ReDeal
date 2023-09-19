@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
+import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -43,12 +45,11 @@ class AccountListFragment : Fragment() {
         arrayOf(
             "즐겨 찾기", "거래 중", "거래 시도", "거래 중지"
         ),
-        arrayOf(
-            12, 48, 10000, 92
-        )
     )
 
     val tabItemListState = mutableListOf<Tab>()
+
+    val tabItemTextViewListState = mutableListOf<TextView>()
 
     val tabItemChipListSort = mutableListOf<Chip>()
 
@@ -70,13 +71,14 @@ class AccountListFragment : Fragment() {
                 val indicatorColor = ContextCompat.getColor(context, R.color.primary20)
 
                 tabItemListState.clear()
+                tabItemTextViewListState.clear()
 
                 for (i in 0..3) {
                     val tab = newTab()
                     val tabItemBinding = TabItemLayoutAccountListStateBinding.inflate(layoutInflater)
                     tabItemBinding.imageViewTabItemAccountListCriterion.setImageResource(tabItemStateInfoList[0][i] as Int)
                     tabItemBinding.textViewTabItemAccountListCriterion.text = tabItemStateInfoList[1][i] as String
-                    tabItemBinding.textViewTabItemAccountListCount.text = (tabItemStateInfoList[2][i] as Int).toString()
+                    tabItemTextViewListState.add(tabItemBinding.textViewTabItemAccountListCount)
                     tab.setCustomView(tabItemBinding.root)
                     tabItemListState.add(tab)
                     addTab(tab)
@@ -112,7 +114,7 @@ class AccountListFragment : Fragment() {
                         }
                         setSelectedTabIndicatorColor(indicatorColor)
                     }
-                    accountListViewModel.getClientList(1)
+                    accountListViewModel.getClientList(mainActivity.userId)
                 }
             }
 
@@ -136,7 +138,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(0)
                         }
-                        accountListViewModel.getClientList(1)
+                        accountListViewModel.getClientList(mainActivity.userId)
                     }
                 }
 
@@ -147,7 +149,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(1)
                         }
-                        accountListViewModel.getClientList(1)
+                        accountListViewModel.getClientList(mainActivity.userId)
                     }
                 }
 
@@ -158,7 +160,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(2)
                         }
-                        accountListViewModel.getClientList(1)
+                        accountListViewModel.getClientList(mainActivity.userId)
                     }
                 }
 
@@ -169,7 +171,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(3)
                         }
-                        accountListViewModel.getClientList(1)
+                        accountListViewModel.getClientList(mainActivity.userId)
                     }
                 }
             }
@@ -188,8 +190,15 @@ class AccountListFragment : Fragment() {
                 }
             }
 
+            accountListViewModel.filterCntList.observe(viewLifecycleOwner) {
+                for (i in 0..3) {
+                    tabItemTextViewListState[i].text = it[i].toString()
+                }
+            }
+
             fabAccountListAddAccount.setOnClickListener {
-                mainActivity.navigateTo(R.id.accountEditFragment)
+                mainActivity.replaceFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT, true)
+                //mainActivity.navigateTo(R.id.accountEditFragment)
             }
         }
 

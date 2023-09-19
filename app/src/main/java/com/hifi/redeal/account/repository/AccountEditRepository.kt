@@ -3,8 +3,8 @@ package com.hifi.redeal.account.repository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.hifi.redeal.account.model.ClientData
-import com.hifi.redeal.account.model.ClientInputData
+import com.hifi.redeal.account.repository.model.ClientData
+import com.hifi.redeal.account.repository.model.ClientInputData
 
 class AccountEditRepository {
     val db = Firebase.firestore

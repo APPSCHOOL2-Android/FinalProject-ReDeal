@@ -6,9 +6,9 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.hifi.redeal.account.model.ClientData
-import com.hifi.redeal.account.model.ContactData
-import com.hifi.redeal.account.model.ScheduleData
+import com.hifi.redeal.account.repository.model.ClientData
+import com.hifi.redeal.account.repository.model.ContactData
+import com.hifi.redeal.account.repository.model.ScheduleData
 import java.util.UUID
 
 class AccountListRepository {
@@ -19,7 +19,7 @@ class AccountListRepository {
         filter: Int,
         sortBy: Int,
         descending: Boolean,
-        callback: (List<ClientData>) -> Unit
+        callback: (List<ClientData>, List<Int>) -> Unit
     ) {
         val userRef = db.collection("userData").document("$userId").collection("clientData")
         userRef.get().addOnSuccessListener { docs ->
@@ -85,7 +85,7 @@ class AccountListRepository {
         filter: Int,
         sortBy: Int,
         descending: Boolean,
-        callback: (List<ClientData>) -> Unit
+        callback: (List<ClientData>, List<Int>) -> Unit
     ) {
         val filteredClientList = when (filter) {
             0 -> {
@@ -113,6 +113,24 @@ class AccountListRepository {
             }
         }
 
+        var bookMarkCnt = 0
+        var tradingCnt = 0
+        var tryingCnt = 0
+        var stopCnt = 0
+
+        clientList.forEach { client ->
+            if (client.isBookmark == true) {
+                bookMarkCnt += 1
+            }
+            when (client.clientState) {
+                1L -> tradingCnt += 1
+                2L -> tryingCnt += 1
+                3L -> stopCnt += 1
+            }
+        }
+
+        val cntList = listOf(bookMarkCnt, tradingCnt, tryingCnt, stopCnt)
+
         val resultClientList = when (sortBy) {
             0 -> {
                 filteredClientList.sortedByDescending { it.viewCount }
@@ -129,9 +147,9 @@ class AccountListRepository {
         }
 
         if (!descending) {
-            callback(resultClientList.reversed())
+            callback(resultClientList.reversed(), cntList)
         } else {
-            callback(resultClientList)
+            callback(resultClientList, cntList)
         }
     }
 

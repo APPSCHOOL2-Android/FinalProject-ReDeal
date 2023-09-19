@@ -116,7 +116,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             }
 
 
-            selectedButtonId.observe(mainActivity) { selectedButtonId ->
+            selectedButtonId.observe(viewLifecycleOwner) { selectedButtonId ->
 
                 fragmentMapBinding.mapBottomSheet.run {
                     // 모든 버튼의 원래 스타일로 초기화
