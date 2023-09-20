@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -33,18 +33,18 @@
                     android:id="@+id/rowMapClientListName"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="clip_vertical"
+                    android:layout_gravity="center_vertical"
                     android:fontFamily="@font/nanumsquareneo_regular"
                     android:gravity="center_vertical"
                     android:text="TextView"
                     android:textColor="@color/text10"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/rowMapClientListBookMark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="clip_vertical"
+                    android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/star_fill_24px" />
             </LinearLayout>
 
@@ -65,6 +65,7 @@
             style="@style/Widget.Material3.Button.IconButton.Filled"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
             app:cornerRadius="4dp"
             app:icon="@drawable/directions_car_24px"
             app:iconGravity="textStart" />
@@ -77,6 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
         <View

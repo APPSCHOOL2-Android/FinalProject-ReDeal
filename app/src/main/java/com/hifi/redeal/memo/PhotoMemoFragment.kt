@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentPhotoMemoBinding
@@ -28,7 +30,7 @@ class PhotoMemoFragment : Fragment() {
     private lateinit var photoMemoViewModel: PhotoMemoViewModel
     private lateinit var fragmentPhotoMemoBinding: FragmentPhotoMemoBinding
     private lateinit var mainActivity: MainActivity
-    private var userIdx = 1L
+    private val userIdx = Firebase.auth.uid!!
     private var clientIdx = 1L
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +56,9 @@ class PhotoMemoFragment : Fragment() {
                 }
             }
             photoMemoAddBtn.setOnClickListener {
-                mainActivity.replaceFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT, true, null)
+                val newBundle = Bundle()
+                newBundle.putLong("clientIdx", clientIdx)
+                mainActivity.replaceFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT, true, newBundle)
             }
             photoMemoRecyclerView.run{
                 adapter = PhotoMemoRecyclerAdapter()
@@ -107,7 +111,6 @@ class PhotoMemoFragment : Fragment() {
                     imageView.setOnClickListener {
                         val newBundle = Bundle()
                         newBundle.putInt("order", i)
-                        newBundle.putLong("userIdx", userIdx)
                         newBundle.putStringArrayList("srcArr", item.srcArr as ArrayList<String>)
                         mainActivity.replaceFragment(MainActivity.PHOTO_DETAIL_FRAGMENT, true, newBundle)
                     }

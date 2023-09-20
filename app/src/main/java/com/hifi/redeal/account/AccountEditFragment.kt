@@ -1,9 +1,6 @@
 package com.hifi.redeal.account
 
 import android.os.Bundle
-import android.os.SystemClock
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
@@ -86,7 +82,7 @@ class AccountEditFragment : Fragment(){
         if (clientIdx == 0L) {
             registerViewInit()
         } else if (!create) {
-            accountEditRepository.getClient(mainActivity.userId, clientIdx) {
+            accountEditRepository.getClient(mainActivity.uid, clientIdx) {
                 client = it
                 editViewInit()
                 create = true
@@ -133,7 +129,7 @@ class AccountEditFragment : Fragment(){
                 val newClientIdx = System.currentTimeMillis()
 
                 accountEditRepository.registerClient(
-                    mainActivity.userId,
+                    mainActivity.uid,
                     ClientInputData(
                         textEditTextAccountEditZipCode.text.toString(),
                         textEditTextAccountEditGeneralNumber.text.toString(),
@@ -173,15 +169,15 @@ class AccountEditFragment : Fragment(){
 
                 when (client.clientState) {
                     1L -> {
-                        setText("거래 중")
+                        setText("거래 중", false)
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary20, 0, 0, 0)
                     }
                     2L -> {
-                        setText("거래 시도")
+                        setText("거래 시도", false)
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary50, 0, 0, 0)
                     }
                     3L -> {
-                        setText("거래 중지")
+                        setText("거래 중지", false)
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
                     }
                 }
@@ -209,7 +205,7 @@ class AccountEditFragment : Fragment(){
                     }
 
                     accountEditRepository.updateClient(
-                        mainActivity.userId,
+                        mainActivity.uid,
                         ClientInputData(
                             textEditTextAccountEditZipCode.text.toString(),
                             textEditTextAccountEditGeneralNumber.text.toString(),
