@@ -99,9 +99,10 @@
         <item name="chipStartPadding">0dp</item>
         <item name="chipStrokeWidth">0dp</item>
         <item name="closeIcon">@drawable/arrow_drop_down_24px</item>
+        <item name="closeIconVisible">true</item>
         <item name="checkedIconVisible">false</item>
         <item name="rippleColor">#00FCFCFC</item>
-        <item name="closeIconTint">@color/primary20</item>
+        <item name="closeIconTint">@color/text50</item>
         <item name="ensureMinTouchTargetSize">false</item>
         <item name="textEndPadding">0dp</item>
         <item name="textStartPadding">0dp</item>

@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:text="조회순"
             style="@style/tab_item_chip_style_account_list"
-            app:closeIconVisible="true"/>
+            app:closeIconTint="@color/primary20"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipAccountListSortVisit"

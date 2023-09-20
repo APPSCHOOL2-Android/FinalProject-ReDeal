@@ -2,17 +2,13 @@ package com.hifi.redeal.account.adapter
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.repository.model.ClientData
@@ -20,8 +16,6 @@ import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.RowFooterAccountListBinding
 import com.hifi.redeal.databinding.RowItemAccountListBinding
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
 
 class AccountListAdapter(
     val mainActivity: MainActivity,
@@ -94,11 +88,14 @@ class AccountListAdapter(
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    val drawable = mainActivity.getDrawable(R.drawable.star_fill_16px)
+
     inner class AccountListViewHolder(val rowItemAccountListBinding: RowItemAccountListBinding): RecyclerView.ViewHolder(rowItemAccountListBinding.root) {
         fun bind(clientData: ClientData) {
             rowItemAccountListBinding.run {
                 root.setOnClickListener {
-                    accountListViewModel.accountListRepository.incClientViewCount(mainActivity.userId, clientData.clientIdx ?: 0, clientData.viewCount ?: 0)
+                    accountListViewModel.accountListRepository.incClientViewCount(mainActivity.uid, clientData.clientIdx ?: 0, clientData.viewCount ?: 0)
 
                     val bundle = Bundle()
                     bundle.putLong("clientIdx", clientData.clientIdx ?: 0)
@@ -108,7 +105,7 @@ class AccountListAdapter(
 
                 textViewRowItemAccountListAccountName.text = clientData.clientName
                 if (clientData.isBookmark == true) {
-                    textViewRowItemAccountListAccountName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.star_fill_16px, 0)
+                    textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.star_fill_16px, 0)
                 } else {
                     textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
                 }

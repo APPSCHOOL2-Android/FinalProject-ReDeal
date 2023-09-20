@@ -1,10 +1,16 @@
 package com.hifi.redeal
 
 
+import android.content.Intent
+import android.provider.MediaStore
+import android.view.inputmethod.InputMethodManager
+import com.hifi.redeal.auth.AuthFindPwFragment
+import com.hifi.redeal.auth.AuthJoinFragment
+import com.hifi.redeal.auth.AuthLoginFragment
+import kotlin.concurrent.thread
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -42,8 +48,24 @@ import com.hifi.redeal.schedule.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import com.hifi.redeal.memo.AddPhotoMemoFragment
+import com.hifi.redeal.memo.AddRecordMemoFragment
+import com.hifi.redeal.memo.PhotoDetailFragment
+import com.hifi.redeal.memo.PhotoMemoFragment
+import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.memo.SelectFragment
+import android.util.Log
+import android.view.View
+import androidx.core.view.forEach
+import androidx.core.view.isVisible
+import com.hifi.redeal.account.AccountDetailFragment
+import com.hifi.redeal.account.AccountEditFragment
+import com.hifi.redeal.account.AccountListFragment
+import com.hifi.redeal.account.AddressSearchFragment
 import com.hifi.redeal.transaction.TransactionFragment
-import com.kakao.sdk.common.util.Utility
+import com.skt.tmap.TMapTapi
+import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
+
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -54,10 +76,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM
 
+    lateinit var tMapTapi: TMapTapi
+
     var newFragment:Fragment? = null
     var oldFragment:Fragment? = null
 
-    var userId = 1L
+    var uid = "1"
 
     val permissionList = arrayOf(
         Manifest.permission.POST_NOTIFICATIONS,
@@ -130,6 +154,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        tMapTapi = TMapTapi(this)
+
+        tMapTapi.setOnAuthenticationListenerCallback( object : OnAuthenticationListenerCallback {
+            override fun SKTMapApikeySucceed() {
+                Log.d("brudenell", "성공")
+            }
+
+            override fun SKTMapApikeyFailed(p0: String?) {
+                Log.d("brudenell", "실패")
+            }
+        })
+
+        tMapTapi.setSKTmapAuthentication(BuildConfig.TMAP_APP_KEY)
 
         requestPermissions(permissionList, 10)
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
@@ -220,7 +258,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        replaceFragment(AUTH_LOGIN_FRAGMENT, true)
+        replaceFragment(AUTH_LOGIN_FRAGMENT, false)
 
 //        val navHostFragment =
 //            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
