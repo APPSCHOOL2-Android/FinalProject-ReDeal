@@ -2,6 +2,7 @@ package com.hifi.redeal.account
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,8 @@ class AccountDetailFragment : Fragment() {
 
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0
+
+        Log.d("ttt", "$clientIdx")
 
         accountDetailRepository.getClient(mainActivity.userId, clientIdx) { client ->
             if (client != null) {

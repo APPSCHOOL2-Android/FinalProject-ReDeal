@@ -111,7 +111,7 @@ class AddPhotoMemoFragment : Fragment() {
             imageView.layoutParams = imageViewLayoutParams
             linearLayoutHorizontal.addView(imageView)
             Glide.with(imageView)
-                .load(it.toString())
+                .load(it)
                 .into(imageView)
             imgCnt++
         }

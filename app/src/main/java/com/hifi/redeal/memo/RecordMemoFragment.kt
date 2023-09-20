@@ -72,7 +72,9 @@ class RecordMemoFragment : Fragment() {
                 }
             }
             addRecordMemoBtn.setOnClickListener {
-                mainActivity.replaceFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT, true, null)
+                val newBundle = Bundle()
+                newBundle.putLong("clientIdx", clientIdx)
+                mainActivity.replaceFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT, true, newBundle)
             }
             recordMemoRecyclerView.run{
                 adapter = RecordMemoRecyclerAdapter()

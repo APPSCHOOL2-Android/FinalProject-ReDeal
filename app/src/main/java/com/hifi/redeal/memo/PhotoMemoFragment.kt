@@ -54,7 +54,9 @@ class PhotoMemoFragment : Fragment() {
                 }
             }
             photoMemoAddBtn.setOnClickListener {
-                mainActivity.replaceFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT, true, null)
+                val newBundle = Bundle()
+                newBundle.putLong("clientIdx", clientIdx)
+                mainActivity.replaceFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT, true, newBundle)
             }
             photoMemoRecyclerView.run{
                 adapter = PhotoMemoRecyclerAdapter()
