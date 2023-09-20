@@ -19,6 +19,7 @@ import java.util.Calendar
 class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
     var clientDataListAll = MutableLiveData<MutableList<ClientDataClass>>()
+    var currentAddress = MutableLiveData<LatLng>()
     var clientDataListTemp = MutableLiveData<MutableList<ClientDataClass>>()
     var scheduleDataClassListByClient = MutableLiveData<MutableList<ScheduleDataClass>>()
     var clientDataListLabel = MutableLiveData<MutableList<LabelOptions>>()

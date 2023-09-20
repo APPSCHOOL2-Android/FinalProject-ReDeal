@@ -25,6 +25,7 @@ import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,21 +65,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     // 거래처 주소
     lateinit var clientViewModel: ClientViewModel
 
-
-    var currentAddress: String? = null
-
     // 카카오 맵
     var kakaoMapTemp: KakaoMap? = null
     private var centerPointLabel: Label? = null
     private lateinit var labels: Array<Label>
-    private var labelLayer: LabelLayer? = null
-    private val selectedList: List<Label> = ArrayList()
-    private var circle: Polyline? = null
 
 
     // 현재 위치
-    var locationListener: LocationListener? = null
-    var currentMyLocation = null
     val PERMISSIONS_REQUEST_CODE = 100
     var REQUIRED_PERMISSIONS = arrayOf<String>(
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -96,6 +89,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
         clientViewModel.run {
+
+            currentAddress.observe(viewLifecycleOwner){
+                Log.d("지도주소", currentAddress.toString())
+                if (currentAddress != null) {
+                    moveCamera(currentAddress.value!!)
+                }
+            }
             clientDataListByKeyWord.observe(viewLifecycleOwner) {
 //                Log.d("검색",it.toString())
                 fragmentMapBinding.mapSearchRecyclerViewResult.adapter?.notifyDataSetChanged()
@@ -163,7 +163,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             startKakaoMap()
 
             mapFABMyLocation.setOnClickListener {
-                moveCurrentLocation()
+                setCurrentLocation()
             }
 
 
@@ -181,17 +181,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
                         // 변경된 레이아웃 파라미터를 설정
                         mapSearchView.layoutParams = searchViewLayoutParams
-                    } else {
-                        Log.d("지도주소", currentAddress.toString())
-                        if (currentAddress != null) {
-                            moveClientAddress(currentAddress!!)
-                        }
                     }
 
                 }
 
                 editText.setOnEditorActionListener { textView, i, keyEvent ->
                     clientViewModel.getClientListByKeyword("1", text.toString())
+
                     true
                 }
             }
@@ -346,8 +342,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-                currentAddress =
-                    clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!
+                setClientAddress(clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!)
 
                 fragmentMapBinding.mapSearchView.hide()
 
@@ -415,9 +410,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-                currentAddress =
-                    clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!
-                moveClientAddress(currentAddress.toString())
+               setClientAddress(clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!)
                 BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout).state =
                     BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -494,20 +487,20 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
         }
     }
 
-    fun moveClientAddress(addr: String) {
+    fun setClientAddress(addr: String) {
         ClientRepository.searchAddr(addr!!) {
             if (it != null) {
                 val lat = it[0].y.toDouble()
                 val long = it[0].x.toDouble()
                 Log.d("주소 확인1", lat.toString())
                 Log.d("주소 확인2", long.toString())
-                moveCamera(LatLng.from(lat, long))
+                clientViewModel.currentAddress.value = LatLng.from(lat,long)
             }
         }
     }
 
 
-    fun moveCurrentLocation() {
+    fun setCurrentLocation() {
         val permissionCheck = ContextCompat
             .checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION)
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
@@ -521,10 +514,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
                 // 기존에 추출된 정보가 있다면 일단 이것으로 먼저 사용한다.
                 if (location1 != null) {
-                    getMyLocation(location1)
+                    val latlng1 = locationToLatLng(location1)
+                    clientViewModel.currentAddress.value = LatLng.from(latlng1)
                 } else if (location2 != null) {
-                    getMyLocation(location2)
+                    val latlng2 = locationToLatLng(location2)
+                    clientViewModel.currentAddress.value = LatLng.from(latlng2)
                 }
+
 
 
             } catch (e: java.lang.NullPointerException) {
@@ -545,13 +541,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
         }
     }
 
-    fun getMyLocation(location: Location) {
-        val uLatitude = location!!.latitude
-        val uLogitude = location!!.longitude
-        Log.d("주소 확인3", uLatitude.toString())
-        Log.d("주소 확인4", uLogitude.toString())
-        moveCamera(LatLng.from(uLatitude, uLogitude))
+    private fun locationToLatLng(location1: Location): LatLng {
+        val lat = location1.latitude
+        val long = location1.longitude
+        val latlng = LatLng.from(lat, long)
+        return latlng
     }
+
 
     private fun persistentBottomSheetEvent() {
         val TAG = "하단"
@@ -584,6 +580,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
 
     private fun moveCamera(position: LatLng) {
+        Log.d("주소 확인 3",position.toString())
         kakaoMapTemp!!.moveCamera(
             CameraUpdateFactory.newCenterPosition(position)
         )
@@ -601,7 +598,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                     .setStyles(R.drawable.red_dot_marker)
             )
 
-        kakaoMap?.labelManager!!.layer
     }
 
     override fun onCameraMoveStart(kakaoMap: KakaoMap, gestureType: GestureType) {
