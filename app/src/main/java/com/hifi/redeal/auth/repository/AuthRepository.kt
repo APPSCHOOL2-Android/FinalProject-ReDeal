@@ -82,38 +82,6 @@ class AuthRepository {
                     }
                 }
         }
-
-
-        // 사용자 아이디를 통해 사용자 정보를 가져온다. (FindPw용)
-        fun getUserInfoByUserId(loginUserEmail: String, callback1: (UserDataClass?) -> Unit) {
-            // Firestore에서 사용자 정보를 가져옵니다. (예: 이메일로 검색)
-            firestore.collection("userData")
-                .whereEqualTo("userEmail", loginUserEmail)
-                .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val querySnapshot = task.result
-                        if (!querySnapshot.isEmpty) {
-                            // 검색 결과가 비어있지 않으면 첫 번째 문서의 데이터를 가져와서 UserDataClass로 변환합니다.
-                            val documentSnapshot = querySnapshot.documents[0]
-                            val userIdx = documentSnapshot.getLong("userIdx") ?: 0
-                            val userName = documentSnapshot.getString("userName") ?: ""
-                            val userData = UserDataClass(userIdx, loginUserEmail,  userName)
-                            callback1(userData)
-                        } else {
-                            // 검색 결과가 비어있으면 null을 반환합니다.
-                            callback1(null)
-                        }
-                    } else {
-                        // 실패 처리
-                        Log.e(
-                            "FirestoreError",
-                            "Firestore에서 사용자 정보 가져오기 실패: ${task.exception?.message}"
-                        )
-                        callback1(null)
-                    }
-                }
-        }
     }
 }
 
