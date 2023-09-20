@@ -193,7 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="175dp"
+            android:layout_marginLeft="13dp"
             android:layout_marginTop="99dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
@@ -206,7 +206,7 @@
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="175dp"
+            android:layout_marginLeft="13dp"
             android:layout_marginTop="120dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
@@ -216,7 +216,7 @@
 
         <TextView
             android:id="@+id/textRecievedAmount"
-            android:layout_width="98dp"
+            android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="99dp"
@@ -229,7 +229,7 @@
 
         <TextView
             android:id="@+id/textRecievables"
-            android:layout_width="85dp"
+            android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="120dp"
