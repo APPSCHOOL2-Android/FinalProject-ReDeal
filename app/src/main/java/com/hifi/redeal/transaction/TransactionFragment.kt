@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogAddDepositBinding
@@ -31,7 +33,7 @@ class TransactionFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var transactionVM: TransactionViewModel
     var clientIdx : Long? = null
-    var userIdx = "1"
+    val uid = Firebase.auth.uid!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -134,8 +136,8 @@ class TransactionFragment : Fragment() {
                 }
             }
 
-            transactionVM.getAllTransactionData(userIdx)
-            transactionVM.getNextTransactionIdx(userIdx)
+            transactionVM.getAllTransactionData()
+            transactionVM.getNextTransactionIdx()
         }
 
     }
@@ -177,12 +179,12 @@ class TransactionFragment : Fragment() {
                         "0",
                         ""
                     )
-                    TransactionRepository.setTransactionData(userIdx,newTransactionData){
-                        TransactionRepository.setClientTransactionDataList(userIdx, newTransactionData){
+                    TransactionRepository.setTransactionData(uid,newTransactionData){
+                        TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
                             dialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "입금 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                            transactionVM.getAllTransactionData(userIdx)
-                            transactionVM.getNextTransactionIdx(userIdx)
+                            transactionVM.getAllTransactionData()
+                            transactionVM.getNextTransactionIdx()
                         }
                     }
                 }
@@ -216,12 +218,12 @@ class TransactionFragment : Fragment() {
                         transactionItemPriceEditText.editableText.toString(),
                         transactionNameEditText.editableText.toString()
                     )
-                    TransactionRepository.setTransactionData(userIdx,newTransactionData){
-                        TransactionRepository.setClientTransactionDataList(userIdx, newTransactionData){
+                    TransactionRepository.setTransactionData(uid,newTransactionData){
+                        TransactionRepository.setClientTransactionDataList(uid, newTransactionData){
                             dialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "거래 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                            transactionVM.getAllTransactionData(userIdx)
-                            transactionVM.getNextTransactionIdx(userIdx)
+                            transactionVM.getAllTransactionData()
+                            transactionVM.getNextTransactionIdx()
                         }
                     }
                 }

@@ -30,6 +30,7 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -346,6 +347,11 @@ class ScheduleManageFragment : Fragment(){
                 override fun bind(container: MonthViewContainer, month: CalendarMonth) {
                     container.headerMonthTextView.text = "${month.month}월"
                     container.headerYearTextView.text = "${month.year}"
+                    container.headerGotoTextView.setOnClickListener {
+                        scheduleVM.selectDate = LocalDate.now()
+                        calendarView.notifyCalendarChanged()
+                        calendarView.scrollToDate(scheduleVM.selectDate, DayOwner.THIS_MONTH)
+                    }
                 }
             }
         }
@@ -399,6 +405,7 @@ class ScheduleManageFragment : Fragment(){
     private inner class MonthViewContainer(view: View) : ViewContainer(view) {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
+        val headerGotoTextView = view.findViewById<TextView>(R.id.headerGoToday)
     }
 
 }
