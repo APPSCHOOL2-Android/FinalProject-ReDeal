@@ -194,32 +194,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="이미 등록된 아이디 입니다"
-                android:textColor="#FF0000"
-                android:visibility="gone" />
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
 
             <TextView
                 android:id="@+id/warningJoinEmailFormat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="이메일 형식으로 작성해주세요"
-                android:textColor="#FF0000"
-                android:visibility="gone" />
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
 
             <TextView
                 android:id="@+id/warningJoinPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="비밀번호를 8자 이상으로 작성해주세요"
-                android:textColor="#FF0000"
-                android:visibility="gone" />
+                android:text="비밀번호는 8자 이상, 특수기호를 포함한 영문자와 숫자로 작성해주세요"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textSize="12dp"/>
 
             <TextView
                 android:id="@+id/warningJoinPasswordCheck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="입력한 비밀번호가 일치하지 않습니다"
-                android:textColor="#FF0000"
-                android:visibility="gone" />
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
+
+            <TextView
+                android:id="@+id/warningJoinPasswordContinuity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="연속된 숫자, 문자는 비밀번호로 사용하실 수 없습니다"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
 
 
             <TextView
@@ -227,8 +241,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="성명을 확인해주세요"
-                android:textColor="#FF0000"
-                android:visibility="gone" />
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
