@@ -7,7 +7,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import java.util.Date
 
 class RecordMemoRepository {
@@ -22,7 +21,7 @@ class RecordMemoRepository {
                 .addOnSuccessListener(callback1)
         }
 
-        fun addRecordMemo(userIdx:Long, clientIdx:Long, recordMemoContext:String, uploadUri:Uri, audioFileName:String, callback:(Task<Void>) -> Unit){
+        fun addRecordMemo(userIdx:Long, clientIdx:Long, recordMemoContext:String, audioFileUri:Uri, audioFileName:String, callback:(Task<Void>) -> Unit){
             val db = Firebase.firestore
             val recordMemoRef = db.collection("userData")
                 .document("$userIdx")
@@ -36,41 +35,16 @@ class RecordMemoRepository {
                     }else{
                         1
                     }
-                    val fileName = "audio_user${userIdx}_client${clientIdx}_audioMemo${recordMemoIdx}"
-                    uploadAudio(userIdx, uploadUri, fileName){isSuccessful ->
-                        if(isSuccessful){
-                            val photoMemo = hashMapOf(
-                                "clientIdx" to clientIdx,
-                                "recordMemoContext" to recordMemoContext,
-                                "recordMemoSrc" to fileName,
-                                "recordMemoDate" to Timestamp(Date()),
-                                "recordMemoIdx" to recordMemoIdx,
-                                "recordMemoFilename" to audioFileName
-                            )
-                            recordMemoRef.document("$recordMemoIdx").set(photoMemo).addOnCompleteListener(callback)
-                        }
-                    }
+                    val photoMemo = hashMapOf(
+                        "clientIdx" to clientIdx,
+                        "recordMemoContext" to recordMemoContext,
+                        "recordMemoSrc" to audioFileUri,
+                        "recordMemoDate" to Timestamp(Date()),
+                        "recordMemoIdx" to recordMemoIdx,
+                        "recordMemoFilename" to audioFileName
+                    )
+                    recordMemoRef.document("$recordMemoIdx").set(photoMemo).addOnCompleteListener(callback)
                 }
-        }
-
-        fun getRecordMemoRecordUrl(userIdx: Long, audioFilePath: String, callback: (Uri) -> Unit) {
-            val storage = FirebaseStorage.getInstance()
-            val fileRef = storage.reference.child("user${userIdx}/$audioFilePath")
-            fileRef.downloadUrl.addOnCompleteListener{
-                callback(it.result)
-            }
-        }
-
-        private fun uploadAudio(userIdx: Long, uploadUri: Uri, fileName:String, callback:(Boolean)-> Unit){
-            val storage = FirebaseStorage.getInstance()
-            val imageRef = storage.reference.child("user${userIdx}/$fileName")
-            imageRef.putFile(uploadUri).addOnCompleteListener{ task ->
-                if(task.isSuccessful){
-                    callback(true)
-                }else{
-                    callback(false)
-                }
-            }
         }
     }
 }
