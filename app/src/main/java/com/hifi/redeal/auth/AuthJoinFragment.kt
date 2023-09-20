@@ -21,6 +21,11 @@ class AuthJoinFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var authViewModel: AuthViewModel
 
+    private val INVALID_NICKNAME_CHARACTERS = listOf(
+        "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
+        "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "/", "?"
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +42,6 @@ class AuthJoinFragment : Fragment() {
 
             buttonJoinComplete.setOnClickListener {
                 val email = textInputEditTextJoinUserId.text.toString()
-                //  val verificationCode = textInputEditTextJoinIdCheck.text.toString()
                 val password = textInputEditTextJoinUserPw.text.toString()
                 val name = textInputEditTextJoinUserName.text.toString()
                 val passwordCheck = textInputEditTextJoinUserPwCheck.text.toString()
@@ -50,28 +54,34 @@ class AuthJoinFragment : Fragment() {
                 warningJoinEmailAlready.visibility = View.GONE
 
                 // 예외처리
-                if (!authViewModel.isEmailValid(email)) {
+                val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                val isPasswordValid = password.length >= 8
+                val isPasswordMatch = password == passwordCheck
+                val isNameValid = name.length in 2..12 && !INVALID_NICKNAME_CHARACTERS.any { name.contains(it) }
+
+                // 이메일 패턴 유효 검사
+                if (!isEmailValid) {
                     warningJoinEmailFormat.visibility = View.VISIBLE
                     return@setOnClickListener
                 } else {
                     warningJoinEmailFormat.visibility = View.GONE
                 }
 
-                if (!authViewModel.isPasswordValid(password)) {
+                if (!isPasswordValid) {
                     warningJoinPassword.visibility = View.VISIBLE
                     return@setOnClickListener
                 } else {
                     warningJoinPassword.visibility = View.GONE
                 }
 
-                if (password != passwordCheck) {
+                if (!isPasswordMatch) {
                     warningJoinPasswordCheck.visibility = View.VISIBLE
                     return@setOnClickListener
                 } else {
                     warningJoinPasswordCheck.visibility = View.GONE
                 }
 
-                if (!authViewModel.isNameValid(name)) {
+                if (!isNameValid) {
                     warningJoinNameFormat.visibility = View.VISIBLE
                     return@setOnClickListener
                 } else {
@@ -110,9 +120,6 @@ class AuthJoinFragment : Fragment() {
             alertDialog.dismiss()
         }
         alertDialog.show()
-
-        // 로그 메시지 추가
-        Log.d("AuthJoinFragment", "showRegistrationSuccessDialog() 호출됨")
     }
 
     // 오류 처리 다이얼로그를 보여주는 함수

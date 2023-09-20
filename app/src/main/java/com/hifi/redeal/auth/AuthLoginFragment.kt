@@ -70,8 +70,7 @@ class AuthLoginFragment : Fragment() {
 
         // 로그인 버튼 클릭 시 로그인 처리 함수 호출
         fragmentAuthLoginBinding.buttonAuthLogin.setOnClickListener {
-            mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, true)
-            //handleLoginButtonClick()
+            handleLoginButtonClick()
         }
 
         // 이메일 입력 텍스트 클릭 시 소프트 키보드 표시

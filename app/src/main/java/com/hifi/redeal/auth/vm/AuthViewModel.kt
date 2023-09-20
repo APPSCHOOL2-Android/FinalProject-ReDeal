@@ -17,11 +17,6 @@ class AuthViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
 
-    private val INVALID_NICKNAME_CHARACTERS = listOf(
-        "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
-        "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "/", "?"
-    )
-
     // Context 초기화
     @SuppressLint("StaticFieldLeak")
     private lateinit var context: Context
@@ -37,49 +32,68 @@ class AuthViewModel : ViewModel() {
 
     // 콜백 정의: 로그인 성공 시 호출됨
     var onLoginSuccess: (() -> Unit)? = null
+    var onRegistrationSuccess: (() -> Unit)? = null
+    var onError: ((String) -> Unit)? = null
 
     // AuthLoginFragment의 로그인 함수
     fun loginUser(email: String, password: String) {
-        AuthRepository.loginUser(email, password) { authResult ->
-            val userUid = authResult.user?.uid
-            if (userUid != null) {
+        AuthRepository.loginUser(email, password,
+            successCallback = { authResult ->
+                val userUid = authResult.user?.uid
+                if (userUid != null) {
                     // 로그인 성공 시 UID를 SharedPreferences에 저장
                     saveUidToSharedPreferences(authResult.user!!.uid)
                     Log.d("testloginUserVM", "로그인 성공.")
-
-                // 로그인 성공 시 처리
-                onLoginSuccess?.invoke() // 콜백 호출
-            } else {
-                // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
-                Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
+                    // 로그인 성공 시 처리
+                    onLoginSuccess?.invoke() // 콜백 호출
+                } else {
+                    // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
+                    Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
+                }
+            },
+            errorCallback = { errorMessage ->
+                onError?.invoke(errorMessage)
             }
-        }
+        )
     }
 
     // AuthJoinFragment의 계정 등록 함수
     fun registerUser(email: String, password: String, name: String): LiveData<AuthResult> {
         val registrationResult = MutableLiveData<AuthResult>()
 
-        AuthRepository.registerUser(email, password) { authResult ->
-            val user = authResult.user
-            if (user != null) {
-                // 사용자가 성공적으로 등록된 경우
-                Log.d("testloginUserVM", "사용자가 성공적으로 등록되었습니다.")
+        AuthRepository.registerUser(email, password,
+            successCallback = { authResult ->
+                val user = authResult.user
+                if (user != null) {
+                    // 사용자가 성공적으로 등록된 경우
+                    Log.d("testloginUserVM", "사용자가 성공적으로 등록되었습니다.")
 
-                // IDX를 가져오는 로그
-                getNextIdx { idx ->
-                    Log.d("getNextIdx", "현재 IDX: $idx")
-                    // IDX를 얻은 후 Firestore에 추가
-                    addUserToFirestore(user.uid, UserDataClass(idx, email, name))
+                    // IDX를 가져오는 로그
+                    getNextIdx(
+                        successCallback = { idx ->
+                            Log.d("getNextIdx", "현재 IDX: $idx")
+                            // IDX를 얻은 후 Firestore에 추가
+                            addUserToFirestore(user.uid, UserDataClass(idx, email, name))
+                            onRegistrationSuccess?.invoke()
+                        },
+                        errorCallback = { errorMessage ->
+                            // 에러 발생 시 처리
+                            Log.e("getNextIdx", errorMessage)
+                            // 에러 콜백 처리 등 추가 작업을 할 수 있습니다.
+                        }
+                    )
+
+                } else {
+                    // 사용자가 null인 경우 처리
+                    Log.d("testloginUserVM", "사용자가 null입니다.")
                 }
-
-            } else {
-                // 사용자가 null인 경우 처리
-                Log.d("testloginUserVM", "사용자가 null입니다.")
+                // 사용자 등록 결과를 LiveData에 넣어줍니다.
+                registrationResult.value = authResult
+            },
+            errorCallback = { errorMessage ->
+                onError?.invoke(errorMessage)
             }
-            // 사용자 등록 결과를 LiveData에 넣어줍니다.
-            registrationResult.value = authResult
-        }
+        )
         // LiveData를 반환합니다.
         return registrationResult
     }
@@ -93,43 +107,27 @@ class AuthViewModel : ViewModel() {
         )
 
         // 리포지토리의 addUserToFirestore 함수
-        AuthRepository.addUserToFirestore(uid, userData) { uid ->
-            if (uid != null) {
-                // Firestore에 사용자 정보 추가 성공
-                Log.d("FirestoreSuccess", "Firestore에 사용자 정보 추가 성공")
-            } else {
-                // Firestore에 사용자 정보 추가 실패
-                Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패")
-                showErrorMessageDialog("Firestore에 사용자 정보 추가 실패")
+        AuthRepository.addUserToFirestore(uid, userData,
+            successCallback = { uid ->
+                if (uid != null) {
+                    // Firestore에 사용자 정보 추가 성공
+                    Log.d("FirestoreSuccess", "Firestore에 사용자 정보 추가 성공")
+                } else {
+                    // Firestore에 사용자 정보 추가 실패
+                    Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패")
+                    onError?.invoke("Firestore에 사용자 정보 추가 실패")
+                }
+            },
+            errorCallback = { errorMessage ->
+                onError?.invoke(errorMessage)
             }
-        }
+        )
     }
 
     // 파이어베이스에서 IDX를 가져와서 인덱스 계산하여 +1
-    private fun getNextIdx(callback: (Long) -> Unit) {
-        // "userData" 컬렉션에서 가장 마지막 문서를 가져옵니다.
-        firestore.collection("userData")
-            .orderBy("userIdx", Query.Direction.DESCENDING)
-            .limit(1)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (!querySnapshot.isEmpty) {
-                    val lastUser = querySnapshot.documents[0]
-                    val currentIdx = lastUser.getLong("userIdx") ?: 0
-                    Log.d("getNextIdx", "가져온 IDX: $currentIdx")
-                    // 다음 인덱스 계산
-                    val nextIdx = currentIdx + 1
-                    // 결과를 반환합니다.
-                    callback(nextIdx)
-                } else {
-                    // 컬렉션에 아무 문서도 없을 경우 기본값 0을 반환합니다.
-                    callback(0)
-                }
-            }
-            .addOnFailureListener { e ->
-                // 실패 시 처리
-                Log.e("getNextIdx", "Error getting next index: $e")
-            }
+    private fun getNextIdx(successCallback: (Long) -> Unit,  errorCallback: (String) -> Unit) {
+        // 리포지토리의 getNextIdx 함수 사용
+        AuthRepository.getNextIdx(successCallback, errorCallback)
     }
 
     // UID를 SharedPreferences에 저장
@@ -139,22 +137,6 @@ class AuthViewModel : ViewModel() {
         editor.apply()
         // 저장 후에 로그로 확인
         Log.d("saveUidToSharedPreferences", "UID 저장 완료: $uid")
-    }
-
-    fun isEmailValid(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun showErrorMessageDialog(message: String) {
-        // 오류 처리 다이얼로그를 보여주는 함수 구현
-    }
-
-    fun isPasswordValid(password: String): Boolean {
-        return password.length >= 6
-    }
-
-    fun isNameValid(nickname: String): Boolean {
-        return nickname.length in 2..12 && !INVALID_NICKNAME_CHARACTERS.any { nickname.contains(it) }
     }
 
 }
