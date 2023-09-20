@@ -188,7 +188,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
 
                 editText.setOnEditorActionListener { textView, i, keyEvent ->
-                    clientViewModel.getClientListByKeyword(Firebase.auth.currentUser!!.uid, text.toString())
+                    clientViewModel.getClientListByKeyword(Firebase.auth.uid!!, text.toString())
 
                     true
                 }
@@ -240,18 +240,18 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
 
                 mapBottomSheetTabAll.setOnClickListener {
-                    clientViewModel.getClientListAll(Firebase.auth.currentUser!!.uid)
+                    clientViewModel.getClientListAll(Firebase.auth.uid!!)
 
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabAll)
                 }
 
                 mapBottomSheetTabBookMark.setOnClickListener {
-                    clientViewModel.getClientListBookMark(Firebase.auth.currentUser!!.uid)
+                    clientViewModel.getClientListBookMark(Firebase.auth.uid!!)
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabBookMark)
                 }
 
                 mapBottomSheetTabVisit.setOnClickListener {
-                    clientViewModel.getClientListTodayVisit(Firebase.auth.currentUser!!.uid)
+                    clientViewModel.getClientListTodayVisit(Firebase.auth.uid!!)
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabVisit)
                 }
             }
@@ -286,7 +286,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                             .setStyles(R.drawable.red_dot_marker)
                     )
                 clientViewModel.run {
-                    getClientListLabel(Firebase.auth.currentUser!!.uid)
+                    getClientListLabel(Firebase.auth.uid!!)
                     clientDataListLabel.observe(viewLifecycleOwner) {
                         Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
                         labels =
@@ -463,7 +463,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             scheduleTempList: MutableList<ScheduleDataClass>,
             holder: ResultViewHolder
         ) {
-            ClientRepository.getScheduleListByClientAndUser(Firebase.auth.currentUser!!.uid, clientIdx!!) {
+            ClientRepository.getScheduleListByClientAndUser(Firebase.auth.uid!!, clientIdx!!) {
                 for (snapshot in it.result.documents) {
                     if (snapshot.getBoolean("isVisitSchedule")!!
                             .equals(true) && snapshot.getBoolean("isScheduleFinish")!!.equals(true)
@@ -570,7 +570,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         Log.d(TAG, "onStateChanged: 펼침")
-                        clientViewModel.getClientListAll(Firebase.auth.currentUser!!.uid)
+                        clientViewModel.getClientListAll(Firebase.auth.uid!!)
 //                        showIconLabel("test")
 
                     }
