@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -36,7 +38,7 @@ class AuthViewModel : ViewModel() {
     var onError: ((String) -> Unit)? = null
 
     // AuthLoginFragment의 로그인 함수
-    fun loginUser(email: String, password: String) {
+    fun loginUser(email: String, password: String, view: View) {
         AuthRepository.loginUser(email, password,
             successCallback = { authResult ->
                 val userUid = authResult.user?.uid
@@ -48,17 +50,19 @@ class AuthViewModel : ViewModel() {
                     onLoginSuccess?.invoke() // 콜백 호출
                 } else {
                     // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
-                    Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")
+                    val errorMessage = "사용자 정보를 가져올 수 없습니다."
+                    showErrorSnackbar(view, errorMessage)
                 }
             },
             errorCallback = { errorMessage ->
-                onError?.invoke(errorMessage)
+                // 스낵바를 사용하여 오류 메시지 표시
+                showErrorSnackbar(view, errorMessage)
             }
         )
     }
 
     // AuthJoinFragment의 계정 등록 함수
-    fun registerUser(email: String, password: String, name: String): LiveData<AuthResult> {
+    fun registerUser(email: String, password: String, name: String, view: View): LiveData<AuthResult> {
         val registrationResult = MutableLiveData<AuthResult>()
 
         AuthRepository.registerUser(email, password,
@@ -73,13 +77,12 @@ class AuthViewModel : ViewModel() {
                         successCallback = { idx ->
                             Log.d("getNextIdx", "현재 IDX: $idx")
                             // IDX를 얻은 후 Firestore에 추가
-                            addUserToFirestore(user.uid, UserDataClass(idx, email, name))
+                            addUserToFirestore(user.uid, UserDataClass(idx, email, name), view)
                             onRegistrationSuccess?.invoke()
                         },
                         errorCallback = { errorMessage ->
                             // 에러 발생 시 처리
-                            Log.e("getNextIdx", errorMessage)
-                            // 에러 콜백 처리 등 추가 작업을 할 수 있습니다.
+                            showErrorSnackbar(view, errorMessage)
                         }
                     )
 
@@ -99,7 +102,7 @@ class AuthViewModel : ViewModel() {
     }
 
     // 파이어스토어에 사용자 정보 추가
-    private fun addUserToFirestore(uid: String, newUser: UserDataClass) {
+    private fun addUserToFirestore(uid: String, newUser: UserDataClass, view: View) {
         val userData = hashMapOf(
             "userIdx" to newUser.userIdx,
             "userEmail" to newUser.userEmail,
@@ -115,11 +118,12 @@ class AuthViewModel : ViewModel() {
                 } else {
                     // Firestore에 사용자 정보 추가 실패
                     Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패")
-                    onError?.invoke("Firestore에 사용자 정보 추가 실패")
+                    showErrorSnackbar(view, "Firestore에 사용자 정보 추가 실패")
                 }
             },
             errorCallback = { errorMessage ->
-                onError?.invoke(errorMessage)
+                // 스낵바를 사용하여 오류 메시지 표시
+                showErrorSnackbar(view, errorMessage)
             }
         )
     }
@@ -137,6 +141,11 @@ class AuthViewModel : ViewModel() {
         editor.apply()
         // 저장 후에 로그로 확인
         Log.d("saveUidToSharedPreferences", "UID 저장 완료: $uid")
+    }
+
+    // 스낵바를 사용하여 오류 메시지 표시
+    private fun showErrorSnackbar(view: View, errorMessage: String) {
+        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
 }
