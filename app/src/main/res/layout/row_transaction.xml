@@ -276,7 +276,9 @@
         android:layout_marginTop="12dp"
         android:fontFamily="@font/nanumsquareneo_regular"
         android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/cardViewTrasaction"
         app:layout_constraintStart_toEndOf="@+id/textTransactionDate"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,8 +41,7 @@ class TransactionFragment : Fragment() {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
-        //clientIdx = arguments?.getLong("clientIdx")
-        clientIdx = 1L
+        clientIdx = arguments?.getLong("clientIdx")
 
         setViewModel()
         setClickEvent()
