@@ -35,6 +35,9 @@ class AuthViewModel : ViewModel() {
         this.context = context
     }
 
+    // 콜백 정의: 로그인 성공 시 호출됨
+    var onLoginSuccess: (() -> Unit)? = null
+
     // AuthLoginFragment의 로그인 함수
     fun loginUser(email: String, password: String) {
         AuthRepository.loginUser(email, password) { authResult ->
@@ -44,8 +47,8 @@ class AuthViewModel : ViewModel() {
                     saveUidToSharedPreferences(authResult.user!!.uid)
                     Log.d("testloginUserVM", "로그인 성공.")
 
-                    // 로그인 성공 시 처리
-
+                // 로그인 성공 시 처리
+                onLoginSuccess?.invoke() // 콜백 호출
             } else {
                 // 사용자 정보가 없는 경우 또는 가져오기 실패한 경우 처리
                 Log.e("testloginUserVM", "사용자 정보를 가져올 수 없습니다.")

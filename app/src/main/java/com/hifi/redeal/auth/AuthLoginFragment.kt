@@ -40,6 +40,13 @@ class AuthLoginFragment : Fragment() {
         // 로그인 시 저장된 체크 상태 확인 및 자동 로그인 시도
         checkAutoLoginStateAndAttempt()
 
+        // 로그인 성공 시 처리를 담당하는 콜백 설정
+        authViewModel.onLoginSuccess = {
+            // 로그인 성공 시 처리 코드를 여기에 추가
+            // MainActivity의 replaceFragment 메서드를 호출하여 화면 이동
+            mainActivity.replaceFragment(MainActivity. ACCOUNT_LIST_FRAGMENT, true, null)
+        }
+
         return fragmentAuthLoginBinding.root
     }
 
@@ -63,8 +70,8 @@ class AuthLoginFragment : Fragment() {
 
         // 로그인 버튼 클릭 시 로그인 처리 함수 호출
         fragmentAuthLoginBinding.buttonAuthLogin.setOnClickListener {
+            handleLoginButtonClick()
             mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, true)
-            //handleLoginButtonClick()
         }
 
         // 이메일 입력 텍스트 클릭 시 소프트 키보드 표시
@@ -99,9 +106,9 @@ class AuthLoginFragment : Fragment() {
             if (currentUser != null) {
                 Log.d("authlogin", "사용자 로그인 상태: ${currentUser.email}")
 
-                // 사용자가 이미 로그인한 경우, 원하는 작업 수행
+                // 사용자가 이미 로그인한 경우, 자동 로그인
                 // 화면 이동
-
+                mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, true, null)
             } else {
                 // 저장된 UID가 없는 경우 로그인 화면을 표시
                 Log.e("authlogin", "사용자 로그인 상태 없음")

@@ -3,6 +3,7 @@ package com.hifi.redeal.schedule.schedule_repository
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -16,6 +17,8 @@ import java.util.Date
 import java.util.Locale
 
 class ScheduleRepository {
+
+
     companion object{
 
         fun delSelectSchedule(userIdx: String, scheduleIdx: String, callback1: (Task<Void>) -> Unit){

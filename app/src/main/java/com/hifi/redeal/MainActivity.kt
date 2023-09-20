@@ -13,16 +13,34 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.MediaStore
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
+import com.hifi.redeal.account.AccountDetailFragment
+import com.hifi.redeal.account.AccountEditFragment
+import com.hifi.redeal.account.AccountListFragment
+import com.hifi.redeal.account.AddressSearchFragment
+import com.hifi.redeal.auth.AuthFindPwFragment
+import com.hifi.redeal.auth.AuthJoinFragment
+import com.hifi.redeal.auth.AuthLoginFragment
+import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
-import androidx.lifecycle.ViewModelProvider
-import com.hifi.redeal.databinding.ActivityMainBinding
+import com.hifi.redeal.memo.AddPhotoMemoFragment
+import com.hifi.redeal.memo.AddRecordMemoFragment
+import com.hifi.redeal.memo.PhotoDetailFragment
+import com.hifi.redeal.memo.PhotoMemoFragment
+import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.memo.SelectFragment
 import com.hifi.redeal.schedule.EditScheduleFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 import com.hifi.redeal.schedule.ScheduleManageFragment
@@ -47,9 +65,11 @@ import com.hifi.redeal.account.AddressSearchFragment
 import com.hifi.redeal.transaction.TransactionFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
+
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
