@@ -15,8 +15,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.account.model.ClientData
-import com.hifi.redeal.account.model.ClientInputData
+import com.hifi.redeal.account.repository.model.ClientData
+import com.hifi.redeal.account.repository.model.ClientInputData
 import com.hifi.redeal.account.repository.AccountEditRepository
 import com.hifi.redeal.databinding.FragmentAccountEditBinding
 
@@ -33,6 +33,8 @@ class AccountEditFragment : Fragment(){
 
     lateinit var client: ClientData
 
+    val items = listOf("거래 중", "거래 시도", "거래 중지")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,26 +50,16 @@ class AccountEditFragment : Fragment(){
             fragmentAccountEditBinding.textEditTextAccountEditZipCode.setText(data.toString())
         }
 
-        if (clientIdx == 0L) {
-            registerViewInit()
-        } else if (!create) {
-            accountEditRepository.getClient(1, clientIdx) {
-                client = it
-                editViewInit()
-                create = true
-            }
-        } else {
-            editViewInit()
-        }
+        val adapter = CustomArrayAdapter(items)
 
         fragmentAccountEditBinding.run {
             materialToolbarAccountEdit.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
+//                findNavController().popBackStack()
             }
 
-            val items = listOf("거래 중", "거래 시도", "거래 중지")
-            val adapter = CustomArrayAdapter(items)
             textEditTextAccountEditState.run {
+
                 setAdapter(adapter)
 
                 setOnItemClickListener { parent, view, position, id ->
@@ -86,8 +78,21 @@ class AccountEditFragment : Fragment(){
             }
 
             buttonAccountEditAddressSearch.setOnClickListener {
-                mainActivity.navigateTo(R.id.addressSearchFragment)
+                mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
+//                mainActivity.navigateTo(R.id.addressSearchFragment)
             }
+        }
+
+        if (clientIdx == 0L) {
+            registerViewInit()
+        } else if (!create) {
+            accountEditRepository.getClient(mainActivity.userId, clientIdx) {
+                client = it
+                editViewInit()
+                create = true
+            }
+        } else {
+            editViewInit()
         }
 
         return fragmentAccountEditBinding.root
@@ -128,7 +133,7 @@ class AccountEditFragment : Fragment(){
                 val newClientIdx = System.currentTimeMillis()
 
                 accountEditRepository.registerClient(
-                    1,
+                    mainActivity.userId,
                     ClientInputData(
                         textEditTextAccountEditZipCode.text.toString(),
                         textEditTextAccountEditGeneralNumber.text.toString(),
@@ -149,7 +154,8 @@ class AccountEditFragment : Fragment(){
                     )
                 ) {
                     Snackbar.make(root, "거래처가 등록되었습니다", Snackbar.LENGTH_SHORT).show()
-                    findNavController().popBackStack()
+                    mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
+//                    findNavController().popBackStack()
                 }
             }
         }
@@ -171,9 +177,11 @@ class AccountEditFragment : Fragment(){
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary20, 0, 0, 0)
                     }
                     2L -> {
+                        setText("거래 시도")
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary50, 0, 0, 0)
                     }
                     3L -> {
+                        setText("거래 중지")
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
                     }
                 }
@@ -201,7 +209,7 @@ class AccountEditFragment : Fragment(){
                     }
 
                     accountEditRepository.updateClient(
-                        1,
+                        mainActivity.userId,
                         ClientInputData(
                             textEditTextAccountEditZipCode.text.toString(),
                             textEditTextAccountEditGeneralNumber.text.toString(),
@@ -222,7 +230,8 @@ class AccountEditFragment : Fragment(){
                         )
                     ) {
                         Snackbar.make(root, "거래처 정보가 수정되었습니다", Snackbar.LENGTH_SHORT).show()
-                        findNavController().popBackStack()
+                        mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
+//                        findNavController().popBackStack()
                     }
                 }
             }

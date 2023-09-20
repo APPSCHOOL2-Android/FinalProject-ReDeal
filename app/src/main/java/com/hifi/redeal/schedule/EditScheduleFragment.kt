@@ -169,7 +169,7 @@ class EditScheduleFragment : Fragment() {
 
         scheduleVM.run{
 
-            editScheduleData.observe(requireActivity()){schedule ->
+            editScheduleData.observe(viewLifecycleOwner){schedule ->
                 newEditScheduleData = schedule
                 getUserSelectClientInfo(userIdx, schedule.clientIdx)
 
