@@ -22,12 +22,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.exoplayer2.text.Cue.AnchorType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.search.SearchView
@@ -76,6 +78,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
     // 현재 위치
     var locationListener: LocationListener? = null
+    var currentMyLocation = null
     val PERMISSIONS_REQUEST_CODE = 100
     var REQUIRED_PERMISSIONS = arrayOf<String>(
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -165,10 +168,19 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
 
             mapSearchView.run {
+
                 Log.d("상태",currentTransitionState.toString())
                 addTransitionListener { searchView, previousState, newState ->
                     if (newState == SearchView.TransitionState.SHOWING) {
                         clientViewModel.resetClientListByKeyword()
+                        // SearchView의 레이아웃 파라미터 가져오기
+                        val searchViewLayoutParams = mapSearchView.layoutParams as CoordinatorLayout.LayoutParams
+
+                        // SearchView의 layout_height 값을 변경 (예: match_parent로 설정)
+                        searchViewLayoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+
+                        // 변경된 레이아웃 파라미터를 설정
+                        mapSearchView.layoutParams = searchViewLayoutParams
                     } else {
                         Log.d("지도주소", currentAddress.toString())
                         if (currentAddress != null) {
