@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.schedule.model.ClientData
 import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
@@ -13,6 +15,8 @@ import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import java.time.LocalDate
 
 class ScheduleVM: ViewModel() {
+
+    val uid = Firebase.auth.uid.toString()
 
     //일정 관련 데이터
     var scheduleListVM = MutableLiveData<MutableList<ScheduleTotalData>>()
@@ -47,8 +51,8 @@ class ScheduleVM: ViewModel() {
         editScheduleData.postValue(selectScheduleData.value)
     }
 
-    fun getSelectScheduleInfo(userIdx: String, scheduleIdx: String){
-        ScheduleRepository.getSelectScheduleInfo(userIdx, scheduleIdx){
+    fun getSelectScheduleInfo(scheduleIdx: String){
+        ScheduleRepository.getSelectScheduleInfo(uid, scheduleIdx){
             Log.d("ttt","${it.result}")
             val tempSelectScheduleData = ScheduleData(
                 it.result["scheduleIdx"] as Long,
@@ -64,8 +68,8 @@ class ScheduleVM: ViewModel() {
             selectScheduleData.postValue(tempSelectScheduleData)
         }
     }
-    fun getSelectClientLastVisitDate (userIdx: String, clientIdx: Long){
-        ScheduleRepository.getSelectClientLastVisitDate(userIdx, clientIdx){
+    fun getSelectClientLastVisitDate (clientIdx: Long){
+        ScheduleRepository.getSelectClientLastVisitDate(uid, clientIdx){
             if(it.result.isEmpty){
                 clientLastVisitDate.postValue(null)
             } else {
@@ -77,8 +81,8 @@ class ScheduleVM: ViewModel() {
         }
     }
 
-    fun getClientInfo(userIdx: String, clientIdx: Long) {
-        ScheduleRepository.getClientInfo(userIdx, clientIdx){
+    fun getClientInfo(clientIdx: Long) {
+        ScheduleRepository.getClientInfo(uid, clientIdx){
             for(c1 in it.result){
                 val clientName = c1["clientName"] as String
                 val clientManagerName = c1["clientManagerName"] as String
@@ -98,18 +102,18 @@ class ScheduleVM: ViewModel() {
         }
     }
 
-    fun addUserSchedule(userIdx: String, scheduleData:ScheduleData, callback1: (Task<Void>) -> Unit){
-        ScheduleRepository.getUserAllSchedule(userIdx,{
+    fun addUserSchedule(scheduleData:ScheduleData, callback1: (Task<Void>) -> Unit){
+        ScheduleRepository.getUserAllSchedule(uid,{
             for(c1 in it.result){
                 val scheduleIdx = c1["scheduleIdx"] as Long
                 scheduleData.scheduleIdx = scheduleIdx + 1L
             }
         },{
-            ScheduleRepository.setUserSchedule(userIdx, scheduleData, callback1)
+            ScheduleRepository.setUserSchedule(uid, scheduleData, callback1)
         })
     }
-    fun getUserSelectClientInfo(userIdx: String, clientIdx:Long){
-        ScheduleRepository.getUserSelectClientInfo(userIdx, clientIdx){
+    fun getUserSelectClientInfo(clientIdx:Long){
+        ScheduleRepository.getUserSelectClientInfo(uid, clientIdx){
             val clientName = it.result["clientName"] as String
             val clientManagerName = it.result["clientManagerName"] as String
             val clientState = it.result["clientState"] as Long
@@ -120,9 +124,9 @@ class ScheduleVM: ViewModel() {
     }
 
 
-    fun getUserAllClientInfo(userIdx: String){
+    fun getUserAllClientInfo(){
         tempUserClientSimpleDataList.clear()
-        ScheduleRepository.getUserAllClientInfo(userIdx){
+        ScheduleRepository.getUserAllClientInfo(uid){
             for(c1 in it.result){
                 var clientIdx = c1["clientIdx"] as Long
                 var clientName = c1["clientName"] as String
@@ -134,10 +138,10 @@ class ScheduleVM: ViewModel() {
             }
         }
     }
-    fun getUserDayOfSchedule(userIdx: String, date: String){
+    fun getUserDayOfSchedule(date: String){
         tempScheduleList.clear()
 
-        ScheduleRepository.getUserDayOfSchedule(userIdx, date,{
+        ScheduleRepository.getUserDayOfSchedule(uid, date,{
             for (c1 in it.result){
                 val scheduleIdx = c1["scheduleIdx"] as Long
                 val clientIdx = c1["clientIdx"] as Long
@@ -157,7 +161,7 @@ class ScheduleVM: ViewModel() {
             scheduleListVM.postValue(tempScheduleList)
         },{
             tempScheduleList.forEach {data ->
-                ScheduleRepository.getClientInfo(userIdx, data.clientIdx){
+                ScheduleRepository.getClientInfo(uid, data.clientIdx){
                     for(c1 in it.result){
                         data.clientName = c1["clientName"] as String
                         data.clientManagerName = c1["clientManagerName"] as String
