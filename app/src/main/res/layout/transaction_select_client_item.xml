@@ -28,13 +28,13 @@
                 android:transitionGroup="true">
 
                 <View
-                    android:id="@+id/selectScheduleClinetState"
+                    android:id="@+id/selectTransactionClinetState"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:background="@drawable/client_state_circle_trading" />
 
                 <TextView
-                    android:id="@+id/selectScheduleClientName"
+                    android:id="@+id/selectTransactionClientName"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginLeft="4dp"
@@ -44,14 +44,14 @@
                     android:textSize="16sp" />
 
                 <View
-                    android:id="@+id/selectScheduleClientBookmarkView"
+                    android:id="@+id/selectTransactionClientBookmarkView"
                     android:layout_width="12dp"
                     android:layout_height="12dp" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/selectScheduleClientManagerName"
+                android:id="@+id/selectTransactionClientManagerName"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginLeft="16dp"

@@ -108,7 +108,7 @@ class AccountListAdapter(
 
                 textViewRowItemAccountListAccountName.text = clientData.clientName
                 if (clientData.isBookmark == true) {
-                    textViewRowItemAccountListAccountName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.star_fill_20px, 0)
+                    textViewRowItemAccountListAccountName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.star_fill_16px, 0)
                 } else {
                     textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
                 }

@@ -47,3 +47,9 @@ data class ClientData(
     var transactionIdxList: List<Long>? = null,
     var viewCount: Long? = null,
 )
+
+data class ClientSimpleData(var clientIdx: Long,
+                            var clientName: String,
+                            var clientManagerName: String,
+                            var clientState: Long,
+                            @JvmField var isBookmark: Boolean)
