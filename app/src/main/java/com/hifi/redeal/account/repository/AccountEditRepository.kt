@@ -9,8 +9,8 @@ import com.hifi.redeal.account.repository.model.ClientInputData
 class AccountEditRepository {
     val db = Firebase.firestore
 
-    fun registerClient(userId: Long, clientInputData: ClientInputData, callback: () -> Unit) {
-        val ref = db.collection("userData").document("$userId").collection("clientData")
+    fun registerClient(userId: String, clientInputData: ClientInputData, callback: () -> Unit) {
+        val ref = db.collection("userData").document(userId).collection("clientData")
         ref.document("${clientInputData.clientIdx}").set(clientInputData)
             .addOnSuccessListener {
                 callback()
@@ -20,8 +20,8 @@ class AccountEditRepository {
             }
     }
 
-    fun getClient(userId: Long, clientIdx: Long, callback: (ClientData) -> Unit) {
-        db.collection("userData").document("$userId").collection("clientData").document("$clientIdx")
+    fun getClient(userId: String, clientIdx: Long, callback: (ClientData) -> Unit) {
+        db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .get()
             .addOnSuccessListener {
                 val client = it.toObject<ClientData>()
@@ -33,7 +33,7 @@ class AccountEditRepository {
             }
     }
 
-    fun updateClient(userId: Long, clientInputData: ClientInputData, callback: () -> Unit) {
+    fun updateClient(userId: String, clientInputData: ClientInputData, callback: () -> Unit) {
         val updates = hashMapOf<String, Any?>(
             "clientState" to clientInputData.clientState,
             "clientName" to clientInputData.clientName,
@@ -47,7 +47,7 @@ class AccountEditRepository {
             "clientMemo" to clientInputData.clientMemo
         )
 
-        db.collection("userData").document("$userId").collection("clientData").document("${clientInputData.clientIdx}")
+        db.collection("userData").document(userId).collection("clientData").document("${clientInputData.clientIdx}")
             .update(updates)
             .addOnSuccessListener {
                 callback()

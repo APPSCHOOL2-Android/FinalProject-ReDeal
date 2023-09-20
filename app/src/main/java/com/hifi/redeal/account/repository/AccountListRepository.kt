@@ -15,27 +15,27 @@ class AccountListRepository {
     val db = Firebase.firestore
 
     fun getClientList(
-        userId: Long,
+        userId: String,
         filter: Int,
         sortBy: Int,
         descending: Boolean,
         callback: (List<ClientData>, List<Int>) -> Unit
     ) {
-        val userRef = db.collection("userData").document("$userId").collection("clientData")
+        val userRef = db.collection("userData").document(userId).collection("clientData")
         userRef.get().addOnSuccessListener { docs ->
             val clientList = docs.map {
                 it.toObject<ClientData>()
             }
 
-            var clientListSize = clientList.size
+            val clientListSize = clientList.size
             var contactFetchCount = 0
             var scheduleFetchCount = 0
 
             val contactRef =
-                db.collection("userData").document("$userId").collection("contactData")
+                db.collection("userData").document(userId).collection("contactData")
 
             val scheduleRef =
-                db.collection("userData").document("$userId").collection("scheduleData")
+                db.collection("userData").document(userId).collection("scheduleData")
 
             for (client in clientList) {
                 contactRef.whereEqualTo("clientIdx", client.clientIdx).orderBy("contactDate", Query.Direction.DESCENDING).limit(1)
@@ -153,12 +153,12 @@ class AccountListRepository {
         }
     }
 
-    fun incClientViewCount(userId: Long, clientIdx: Long, viewCount: Long) {
+    fun incClientViewCount(userId: String, clientIdx: Long, viewCount: Long) {
         if (clientIdx == 0L) {
             return
         }
 
-        db.collection("userData").document("$userId").collection("clientData").document("$clientIdx")
+        db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .update("viewCount", viewCount + 1)
     }
 }

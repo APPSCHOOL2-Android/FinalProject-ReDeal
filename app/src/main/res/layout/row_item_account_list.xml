@@ -9,7 +9,7 @@
         android:id="@+id/imageViewRowItemAccountListTransactionState"
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/constraintLayoutRowItemAccountListAccountName"
         app:srcCompat="@drawable/circle_big_24px_primary20" />
@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@id/buttonRowItemAccountListCall"
         app:layout_constraintStart_toEndOf="@id/imageViewRowItemAccountListTransactionState"
@@ -34,11 +34,12 @@
             android:maxLines="1"
             android:text="ABC Company"
             android:textColor="@color/text10"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -60,9 +61,9 @@
         android:id="@+id/textViewRowItemAccountListRepresentative"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:ellipsize="end"
         android:fontFamily="@font/nanumsquareneo_regular"
         android:maxLines="1"
