@@ -46,6 +46,21 @@ class ClientRepository {
 
         }
 
+        fun getVisitScheduleListByClientAndUser(
+            userIdx: String,
+            clientIdx: Long,
+            callback1: (Task<QuerySnapshot>) -> Unit
+        ) {
+            val database = Firebase.firestore
+
+            val scheduleDataRef =
+                database.collection("userData").document(userIdx).collection("scheduleData")
+                    .whereEqualTo("clientIdx", clientIdx).whereEqualTo("isVisitSchedule", true)
+
+            scheduleDataRef.get().addOnCompleteListener(callback1)
+
+        }
+
         fun searchAddr(address: String, callback: (List<Place>?) -> Unit) {
             val retrofit = Retrofit.Builder()   // Retrofit 구성
                 .baseUrl(MainActivity.BASE_URL)

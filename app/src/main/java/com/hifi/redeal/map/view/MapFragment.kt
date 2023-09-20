@@ -249,13 +249,12 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
 
                 mapBottomSheetTabBookMark.setOnClickListener {
-                    clientViewModel.clientDataListAll.value =
-                        clientViewModel.clientDataListAll.value?.filter { it.isBookmark == true } as MutableList<ClientDataClass>
+                    clientViewModel.getClientListBookMark("1")
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabBookMark)
                 }
 
                 mapBottomSheetTabVisit.setOnClickListener {
-//                    clientViewModel.getClientListTodayVisit("1")
+                    clientViewModel.getClientListTodayVisit("1")
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabVisit)
                 }
             }
