@@ -20,7 +20,7 @@ class PhotoMemoViewModel : ViewModel(){
                 val context = item.get("photoMemoContext") as String
                 val date = item.get("photoMemoDate") as Timestamp
                 val srcArr = item.get("photoMemoSrcArr") as List<String>
-                val newPhotoMemo = PhotoMemoData(context, date.seconds, srcArr)
+                val newPhotoMemo = PhotoMemoData(context, date.seconds + 32400, srcArr)
                 photoMemoData.add(newPhotoMemo)
             }
             photoMemoList.postValue(photoMemoData)

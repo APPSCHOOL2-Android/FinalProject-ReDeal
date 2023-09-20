@@ -65,7 +65,7 @@ class RecordMemoFragment : Fragment() {
         }
 
         fragmentRecordMemoBinding.run{
-            recordMemoViewModel.getRecordMemoList(userIdx, clientIdx)
+            recordMemoViewModel.getRecordMemoList(userIdx, clientIdx, mainActivity)
             recordMemoToolbar.run{
                 setNavigationOnClickListener {
                     mainActivity.removeFragment(MainActivity.RECORD_MEMO_FRAGMENT)
@@ -84,6 +84,11 @@ class RecordMemoFragment : Fragment() {
         return fragmentRecordMemoBinding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        resetAudio()
+    }
+
     inner class RecordMemoRecyclerAdapter: RecyclerView.Adapter<RecordMemoRecyclerAdapter.RecordMemoViewHolder>(){
         inner class RecordMemoViewHolder(rowRecordMemoBinding: RowRecordMemoBinding): RecyclerView.ViewHolder(rowRecordMemoBinding.root){
             private val recordDateTextView = rowRecordMemoBinding.recordDateTextView
@@ -96,35 +101,35 @@ class RecordMemoFragment : Fragment() {
             private val recordMemoAudioSeekBar = rowRecordMemoBinding.recordMemoAudioSeekBar
 
             init{
-                recordMemoAudioPlayBtn.setOnClickListener {
-                    Log.d("testaaa", "flag1")
-                    resetAudio()
-                    currentSeekBar = recordMemoAudioSeekBar
-                    currentTimeTextView = recordMemoCurrentDurationTimeTextView
-                    currentMediaPlayer = MediaPlayer.create(requireContext(), audioUriList[adapterPosition])
-                    currentMediaPlayer?.start()
-                    isAudioPlaying = true
-                    updateSeekBar()
-                    currentMediaPlayer?.setOnCompletionListener {
+                recordMemoResetRecordBtn.setOnClickListener {
+                    if(isAudioPlaying){
                         resetAudio()
                     }
-                }
-                recordMemoResetRecordBtn.setOnClickListener {
-                    // todo : 리셋 버튼 클릭 시 처리
                 }
             }
             fun bindItem(item: RecordMemoData){
                 recordDateTextView.text = dateFormat.format(item.date * 1000)
                 recordMemoTextView.text = item.context
                 recordMemoFilenameTextView.text = item.audioFilename
+                recordMemoAudioSeekBar.progress = 0
                 recordMemoCurrentDurationTimeTextView.text = getCurrentDuration(0)
                 recordMemoTotalDurationTimeTextView.text = "로딩 중"
-                RecordMemoRepository.getRecordMemoRecordUrl(userIdx, item.audioSrc){uri ->
-                    audioUriList.add(uri)
-                    val tempMediaPlayer = MediaPlayer.create(requireContext(), uri)
+                if(item.audioFileUri != null) {
+                    var tempMediaPlayer = MediaPlayer.create(requireContext(), item.audioFileUri)
                     recordMemoTotalDurationTimeTextView.text = getTotalDuration(tempMediaPlayer)
                     recordMemoAudioSeekBar.max = tempMediaPlayer?.duration!!
-                    recordMemoAudioSeekBar.progress = 0
+                    recordMemoAudioPlayBtn.setOnClickListener {
+                        resetAudio()
+                        currentSeekBar = recordMemoAudioSeekBar
+                        currentTimeTextView = recordMemoCurrentDurationTimeTextView
+                        currentMediaPlayer = MediaPlayer.create(requireContext(), item.audioFileUri)
+                        currentMediaPlayer?.start()
+                        isAudioPlaying = true
+                        updateSeekBar()
+                        currentMediaPlayer?.setOnCompletionListener {
+                            resetAudio()
+                        }
+                    }
                 }
             }
         }
@@ -167,7 +172,6 @@ class RecordMemoFragment : Fragment() {
             currentSeekBar?.progress = currentPosition
             currentTimeTextView?.text = getCurrentDuration(currentPosition)
             handler.postDelayed({ updateSeekBar() }, 20)
-            Log.d("testaaa", "time")
         }
     }
 }
