@@ -155,11 +155,6 @@ class ClientViewModel : ViewModel() {
         clientDataListByKeyWord.value = mutableListOf<ClientDataClass>()
     }
 
-    fun resetClientList() {
-        clientDataListAll.value = mutableListOf<ClientDataClass>()
-
-    }
-
 
     fun setSelectedButton(buttonId: Int) {
         selectedButtonId.value = buttonId

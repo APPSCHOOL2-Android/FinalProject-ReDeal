@@ -242,7 +242,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
 
                 mapBottomSheetTabAll.setOnClickListener {
-                    clientViewModel.resetClientList()
                     clientViewModel.getClientListAll("1")
 
                     clientViewModel.setSelectedButton(R.id.mapBottomSheetTabAll)
@@ -455,6 +454,8 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             if (clientViewModel.clientDataListAll.value?.get(position)?.isBookmark == false) {
                 holder.rowMapClientListBookMark.visibility = View.INVISIBLE
+            } else{
+                holder.rowMapClientListBookMark.visibility = View.VISIBLE
             }
             val clientIdx = clientViewModel.clientDataListAll.value?.get(position)?.clientIdx
 
@@ -482,6 +483,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 }
                 Log.d("일정 테스트4", scheduleTempList.toString())
                 if (scheduleTempList.isNotEmpty()) {
+                    holder.rowMapClientListDateRecentLayout.visibility = View.VISIBLE
                     val dateFormat = SimpleDateFormat("yyyy.MM.dd")
                     holder.rowMapClientListDateRecent.text =
                         dateFormat.format(scheduleTempList.get(scheduleTempList.size - 1).scheduleFinishTime)
