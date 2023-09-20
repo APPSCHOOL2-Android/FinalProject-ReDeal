@@ -28,7 +28,7 @@
 
                 <com.google.android.material.search.SearchBar
                     android:id="@+id/mapSearchBar"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
@@ -72,8 +72,9 @@
     <com.google.android.material.search.SearchView
         android:id="@+id/mapSearchView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_anchor="@id/mapSearchBar">
+        android:layout_height="0dp"
+        app:layout_anchor="@id/mapSearchBar"
+        app:layout_anchorGravity="center">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mapSearchRecyclerViewResult"

@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentVisitedScheduleBinding
@@ -25,7 +27,7 @@ class VisitedScheduleFragment : Fragment() {
     lateinit var fragmentVisitedScheduleBinding: FragmentVisitedScheduleBinding
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
-    var userIdx = "1"
+    private val uid = Firebase.auth.uid!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -88,8 +90,8 @@ class VisitedScheduleFragment : Fragment() {
                     }
                 }
 
-                getClientInfo(userIdx,scheduleInfo.clientIdx)
-                getSelectClientLastVisitDate(userIdx, scheduleInfo.clientIdx)
+                getClientInfo(scheduleInfo.clientIdx)
+                getSelectClientLastVisitDate(scheduleInfo.clientIdx)
             }
 
             selectClientData.observe(viewLifecycleOwner){
@@ -152,7 +154,7 @@ class VisitedScheduleFragment : Fragment() {
                 }
             }
 
-            getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleIdx}")
+            getSelectScheduleInfo("${scheduleVM.selectScheduleIdx}")
 
         }
     }
@@ -175,10 +177,10 @@ class VisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setMessage("해당 일정을 완료 취소 처리 합니다.")
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
-                                    ScheduleRepository.setUserSchedule(userIdx, updateScheduleData,{
-                                        scheduleVM.getSelectClientLastVisitDate(userIdx, scheduleVM.selectScheduleData.value!!.clientIdx)
+                                    ScheduleRepository.setUserSchedule(uid, updateScheduleData,{
+                                        scheduleVM.getSelectClientLastVisitDate(scheduleVM.selectScheduleData.value!!.clientIdx)
                                     },{
-                                        scheduleVM.getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                        scheduleVM.getSelectScheduleInfo("${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
                                     })
                                 }
                                 cancelBuilder.setPositiveButton("취소",null)
@@ -189,10 +191,10 @@ class VisitedScheduleFragment : Fragment() {
                                 completeBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
-                                    ScheduleRepository.setUserSchedule(userIdx, updateScheduleData,{
-                                        scheduleVM.getSelectClientLastVisitDate(userIdx, scheduleVM.selectScheduleData.value!!.clientIdx)
+                                    ScheduleRepository.setUserSchedule(uid, updateScheduleData,{
+                                        scheduleVM.getSelectClientLastVisitDate(scheduleVM.selectScheduleData.value!!.clientIdx)
                                     },{
-                                        scheduleVM.getSelectScheduleInfo(userIdx, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                        scheduleVM.getSelectScheduleInfo("${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
                                     })
                                 }
                                 completeBuilder.setPositiveButton("취소",null)
@@ -207,7 +209,7 @@ class VisitedScheduleFragment : Fragment() {
                             val deleteBuilder = AlertDialog.Builder(requireActivity())
                             deleteBuilder.setMessage("해당 일정을 삭제 처리합니다.")
                             deleteBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
-                                ScheduleRepository.delSelectSchedule(userIdx, "${updateScheduleData.scheduleIdx}"){
+                                ScheduleRepository.delSelectSchedule(uid, "${updateScheduleData.scheduleIdx}"){
                                     mainActivity.removeFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT)
                                 }
                             }

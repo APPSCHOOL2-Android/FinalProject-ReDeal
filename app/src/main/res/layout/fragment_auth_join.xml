@@ -49,10 +49,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutJoinUserId"
-            android:layout_width="241dp"
+            android:layout_width="330dp"
             android:layout_height="50dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="70dp"
             android:background="@color/background"
             android:hint="이메일"
             android:textColorHint="@color/text50"
@@ -73,57 +73,12 @@
                 android:textColor="@color/text30" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonJoinIdCheck"
-            android:layout_width="83dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="42dp"
-            android:fontFamily="@font/nanumsquareneo_bold"
-            android:padding="1dp"
-            android:text="인증코드 전송"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="11dp"
-            app:backgroundTint="@color/primary20"
-            app:cornerRadius="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textInputLayoutJoinUserId"
-            app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutJoinIdCheck"
-            android:layout_width="330dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="40dp"
-            android:background="@color/background"
-            android:hint="인증코드"
-            android:textColorHint="@color/text50"
-            android:transitionGroup="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserId">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputEditTextJoinIdCheck"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="60dp"
-                android:fontFamily="@font/nanumsquareneo_regular"
-                android:inputType="number"
-                android:padding="1dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/text30" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutJoinUserPw"
             android:layout_width="330dp"
             android:layout_height="50dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="40dp"
             android:background="@color/background"
             android:hint="비밀번호"
@@ -132,7 +87,7 @@
             app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinIdCheck"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserId"
             tools:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -183,7 +138,7 @@
             android:layout_width="330dp"
             android:layout_height="50dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="40dp"
             android:background="@color/background"
             android:hint="성명 (변경 불가)"

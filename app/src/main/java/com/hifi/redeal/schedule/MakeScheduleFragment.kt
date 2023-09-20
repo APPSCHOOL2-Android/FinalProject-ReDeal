@@ -40,7 +40,6 @@ class MakeScheduleFragment : Fragment() {
     private lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
     private lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
-    private var userIdx = "1" // 추후 사용자의 idx 저장
     private var clientIdx = 0L
   
     override fun onCreateView(
@@ -336,7 +335,7 @@ class MakeScheduleFragment : Fragment() {
                     makeScheduleEditTextScheduleTitle.editableText.toString()
                 )
 
-                scheduleVM.addUserSchedule(userIdx, newScheduleData){
+                scheduleVM.addUserSchedule(newScheduleData){
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정을 성공적으로 저장하였습니다.")
                     builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
