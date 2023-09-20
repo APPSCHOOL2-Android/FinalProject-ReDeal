@@ -53,11 +53,13 @@
             android:layout_height="50dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="70dp"
+            android:layout_marginEnd="40dp"
             android:background="@color/background"
             android:hint="이메일"
             android:textColorHint="@color/text50"
             android:transitionGroup="true"
             app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -161,11 +163,27 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonJoinComplete"
+            android:layout_width="330dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="회원가입 완료"
+            app:backgroundTint="@color/primary20"
+            app:cornerRadius="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserName"
+            app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
+
         <LinearLayout
             android:id="@+id/LinearLayoutJoinWarning"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -212,22 +230,6 @@
                 android:textColor="#FF0000"
                 android:visibility="gone" />
         </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonJoinComplete"
-            android:layout_width="330dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="200dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="200dp"
-            android:fontFamily="@font/nanumsquareneo_bold"
-            android:text="회원가입 완료"
-            app:backgroundTint="@color/primary20"
-            app:cornerRadius="6dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserName"
-            app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
