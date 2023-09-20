@@ -85,7 +85,7 @@ class ClientViewModel : ViewModel() {
                         Log.d("거래처정 테스트3", snapshot.toObject(ScheduleDataClass::class.java).toString())
                         val dateFormat = SimpleDateFormat("yyyy.MM.dd")
                         val tempSnapShotDate =
-                            dateFormat.format(snapshot.getDate("scheduleDeadLineTime"))
+                            dateFormat.format(snapshot.getDate("scheduleDeadlineTime"))
                         val today = dateFormat.format(Calendar.getInstance().time)
                         Log.d("일정정1", tempSnapShotDate)
                         Log.d("일정정2", today)

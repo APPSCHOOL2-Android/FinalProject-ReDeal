@@ -1,4 +1,4 @@
-package com.hifi.redeal.account.vm
+package com.hifi.redeal.account.repository.model.vm
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

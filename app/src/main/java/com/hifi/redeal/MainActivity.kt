@@ -1,21 +1,16 @@
 package com.hifi.redeal
 
 
-import android.content.Intent
-import android.provider.MediaStore
-import android.view.inputmethod.InputMethodManager
-import com.hifi.redeal.auth.AuthFindPwFragment
-import com.hifi.redeal.auth.AuthJoinFragment
-import com.hifi.redeal.auth.AuthLoginFragment
-import kotlin.concurrent.thread
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +20,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 import com.hifi.redeal.account.AccountDetailFragment
 import com.hifi.redeal.account.AccountEditFragment
 import com.hifi.redeal.account.AccountListFragment
@@ -48,24 +46,9 @@ import com.hifi.redeal.schedule.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
-import com.hifi.redeal.memo.AddPhotoMemoFragment
-import com.hifi.redeal.memo.AddRecordMemoFragment
-import com.hifi.redeal.memo.PhotoDetailFragment
-import com.hifi.redeal.memo.PhotoMemoFragment
-import com.hifi.redeal.memo.RecordMemoFragment
-import com.hifi.redeal.memo.SelectFragment
-import android.util.Log
-import android.view.View
-import androidx.core.view.forEach
-import androidx.core.view.isVisible
-import com.hifi.redeal.account.AccountDetailFragment
-import com.hifi.redeal.account.AccountEditFragment
-import com.hifi.redeal.account.AccountListFragment
-import com.hifi.redeal.account.AddressSearchFragment
 import com.hifi.redeal.transaction.TransactionFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
-
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -81,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     var newFragment:Fragment? = null
     var oldFragment:Fragment? = null
 
-    var uid = "1"
+    var uid = ""
 
     val permissionList = arrayOf(
         Manifest.permission.POST_NOTIFICATIONS,

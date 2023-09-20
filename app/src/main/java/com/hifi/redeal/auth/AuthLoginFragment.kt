@@ -44,6 +44,7 @@ class AuthLoginFragment : Fragment() {
         authViewModel.onLoginSuccess = {
             // 로그인 성공 시 처리 코드를 여기에 추가
             // MainActivity의 replaceFragment 메서드를 호출하여 화면 이동
+            mainActivity.uid = Firebase.auth.uid!!
             mainActivity.replaceFragment(MainActivity. ACCOUNT_LIST_FRAGMENT, true, null)
         }
 
@@ -107,6 +108,7 @@ class AuthLoginFragment : Fragment() {
 
                 // 사용자가 이미 로그인한 경우, 자동 로그인
                 // 화면 이동
+                mainActivity.uid = Firebase.auth.uid!!
                 mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, true, null)
             } else {
                 // 저장된 UID가 없는 경우 로그인 화면을 표시

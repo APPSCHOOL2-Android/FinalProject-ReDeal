@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.repository.model.ClientData
-import com.hifi.redeal.account.vm.AccountListViewModel
+import com.hifi.redeal.account.repository.model.vm.AccountListViewModel
 import com.hifi.redeal.databinding.RowFooterAccountListBinding
 import com.hifi.redeal.databinding.RowItemAccountListBinding
 import java.text.SimpleDateFormat
