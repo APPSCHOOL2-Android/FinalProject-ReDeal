@@ -9,6 +9,17 @@ import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.model.ScheduleDataClass
 import com.hifi.redeal.map.repository.ClientRepository
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.MapConfig
+import com.kakao.vectormap.MapLogger
+import com.kakao.vectormap.MapOverlay
+import com.kakao.vectormap.MapReadyCallback
+import com.kakao.vectormap.MapView
+import com.kakao.vectormap.RoadViewRequest.Marker
+import com.kakao.vectormap.graphics.MapRenderer
+import com.kakao.vectormap.internal.MapViewHolder
+import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelLayerOptions
+import com.kakao.vectormap.label.LabelManager
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -45,7 +56,6 @@ class ClientViewModel : ViewModel() {
             }
             clientDataListByKeyWord.value = tempList
         }
-
     }
 
     fun getClientListAll(userIdx: String) {

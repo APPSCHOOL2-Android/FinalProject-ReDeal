@@ -1,35 +1,27 @@
 package com.hifi.redeal.memo
 
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentRecordMemoBinding
-import com.hifi.redeal.databinding.RowPhotoMemoBinding
 import com.hifi.redeal.databinding.RowRecordMemoBinding
-import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.model.RecordMemoData
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
-import com.hifi.redeal.memo.repository.RecordMemoRepository
-import com.hifi.redeal.memo.utils.dpToPx
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
-import com.hifi.redeal.memo.vm.PhotoMemoViewModel
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -40,14 +32,14 @@ class RecordMemoFragment : Fragment() {
     private lateinit var fragmentRecordMemoBinding : FragmentRecordMemoBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var recordMemoViewModel: RecordMemoViewModel
-    var userIdx = 1L
+    private val userIdx = Firebase.auth.uid!!
     var clientIdx = 1L
-    val audioUriList = mutableListOf<Uri>()
     var currentMediaPlayer:MediaPlayer? = null
     var isAudioPlaying = false
     val handler = Handler()
     var currentSeekBar:SeekBar? = null
     var currentTimeTextView:TextView? = null
+    private var currentPlayPosition: AppCompatButton? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,6 +66,8 @@ class RecordMemoFragment : Fragment() {
             addRecordMemoBtn.setOnClickListener {
                 val newBundle = Bundle()
                 newBundle.putLong("clientIdx", clientIdx)
+                currentPlayPosition = null
+                resetAudio()
                 mainActivity.replaceFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT, true, newBundle)
             }
             recordMemoRecyclerView.run{
@@ -112,22 +106,52 @@ class RecordMemoFragment : Fragment() {
                 recordMemoTextView.text = item.context
                 recordMemoFilenameTextView.text = item.audioFilename
                 recordMemoAudioSeekBar.progress = 0
+                recordMemoAudioSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (fromUser) {
+                            currentMediaPlayer?.seekTo(progress)
+                        }
+                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    }
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    }
+                })
                 recordMemoCurrentDurationTimeTextView.text = getCurrentDuration(0)
                 recordMemoTotalDurationTimeTextView.text = "로딩 중"
-                if(item.audioFileUri != null) {
-                    var tempMediaPlayer = MediaPlayer.create(requireContext(), item.audioFileUri)
+                if(item.audioSrc != null) {
+                    var tempMediaPlayer = MediaPlayer.create(requireContext(), item.audioSrc)
                     recordMemoTotalDurationTimeTextView.text = getTotalDuration(tempMediaPlayer)
                     recordMemoAudioSeekBar.max = tempMediaPlayer?.duration!!
                     recordMemoAudioPlayBtn.setOnClickListener {
-                        resetAudio()
-                        currentSeekBar = recordMemoAudioSeekBar
-                        currentTimeTextView = recordMemoCurrentDurationTimeTextView
-                        currentMediaPlayer = MediaPlayer.create(requireContext(), item.audioFileUri)
-                        currentMediaPlayer?.start()
-                        isAudioPlaying = true
-                        updateSeekBar()
-                        currentMediaPlayer?.setOnCompletionListener {
+                        if(currentPlayPosition == null || currentPlayPosition != recordMemoAudioPlayBtn){
                             resetAudio()
+                            currentPlayPosition?.setBackgroundResource(R.drawable.play_arrow_24px)
+                            currentPlayPosition = recordMemoAudioPlayBtn
+                            currentSeekBar = recordMemoAudioSeekBar
+                            currentTimeTextView = recordMemoCurrentDurationTimeTextView
+                            currentMediaPlayer = MediaPlayer.create(requireContext(), item.audioSrc)
+                            currentMediaPlayer?.start()
+                            isAudioPlaying = true
+                            handler.post(updateSeekBar())
+                            recordMemoAudioPlayBtn.setBackgroundResource(R.drawable.pause_24px)
+                            currentMediaPlayer?.setOnCompletionListener {
+                                recordMemoAudioPlayBtn.setBackgroundResource(R.drawable.play_arrow_24px)
+                                currentPlayPosition = null
+                                resetAudio()
+                            }
+                        }else{
+                            if(isAudioPlaying) {
+                                currentMediaPlayer?.pause()
+                                handler.removeCallbacksAndMessages(null)
+                                isAudioPlaying = false
+                                recordMemoAudioPlayBtn.setBackgroundResource(R.drawable.play_arrow_24px)
+                            }else {
+                                currentMediaPlayer?.start()
+                                isAudioPlaying = true
+                                handler.post(updateSeekBar())
+                                recordMemoAudioPlayBtn.setBackgroundResource(R.drawable.pause_24px)
+                            }
                         }
                     }
                 }
@@ -158,6 +182,7 @@ class RecordMemoFragment : Fragment() {
 
     fun resetAudio(){
         isAudioPlaying = false
+        handler.removeCallbacksAndMessages(null)
         currentMediaPlayer?.release()
         currentMediaPlayer = null
         currentSeekBar?.progress = 0
@@ -166,12 +191,14 @@ class RecordMemoFragment : Fragment() {
         currentTimeTextView = null
     }
 
-    private fun updateSeekBar() {
-        if (isAudioPlaying) {
-            val currentPosition = currentMediaPlayer?.currentPosition!!
-            currentSeekBar?.progress = currentPosition
-            currentTimeTextView?.text = getCurrentDuration(currentPosition)
-            handler.postDelayed({ updateSeekBar() }, 20)
+    private fun updateSeekBar() = object:Runnable {
+        override fun run() {
+            if (isAudioPlaying && currentMediaPlayer != null) {
+                val currentPosition = currentMediaPlayer?.currentPosition!!
+                currentSeekBar?.progress = currentPosition
+                currentTimeTextView?.text = getCurrentDuration(currentPosition)
+                handler.postDelayed(this, 20)
+            }
         }
     }
 }

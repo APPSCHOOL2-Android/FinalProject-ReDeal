@@ -13,7 +13,7 @@ class PhotoMemoViewModel : ViewModel(){
     init{
         photoMemoList.value = listOf<PhotoMemoData>()
     }
-    fun getPhotoMemoList(userIdx:Long, clientIdx:Long){
+    fun getPhotoMemoList(userIdx:String, clientIdx:Long){
         PhotoMemoRepository.getPhotoMemoAll(userIdx, clientIdx){documentSnapshot ->
             val photoMemoData = mutableListOf<PhotoMemoData>()
             for(item in documentSnapshot){
