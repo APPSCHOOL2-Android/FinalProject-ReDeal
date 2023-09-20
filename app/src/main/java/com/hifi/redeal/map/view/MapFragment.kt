@@ -5,7 +5,6 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -50,12 +49,7 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.shape.DotPoints
-import com.kakao.vectormap.shape.Polygon
 import com.kakao.vectormap.shape.Polyline
-import com.kakao.vectormap.shape.PolylineOptions
-import com.kakao.vectormap.shape.PolylineStyles
-import com.kakao.vectormap.shape.PolylineStylesSet
 import java.text.SimpleDateFormat
 
 
@@ -163,52 +157,15 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             persistentBottomSheetEvent()
 
-            mapKakao.start(object : MapLifeCycleCallback() {
-                override fun onMapDestroy() {
-                    // 지도 API가 정상적으로 종료될 때 호출됨
-                }
-
-                override fun onMapError(error: Exception) {
-                    // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
-                    Log.d("지도", error.toString())
-                }
-            }, object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {
-                    // 인증 후 API가 정상적으로 실행될 때 호출
-                    Log.d("지도2", "성공")
-                    kakaoMapTemp = kakaoMap
-
-                    kakaoMap?.setOnCameraMoveStartListener(this@MapFragment)
-                    kakaoMap?.setOnCameraMoveEndListener(this@MapFragment)
-                    centerPointLabel = kakaoMap.labelManager!!.layer
-                        .addLabel(
-                            LabelOptions.from(kakaoMap.cameraPosition!!.position)
-                                .setStyles(R.drawable.red_dot_marker)
-                        )
-                    clientViewModel.run {
-                        getClientListLabel("1")
-                        clientDataListLabel.observe(viewLifecycleOwner) {
-                            Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
-                            labels = kakaoMap?.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
-
-                        }
-                    }
-
-
-
-                }
-
-                override fun getZoomLevel(): Int {
-                    return 17
-                }
-
-            })
+            startKakaoMap()
 
             mapFABMyLocation.setOnClickListener {
                 moveCurrentLocation()
             }
 
+
             mapSearchView.run {
+                Log.d("상태",currentTransitionState.toString())
                 addTransitionListener { searchView, previousState, newState ->
                     if (newState == SearchView.TransitionState.SHOWING) {
                         clientViewModel.resetClientListByKeyword()
@@ -218,6 +175,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                             moveClientAddress(currentAddress!!)
                         }
                     }
+
                 }
 
                 editText.setOnEditorActionListener { textView, i, keyEvent ->
@@ -294,6 +252,49 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
 
         return fragmentMapBinding.root
+    }
+
+    private fun FragmentMapBinding.startKakaoMap() {
+        mapKakao.start(object : MapLifeCycleCallback() {
+            override fun onMapDestroy() {
+                // 지도 API가 정상적으로 종료될 때 호출됨
+            }
+
+            override fun onMapError(error: Exception) {
+                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
+                Log.d("지도", error.toString())
+            }
+        }, object : KakaoMapReadyCallback() {
+            override fun onMapReady(kakaoMap: KakaoMap) {
+                // 인증 후 API가 정상적으로 실행될 때 호출
+                Log.d("지도2", "성공")
+                kakaoMapTemp = kakaoMap
+
+                kakaoMap?.setOnCameraMoveStartListener(this@MapFragment)
+                kakaoMap?.setOnCameraMoveEndListener(this@MapFragment)
+                centerPointLabel = kakaoMap.labelManager!!.layer
+                    .addLabel(
+                        LabelOptions.from(kakaoMap.cameraPosition!!.position)
+                            .setStyles(R.drawable.red_dot_marker)
+                    )
+                clientViewModel.run {
+                    getClientListLabel("1")
+                    clientDataListLabel.observe(viewLifecycleOwner) {
+                        Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
+                        labels =
+                            kakaoMap?.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
+
+                    }
+                }
+
+
+            }
+
+            override fun getZoomLevel(): Int {
+                return 17
+            }
+
+        })
     }
 
     inner class SearchClientResultRecyclerViewAdapter :
@@ -402,6 +403,17 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
 
+            rowMapClientListBinding.root.setOnClickListener {
+                val position = allViewHolder.adapterPosition
+                currentAddress =
+                    clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!
+                moveClientAddress(currentAddress.toString())
+                BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout).state =
+                    BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+
+
             return allViewHolder
         }
 
@@ -414,6 +426,22 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 clientViewModel.clientDataListAll.value?.get(position)?.clientName
             holder.rowMapClientListManagerName.text =
                 clientViewModel.clientDataListAll.value?.get(position)?.clientManagerName
+
+            when(clientViewModel.clientDataListAll.value?.get(position)?.clientState){
+                1L ->{
+                    holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary20)
+                }
+                2L ->{
+                    holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary50)
+                }
+                3L ->{
+                    holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary80)
+                }
+                else ->{
+                    holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary20)
+                }
+            }
+
             if (clientViewModel.clientDataListAll.value?.get(position)?.isBookmark == false) {
                 holder.rowMapClientListBookMark.visibility = View.INVISIBLE
             }
@@ -559,6 +587,8 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 LabelOptions.from(kakaoMap.cameraPosition!!.position)
                     .setStyles(R.drawable.red_dot_marker)
             )
+
+        kakaoMap?.labelManager!!.layer
     }
 
     override fun onCameraMoveStart(kakaoMap: KakaoMap, gestureType: GestureType) {
