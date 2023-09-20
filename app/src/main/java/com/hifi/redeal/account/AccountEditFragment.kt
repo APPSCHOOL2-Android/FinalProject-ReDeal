@@ -173,15 +173,15 @@ class AccountEditFragment : Fragment(){
 
                 when (client.clientState) {
                     1L -> {
-                        setText("거래 중")
+                        setText("거래 중", false)
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary20, 0, 0, 0)
                     }
                     2L -> {
-                        setText("거래 시도")
+                        setText("거래 시도", false)
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary50, 0, 0, 0)
                     }
                     3L -> {
-                        setText("거래 중지")
+                        setText("거래 중지", false)
                         setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
                     }
                 }

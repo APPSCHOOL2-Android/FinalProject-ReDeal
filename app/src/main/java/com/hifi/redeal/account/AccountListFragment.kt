@@ -186,6 +186,7 @@ class AccountListFragment : Fragment() {
                 accountListAdapter.run {
                     submitList(it) {
                         notifyItemChanged(itemCount - 1)
+                        recyclerViewAccountList.scrollToPosition(0)
                     }
                 }
             }
