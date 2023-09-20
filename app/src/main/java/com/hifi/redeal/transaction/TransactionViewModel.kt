@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.hifi.redeal.transaction.model.ClientSimpleData
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.model.customTransactionData
 
@@ -14,6 +15,9 @@ class TransactionViewModel: ViewModel() {
 
     var transactionList = MutableLiveData<MutableList<customTransactionData>>()
     var tempTransactionList = mutableListOf<customTransactionData>()
+
+    var clientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
+    var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
 
     var nextTransactionIdx = 0L
     fun getNextTransactionIdx(){
@@ -53,4 +57,20 @@ class TransactionViewModel: ViewModel() {
         })
     }
 
+    fun getUserAllClient(){
+        tempClientSimpleDataList.clear()
+        TransactionRepository.getUserAllClient(uid){
+            for(c1 in it.result){
+                val newClientData = ClientSimpleData(
+                    c1["clientIdx"] as Long,
+                    c1["clientName"] as String,
+                    c1["clientManagerName"] as String,
+                    c1["clientState"] as Long,
+                    c1["isBookmark"] as Boolean
+                )
+                tempClientSimpleDataList.add(newClientData)
+                clientSimpleDataListVM.postValue(tempClientSimpleDataList)
+            }
+        }
+    }
 }

@@ -14,12 +14,12 @@ class TransactionRepository {
 
     companion object{
 
-        fun setClientTransactionDataList(userIdx: String, newTransactionData: TransactionData, callback1: (Task<DocumentSnapshot>) -> Unit){
+        fun setClientTransactionDataList(uid: String, newTransactionData: TransactionData, callback1: (Task<DocumentSnapshot>) -> Unit){
             var clientData = ClientData()
             var transactionList = mutableListOf<Long>()
             val db = Firebase.firestore
             db.collection("userData")
-                .document(userIdx)
+                .document(uid)
                 .collection("clientData")
                 .document("${newTransactionData.clientIdx}")
                 .get()
@@ -30,35 +30,44 @@ class TransactionRepository {
                     clientData.transactionIdxList = transactionList.toList()
                 }.addOnSuccessListener {
                     db.collection("userData")
-                        .document(userIdx)
+                        .document(uid)
                         .collection("clientData")
                         .document("${newTransactionData.clientIdx}")
                         .set(clientData)
                 }.addOnCompleteListener(callback1)
         }
-        fun setTransactionData(userIdx: String, transactionData: TransactionData, callback1: (Task<Void>) -> Unit){
+        fun setTransactionData(uid: String, transactionData: TransactionData, callback1: (Task<Void>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
-                .document(userIdx)
+                .document(uid)
                 .collection("transactionData")
                 .document("${transactionData.transactionIdx}")
                 .set(transactionData)
                 .addOnCompleteListener(callback1)
         }
-        fun getClientInfo(userIdx: String, clientIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
+        fun getClientInfo(uid: String, clientIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
-                .document(userIdx)
+                .document(uid)
                 .collection("clientData")
                 .whereEqualTo("clientIdx", clientIdx)
                 .get()
                 .addOnCompleteListener(callback1)
         }
 
-        fun getNextTransactionIdx(userIdx: String, callback: (Task<QuerySnapshot>) -> Unit){
+        fun getUserAllClient(uid: String, callback1: (Task<QuerySnapshot>) -> Unit){
+            val db = Firebase.firestore
+            db.collection("userData")
+                .document(uid)
+                .collection("clientData")
+                .get()
+                .addOnCompleteListener(callback1)
+        }
+
+        fun getNextTransactionIdx(uid: String, callback: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore
             val transactionDataRef = db.collection("userData")
-                .document(userIdx)
+                .document(uid)
                 .collection("transactionData")
 
             transactionDataRef.orderBy("transactionIdx", Query.Direction.DESCENDING).limit(1)
@@ -66,10 +75,10 @@ class TransactionRepository {
                 .addOnCompleteListener(callback)
         }
 
-        fun getAllTransactionData(userIdx: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
+        fun getAllTransactionData(uid: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")
-                .document(userIdx)
+                .document(uid)
                 .collection("transactionData")
                 .get()
                 .addOnCompleteListener(callback1)
