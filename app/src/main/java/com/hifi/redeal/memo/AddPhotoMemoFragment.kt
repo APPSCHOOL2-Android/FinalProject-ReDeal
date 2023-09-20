@@ -55,14 +55,24 @@ class AddPhotoMemoFragment : Fragment() {
                     true
                 }
             }
-            addPhotoMemoBtn.setOnClickListener{
-                val photoMemoContext = photoMemoTextInputEditText.text.toString()
-                addPhotoMemoBtn.isEnabled = false
-                addPhotoMemoBtn.setBackgroundResource(R.drawable.add_button_loading_container)
-                addPhotoMemoBtn.text = "등록 중 ..."
-                addPhotoMemoBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary20))
-                PhotoMemoRepository.addPhotoMemo(1,clientIdx,photoMemoContext,uriList){
-                    mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
+            addPhotoMemoBtn.run {
+                isEnabled = false
+                setBackgroundResource(R.drawable.add_button_loading_container)
+                text = "사진을 등록해주세요."
+                setOnClickListener {
+                    val photoMemoContext = photoMemoTextInputEditText.text.toString()
+                    addPhotoMemoBtn.isEnabled = false
+                    addPhotoMemoBtn.setBackgroundResource(R.drawable.add_button_loading_container)
+                    addPhotoMemoBtn.text = "등록 중 ..."
+                    addPhotoMemoBtn.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.primary20
+                        )
+                    )
+                    PhotoMemoRepository.addPhotoMemo(1, clientIdx, photoMemoContext, uriList) {
+                        mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
+                    }
                 }
             }
         }
@@ -86,6 +96,10 @@ class AddPhotoMemoFragment : Fragment() {
         layoutParams.setMargins(0,0,0,dpToPx(requireContext(), 6))
         linearLayoutHorizontal.layoutParams = layoutParams
         var imgCnt = 0
+
+        fragmentAddPhotoMemoBinding.addPhotoMemoBtn.isEnabled = true
+        fragmentAddPhotoMemoBinding.addPhotoMemoBtn.setBackgroundResource(R.drawable.add_button_container)
+        fragmentAddPhotoMemoBinding.addPhotoMemoBtn.text = "포토 메모 등록"
         uriList.forEach{
             if(imgCnt != 0 && imgCnt % 3 == 0) {
                 fragmentAddPhotoMemoBinding.addImageListLayout.addView(linearLayoutHorizontal)

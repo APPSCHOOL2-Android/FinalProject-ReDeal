@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +29,7 @@ import com.hifi.redeal.memo.repository.RecordMemoRepository
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 
 
@@ -53,7 +53,10 @@ class AddRecordMemoFragment : Fragment() {
     private var audioFileUri: Uri? = null
     private var clientIdx = 1L
 
+    private var isUpload = false
+
     private lateinit var audioLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,7 +65,6 @@ class AddRecordMemoFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         clientIdx = arguments?.getLong("clientIdx")!!
-        Log.d("ttt","민국님 코드 $clientIdx")
         audioLauncher = recordingSetting()
         prepareRecorder()
         fragmentAddRecordMemoBinding.run{
@@ -102,6 +104,13 @@ class AddRecordMemoFragment : Fragment() {
                 addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_loading_container)
                 addRecordMemoAddBtn.text = "등록 중 ..."
                 addRecordMemoAddBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary20))
+                if(isUpload) {
+                    if (recordFileLocation.exists()) {
+                        recordFileLocation.delete()
+                    }
+                    setRecordingLocation(audioFileName!!)
+                    saveAudioFileFromUri(audioFileUri!!, recordFileLocation.getAbsolutePath())
+                }
                 RecordMemoRepository.addRecordMemo(1,clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }
@@ -112,7 +121,7 @@ class AddRecordMemoFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        resetRecorder(true)
+        resetRecorder(false)
         audioFileUri = null
     }
 
@@ -182,7 +191,7 @@ class AddRecordMemoFragment : Fragment() {
                 fragmentAddRecordMemoBinding.addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_container)
                 fragmentAddRecordMemoBinding.addRecordMemoAddBtn.text = "포토 메모 등록"
                 Snackbar.make(requireView(), "$audioFileName 저장 완료", Snackbar.LENGTH_LONG).show()
-                fragmentAddRecordMemoBinding.addRecordFileTextView.text = "$audioFileName.mp4"
+                fragmentAddRecordMemoBinding.addRecordFileTextView.text = "$audioFileName"
                 dialog.dismiss()
             }
         }
@@ -194,7 +203,7 @@ class AddRecordMemoFragment : Fragment() {
         builder.create().show()
     }
     private fun setRecordingLocation(recordingName: String) {
-        recordFileLocation = File(getRecordingStorageDirectory(), "$recordingName.mp4");
+        recordFileLocation = File(getRecordingStorageDirectory(), "$recordingName")
     }
 
     private fun stopAudioPlayback() {
@@ -255,6 +264,8 @@ class AddRecordMemoFragment : Fragment() {
         val audioLauncher = registerForActivityResult(audioContract){
             if(it.resultCode == AppCompatActivity.RESULT_OK){
                 if(it.data?.data != null){
+                    isSaveFile = true
+                    isUpload = true
                     audioFileUri = it.data?.data
                     val durationMediaPlayer = MediaPlayer.create(requireContext(), audioFileUri)
                     fragmentAddRecordMemoBinding.audioSeekBar.max = durationMediaPlayer?.duration!!
@@ -297,9 +308,20 @@ class AddRecordMemoFragment : Fragment() {
         return null
     }
 
-    fun getRecordingStorageDirectory() : File{
+    private fun getRecordingStorageDirectory() : File{
         val dir = File(mainActivity.getExternalFilesDir(null), "recordings")
         dir.mkdirs()
         return dir
+    }
+
+    private fun saveAudioFileFromUri(uri: Uri, outputFilePath: String) {
+        val inputStream = mainActivity.contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(outputFilePath)
+
+        inputStream?.use {input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
     }
 }
