@@ -23,6 +23,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddRecordMemoBinding
@@ -57,6 +60,7 @@ class AddRecordMemoFragment : Fragment() {
     private var isSaveFile = false
 
     private lateinit var audioLauncher: ActivityResultLauncher<Intent>
+    private val userIdx = Firebase.auth.uid!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,7 +127,7 @@ class AddRecordMemoFragment : Fragment() {
                     setRecordingLocation(audioFileName!!)
                     saveAudioFileFromUri(audioFileUri!!, recordFileLocation.getAbsolutePath())
                 }
-                RecordMemoRepository.addRecordMemo(1,clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
+                RecordMemoRepository.addRecordMemo(userIdx,clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }
             }

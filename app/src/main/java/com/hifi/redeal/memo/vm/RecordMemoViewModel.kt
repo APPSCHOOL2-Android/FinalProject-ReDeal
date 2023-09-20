@@ -17,7 +17,7 @@ class RecordMemoViewModel : ViewModel() {
     init{
         recordMemoList.value = listOf<RecordMemoData>()
     }
-    fun getRecordMemoList(userIdx:Long, clientIdx:Long, mainContext:Context){
+    fun getRecordMemoList(userIdx:String, clientIdx:Long, mainContext:Context){
         RecordMemoRepository.getRecordMemoAll(userIdx, clientIdx){ documentSnapshot ->
             val recordMemoData = mutableListOf<RecordMemoData>()
             for(item in documentSnapshot){

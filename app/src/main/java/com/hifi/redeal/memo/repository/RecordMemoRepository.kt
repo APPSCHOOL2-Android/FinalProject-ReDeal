@@ -11,7 +11,7 @@ import java.util.Date
 
 class RecordMemoRepository {
     companion object{
-        fun getRecordMemoAll(userIdx:Long, clientIdx:Long, callback1: (QuerySnapshot) -> Unit){
+        fun getRecordMemoAll(userIdx:String, clientIdx:Long, callback1: (QuerySnapshot) -> Unit){
             val db = Firebase.firestore
             val photoMemoRef = db.collection("userData")
                 .document("$userIdx")
@@ -21,7 +21,7 @@ class RecordMemoRepository {
                 .addOnSuccessListener(callback1)
         }
 
-        fun addRecordMemo(userIdx:Long, clientIdx:Long, recordMemoContext:String, audioFileUri:Uri, audioFileName:String, callback:(Task<Void>) -> Unit){
+        fun addRecordMemo(userIdx:String, clientIdx:Long, recordMemoContext:String, audioFileUri:Uri, audioFileName:String, callback:(Task<Void>) -> Unit){
             val db = Firebase.firestore
             val recordMemoRef = db.collection("userData")
                 .document("$userIdx")

@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentRecordMemoBinding
@@ -30,7 +32,7 @@ class RecordMemoFragment : Fragment() {
     private lateinit var fragmentRecordMemoBinding : FragmentRecordMemoBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var recordMemoViewModel: RecordMemoViewModel
-    var userIdx = 1L
+    private val userIdx = Firebase.auth.uid!!
     var clientIdx = 1L
     var currentMediaPlayer:MediaPlayer? = null
     var isAudioPlaying = false

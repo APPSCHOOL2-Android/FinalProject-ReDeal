@@ -21,6 +21,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddPhotoMemoBinding
@@ -33,6 +35,7 @@ class AddPhotoMemoFragment : Fragment() {
     private lateinit var albumLauncher: ActivityResultLauncher<Intent>
     private var uriList = mutableListOf<Uri>()
     private var clientIdx = 1L
+    private val userIdx = Firebase.auth.uid!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,7 +73,7 @@ class AddPhotoMemoFragment : Fragment() {
                             R.color.primary20
                         )
                     )
-                    PhotoMemoRepository.addPhotoMemo(1, clientIdx, photoMemoContext, uriList) {
+                    PhotoMemoRepository.addPhotoMemo(userIdx, clientIdx, photoMemoContext, uriList) {
                         mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
                     }
                 }
