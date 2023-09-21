@@ -60,13 +60,29 @@
             android:id="@+id/mapSearchRegionRecyclerViewSiDo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/text50" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mapSearchRegionRecyclerViewSiGunGu"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/text50" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mapSearchRegionRecyclerViewDong"
@@ -87,7 +103,7 @@
         android:layout_margin="18dp"
         android:fontFamily="@font/nanumsquareneo_extrabold"
         android:text="확인"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:cornerRadius="8dp" />
 
 </LinearLayout>

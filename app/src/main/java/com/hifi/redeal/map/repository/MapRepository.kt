@@ -57,7 +57,7 @@ class MapRepository {
 
         }
 
-        fun searchSiDo(callback: (List<AdmVO>?) -> Unit) {
+        fun searchSiDo(callback: (MutableList<AdmVO>?) -> Unit) {
             val retrofit = Retrofit.Builder()   // Retrofit 구성
                 .baseUrl(MainActivity.REGION_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -78,9 +78,18 @@ class MapRepository {
                     // 통신 성공 (검색 결과는 response.body()에 담겨있음)
                     Log.d("Test2", "Raw: ${response.raw()}")
                     Log.d("Test2", "Body: ${response.body()}")
+                    val admVo1 = AdmVO("경상남도", "48", "경상남도")
+                    val admVo2 = AdmVO("경상남도", "47", "경상북도")
+                    val admVo3 = AdmVO("전라남도", "46", "전라남도")
+                    val admVo4 = AdmVO("전라남도", "45", "전라북도")
+                    val admVo5 = AdmVO("충청남도", "44", "충청남도")
+                    val admVo6 = AdmVO("충청남도", "42", "강원도")
+                    val admVo7 = AdmVO("충청남도", "50", "제주특별자치도")
+                    val admList = mutableListOf(admVo1, admVo2, admVo3, admVo4, admVo5, admVo6, admVo7)
 
-                    val result = response.body()?.admVOList?.admVOList
-                    callback(result)
+                    val temp = response.body()?.admVOList?.admVOList as MutableList
+                    admList.addAll(temp)
+                    callback(admList)
 
                 }
 
