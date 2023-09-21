@@ -99,8 +99,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 Log.d("지도주소", currentAddress.toString())
                 if (currentAddress != null && kakaoMapTemp!=null) {
                     moveCamera(currentAddress.value!!)
-                } else {
-                    showDialog("주소 오류","현 주소는 지원하지 않습니다.",mainActivity)
                 }
             }
             clientDataListByKeyWord.observe(viewLifecycleOwner) {
@@ -356,7 +354,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
                 val regex = "\\([^)]*\\)"
-                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
+                val clientAddr = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
                 Log.d("거래처지역1",clientAddr)
                 setClientAddress(clientAddr)
 
