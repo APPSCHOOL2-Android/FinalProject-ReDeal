@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.hifi.redeal.auth.model.UserDataClass
 import com.hifi.redeal.auth.repository.AuthRepository
+import com.hifi.redeal.databinding.FragmentAuthJoinBinding
 
 class AuthViewModel : ViewModel() {
 
@@ -65,6 +65,9 @@ class AuthViewModel : ViewModel() {
     fun registerUser(email: String, password: String, name: String, view: View): LiveData<AuthResult> {
         val registrationResult = MutableLiveData<AuthResult>()
 
+        // 해당 Fragment의 바인딩 객체 초기화
+        val binding = FragmentAuthJoinBinding.bind(view)
+
         AuthRepository.registerUser(email, password,
             successCallback = { authResult ->
                 val user = authResult.user
@@ -81,8 +84,8 @@ class AuthViewModel : ViewModel() {
                             onRegistrationSuccess?.invoke()
                         },
                         errorCallback = { errorMessage ->
-                            // 에러 발생 시 처리
-                            showErrorSnackbar(view, errorMessage)
+                                // IDX 오류 처리
+                                showErrorSnackbar(view, errorMessage)
                         }
                     )
 
@@ -94,7 +97,14 @@ class AuthViewModel : ViewModel() {
                 registrationResult.value = authResult
             },
             errorCallback = { errorMessage ->
-                onError?.invoke(errorMessage)
+                // 에러 발생 시 처리
+                if (errorMessage == "가입된 이메일 주소") {
+                    // 중복된 이메일 주소 처리
+                    binding.warningJoinEmailAlready.visibility = View.VISIBLE
+                } else {
+                    // 회원가입 시 다른
+                    showErrorSnackbar(view, errorMessage)
+                }
             }
         )
         // LiveData를 반환합니다.

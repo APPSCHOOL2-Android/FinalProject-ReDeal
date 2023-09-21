@@ -13,7 +13,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.auth.vm.AuthViewModel
-import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
 
 class AuthLoginFragment : Fragment() {

@@ -3,11 +3,11 @@ package com.hifi.redeal.auth.repository
 import android.annotation.SuppressLint
 import android.util.Log
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -66,29 +66,15 @@ class AuthRepository {
             successCallback: (AuthResult) -> Unit,
             errorCallback: (String) -> Unit
         ) {
-            auth.fetchSignInMethodsForEmail(email)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val signInMethods = task.result?.signInMethods
-                        if (signInMethods != null && signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
-                            val errorMessage = "이미 가입된 이메일 주소입니다. 다른 이메일 주소를 사용하세요."
-                            errorCallback(errorMessage)
-                        } else {
-                            auth.createUserWithEmailAndPassword(email, password)
-                                .addOnSuccessListener(successCallback)
-                                .addOnFailureListener { e ->
-                                    val errorMessage = when (e) {
-                                        is FirebaseAuthInvalidCredentialsException -> "잘못된 이메일 형식이거나 비밀번호가 너무 간단합니다. 다시 확인해주세요."
-                                        is FirebaseAuthInvalidUserException -> "이미 가입된 이메일 주소입니다. 다른 이메일을 사용하세요."
-                                        else -> "회원가입 중 오류가 발생했습니다. 다시 시도해주세요."
-                                    }
-                                    errorCallback(errorMessage)
-                                }
-                        }
-                    } else {
-                        val errorMessage = "이메일 확인 작업 중 오류가 발생했습니다. 다시 시도해주세요."
-                        errorCallback(errorMessage)
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(successCallback)
+                .addOnFailureListener { e ->
+                    val errorMessage = when (e) {
+                        is FirebaseAuthUserCollisionException -> "가입된 이메일 주소"
+                        is FirebaseAuthInvalidCredentialsException -> "잘못된 이메일 형식이거나 비밀번호가 너무 간단합니다."
+                        else -> "회원가입 중 오류가 발생했습니다. 다시 시도해주세요."
                     }
+                    errorCallback(errorMessage)
                 }
         }
 

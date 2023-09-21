@@ -1,27 +1,28 @@
 package com.hifi.redeal.auth
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.firestore.FirebaseFirestore
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.FragmentAuthJoinBinding
 import com.hifi.redeal.auth.vm.AuthViewModel
+import com.hifi.redeal.databinding.FragmentAuthJoinBinding
 
 class AuthJoinFragment : Fragment() {
 
     lateinit var fragmentAuthJoinBinding: FragmentAuthJoinBinding
     lateinit var mainActivity: MainActivity
     lateinit var authViewModel: AuthViewModel
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val INVALID_NICKNAME_CHARACTERS = listOf(
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
@@ -119,6 +120,10 @@ class AuthJoinFragment : Fragment() {
                 })
             }
         }
+
+        // 터치 시 키보드 숨기기 처리
+        hideKeyboardOnTouch(fragmentAuthJoinBinding.root)
+
         return fragmentAuthJoinBinding.root
     }
 
@@ -149,7 +154,7 @@ class AuthJoinFragment : Fragment() {
 
     // 연속된 문자나 숫자 검사 함수 추가
     private fun containsConsecutiveOrSequentialNumbers(password: String): Boolean {
-        var sameNumberCount = 1 // 동일한 숫자의 개수를 추적합니다.
+        var sameNumberCount = 1 // 동일한 숫자의 개수를 추적
 
         for (i in 0 until password.length - 1) {
             if (password[i] == password[i + 1]) {
@@ -163,4 +168,14 @@ class AuthJoinFragment : Fragment() {
         }
         return false
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun hideKeyboardOnTouch(view: View) {
+        view.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            false
+        }
+    }
+
 }
