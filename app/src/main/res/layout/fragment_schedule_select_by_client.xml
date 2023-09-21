@@ -33,7 +33,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:transitionGroup="false"
-        app:layout_anchor="@id/scheduleClientBySearchBar" />
+        app:layout_anchor="@id/scheduleClientBySearchBar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewScheduleSearchListResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionGroup="false" />
+    </com.google.android.material.search.SearchView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

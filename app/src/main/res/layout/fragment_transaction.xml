@@ -44,7 +44,7 @@
         android:layout_width="411dp"
         android:layout_height="105dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTransactionMain">
 
@@ -86,6 +86,8 @@
             android:textColor="@color/text10"
             android:textSize="16dp"
             app:layout_constraintEnd_toStartOf="@+id/textViewTran3"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/textViewTran2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -99,6 +101,8 @@
             android:textColor="@color/primary20"
             android:textSize="16dp"
             app:layout_constraintEnd_toStartOf="@+id/textViewTran4"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/textViewTran5"
             app:layout_constraintTop_toBottomOf="@+id/textTotalSales" />
 
         <TextView

@@ -12,6 +12,8 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.CompleteScheduleItemBinding
@@ -28,6 +30,7 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -38,8 +41,7 @@ class ScheduleManageFragment : Fragment(){
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
     lateinit var scheduleVM: ScheduleVM
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-
-    var userIdx = "1" // 추후 사용자의 idx 저장
+    private var uid = Firebase.auth.uid!!
     var scheduleList = mutableListOf<ScheduleTotalData>()
 
     override fun onCreateView(
@@ -94,7 +96,7 @@ class ScheduleManageFragment : Fragment(){
 
         }
 
-        scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
+        scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
     }
 
     private fun setClickEvent(){
@@ -104,7 +106,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     scheduleVM.selectedScheduleIsVisit = true
-                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
+                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
                 }
             }
 
@@ -113,7 +115,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     scheduleVM.selectedScheduleIsVisit = false
-                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
+                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
                 }
             }
 
@@ -197,8 +199,8 @@ class ScheduleManageFragment : Fragment(){
                             builder.setTitle("일정 완료 처리")
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 처리 됩니다.")
                             builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
-                                ScheduleRepository.updateUserDayOfScheduleState(userIdx, schedule.scheduleIdx.toString()){
-                                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
+                                ScheduleRepository.updateUserDayOfScheduleState(uid, schedule.scheduleIdx.toString()){
+                                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
                                 }
                             }
                             builder.setPositiveButton("취소", null)
@@ -259,8 +261,8 @@ class ScheduleManageFragment : Fragment(){
                             builder.setTitle("일정 완료 취소 처리")
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 취소 처리 됩니다.")
                             builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
-                                ScheduleRepository.updateUserDayOfScheduleState(userIdx, schedule.scheduleIdx.toString()){
-                                    scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
+                                ScheduleRepository.updateUserDayOfScheduleState(uid, schedule.scheduleIdx.toString()){
+                                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
                                 }
                             }
                             builder.setPositiveButton("취소", null)
@@ -345,6 +347,11 @@ class ScheduleManageFragment : Fragment(){
                 override fun bind(container: MonthViewContainer, month: CalendarMonth) {
                     container.headerMonthTextView.text = "${month.month}월"
                     container.headerYearTextView.text = "${month.year}"
+                    container.headerGotoTextView.setOnClickListener {
+                        scheduleVM.selectDate = LocalDate.now()
+                        calendarView.notifyCalendarChanged()
+                        calendarView.scrollToDate(scheduleVM.selectDate, DayOwner.THIS_MONTH)
+                    }
                 }
             }
         }
@@ -382,7 +389,7 @@ class ScheduleManageFragment : Fragment(){
 
                 // 클릭한 날짜에 해당하는 일정을 가져오는 코드 작성 부분
 
-                scheduleVM.getUserDayOfSchedule(userIdx, "${scheduleVM.selectDate}")
+                scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
 
                 setDateText()
 
@@ -398,6 +405,7 @@ class ScheduleManageFragment : Fragment(){
     private inner class MonthViewContainer(view: View) : ViewContainer(view) {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
+        val headerGotoTextView = view.findViewById<TextView>(R.id.headerGoToday)
     }
 
 }

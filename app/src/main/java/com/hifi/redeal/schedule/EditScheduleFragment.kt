@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentEditScheduleBinding
@@ -41,8 +43,7 @@ class EditScheduleFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
     lateinit var newEditScheduleData: ScheduleData
-    var userIdx = "1" // 추후 사용자의 idx 저장
-
+    private var uid = Firebase.auth.uid!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -150,7 +151,7 @@ class EditScheduleFragment : Fragment() {
                         scheduleVM.editScheduleData.value?.scheduleTitle = editScheduleEditTextScheduleTitle.editableText.toString()
                     }
 
-                    ScheduleRepository.setUserSchedule(userIdx, scheduleVM.editScheduleData.value!!){
+                    ScheduleRepository.setUserSchedule(uid,scheduleVM.editScheduleData.value!!){
                         val builder = AlertDialog.Builder(mainActivity)
                         builder.setMessage("일정을 성공적으로 변경 하였습니다.")
                         builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
@@ -171,7 +172,7 @@ class EditScheduleFragment : Fragment() {
 
             editScheduleData.observe(viewLifecycleOwner){schedule ->
                 newEditScheduleData = schedule
-                getUserSelectClientInfo(userIdx, schedule.clientIdx)
+                getUserSelectClientInfo(schedule.clientIdx)
 
                 fragmentEditScheduleBinding.run{
                     if(schedule.isVisitSchedule){

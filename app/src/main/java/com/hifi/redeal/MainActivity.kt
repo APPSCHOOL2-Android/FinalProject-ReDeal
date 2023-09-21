@@ -3,7 +3,6 @@ package com.hifi.redeal
 
 import android.content.Intent
 import android.provider.MediaStore
-import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import com.hifi.redeal.auth.AuthFindPwFragment
 import com.hifi.redeal.auth.AuthJoinFragment
@@ -12,19 +11,36 @@ import kotlin.concurrent.thread
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.MediaStore
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
+import com.hifi.redeal.account.AccountDetailFragment
+import com.hifi.redeal.account.AccountEditFragment
+import com.hifi.redeal.account.AccountListFragment
+import com.hifi.redeal.account.AddressSearchFragment
+import com.hifi.redeal.auth.AuthFindPwFragment
+import com.hifi.redeal.auth.AuthJoinFragment
+import com.hifi.redeal.auth.AuthLoginFragment
+import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
-import androidx.lifecycle.ViewModelProvider
-import com.hifi.redeal.databinding.ActivityMainBinding
+import com.hifi.redeal.memo.AddPhotoMemoFragment
+import com.hifi.redeal.memo.AddRecordMemoFragment
+import com.hifi.redeal.memo.PhotoDetailFragment
+import com.hifi.redeal.memo.PhotoMemoFragment
+import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.memo.SelectFragment
 import com.hifi.redeal.schedule.EditScheduleFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 import com.hifi.redeal.schedule.ScheduleManageFragment
@@ -40,34 +56,32 @@ import com.hifi.redeal.memo.RecordMemoFragment
 import com.hifi.redeal.memo.SelectFragment
 import android.util.Log
 import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.hifi.redeal.account.AccountDetailFragment
 import com.hifi.redeal.account.AccountEditFragment
 import com.hifi.redeal.account.AccountListFragment
 import com.hifi.redeal.account.AddressSearchFragment
 import com.hifi.redeal.transaction.TransactionFragment
+import com.skt.tmap.TMapTapi
+import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
+
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM
 
+    lateinit var tMapTapi: TMapTapi
+
     var newFragment:Fragment? = null
     var oldFragment:Fragment? = null
 
-    var userId = 1L
+    var uid = "1"
 
     val permissionList = arrayOf(
         Manifest.permission.POST_NOTIFICATIONS,
@@ -111,6 +125,7 @@ class MainActivity : AppCompatActivity() {
         val TRANSACTION_FRAGMENT = "TransactionFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
+        const val REGION_BASE_URL = "http://api.vworld.kr/"
     }
 
     val REQUEST_INTENTS = listOf(
@@ -140,6 +155,20 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
+        tMapTapi = TMapTapi(this)
+
+        tMapTapi.setOnAuthenticationListenerCallback( object : OnAuthenticationListenerCallback {
+            override fun SKTMapApikeySucceed() {
+                Log.d("brudenell", "성공")
+            }
+
+            override fun SKTMapApikeyFailed(p0: String?) {
+                Log.d("brudenell", "실패")
+            }
+        })
+
+        tMapTapi.setSKTmapAuthentication(BuildConfig.TMAP_APP_KEY)
+
         requestPermissions(permissionList, 10)
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
@@ -166,6 +195,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
+        //replaceFragment(MAP_FRAGMENT,false,null)
 
         supportFragmentManager.addOnBackStackChangedListener {
             for (fragment in supportFragmentManager.fragments) {
@@ -228,7 +258,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        replaceFragment(AUTH_LOGIN_FRAGMENT, true)
+        replaceFragment(AUTH_LOGIN_FRAGMENT, false)
 
 //        val navHostFragment =
 //            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment

@@ -23,7 +23,7 @@ class AccountListViewModel: ViewModel() {
 
     val filterCntList = MutableLiveData<List<Int>>()
 
-    fun getClientList(userId: Long) {
+    fun getClientList(userId: String) {
         val filter = selectedTabItemPosState.value ?: -1
 
         val sortBy = tabItemCheckedListSort.indexOf(true)
