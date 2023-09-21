@@ -26,7 +26,7 @@
         android:title="거래 내역" />
 
     <item
-        android:id="@+id/selectFragment"
+        android:id="@+id/memoFragment"
         android:icon="@drawable/add_memo_24px_primary99"
         android:menuCategory="secondary"
         android:title="메모" />
