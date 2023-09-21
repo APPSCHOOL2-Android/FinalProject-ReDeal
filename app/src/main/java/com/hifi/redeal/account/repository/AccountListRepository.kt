@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.ContactData
 import com.hifi.redeal.account.repository.model.ScheduleData
+import com.hifi.redeal.account.repository.model.UserData
 import java.util.UUID
 
 class AccountListRepository {
@@ -164,5 +165,19 @@ class AccountListRepository {
 
         db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .update("viewCount", viewCount + 1)
+    }
+
+    fun getUserData(userId: String, callback: (UserData) -> Unit) {
+        db.collection("userData").document(userId)
+            .get()
+            .addOnSuccessListener {
+                val user = it.toObject<UserData>()
+                if (user != null) {
+                    callback(user)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
     }
 }

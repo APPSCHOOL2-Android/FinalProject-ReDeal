@@ -56,6 +56,10 @@ class AccountListFragment : Fragment() {
 
         accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
 
+        accountListViewModel.accountListRepository.getUserData(mainActivity.uid) {
+            fragmentAccountListBinding.textViewAccountListUserName.text = it.userName
+        }
+
         fragmentAccountListBinding.run {
 
             val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)

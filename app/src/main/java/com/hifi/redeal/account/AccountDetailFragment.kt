@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 
 
@@ -41,17 +43,17 @@ class AccountDetailFragment : Fragment() {
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
         accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
-            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {
-                    if (client != null) {
-                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
-                            if (it != null) {
-                                mapInit(it)
-                            }
-                        }
-                    }
-                }
-            })
+//            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+//                override fun onMapReady(kakaoMap: KakaoMap) {
+//                    if (client != null) {
+//                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
+//                            if (it != null) {
+//                                mapInit(it)
+//                            }
+//                        }
+//                    }
+//                }
+//            })
 
             if (client != null) {
                 accountDetailViewInit(client)
@@ -264,9 +266,17 @@ class AccountDetailFragment : Fragment() {
                 accountDetailRepository.updateBookmark(mainActivity.uid, clientIdx, client.isBookmark ?: false)
             }
 
-            val ceoPhoneNumber = PhoneNumberUtils.formatNumber(client.clientCeoPhone, "KR")
-            val managerPhoneNumber = PhoneNumberUtils.formatNumber(client.clientManagerPhone, "KR")
-            val faxNumber = PhoneNumberUtils.formatNumber(client.clientFaxNumber, "KR")
+            var ceoPhoneNumber = PhoneNumberUtils.formatNumber(client.clientCeoPhone, "KR")
+            if (ceoPhoneNumber == null)
+                ceoPhoneNumber = client.clientCeoPhone
+
+            var managerPhoneNumber = PhoneNumberUtils.formatNumber(client.clientManagerPhone, "KR")
+            if (managerPhoneNumber == null)
+                managerPhoneNumber = client.clientManagerPhone
+
+            var faxNumber = PhoneNumberUtils.formatNumber(client.clientFaxNumber, "KR")
+            if (faxNumber == null)
+                faxNumber = client.clientFaxNumber
 
             textViewAccountDetailShortDescription.text = client.clientExplain
             textViewAccountDetailGeneralNumber.append(ceoPhoneNumber)
