@@ -126,11 +126,32 @@ class AddPhotoMemoFragment : Fragment() {
             }
             val imageView = ImageView(requireContext())
             imageView.layoutParams = imageViewLayoutParams
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                // 이미지를 생성할 수 있는 디코더를 생성한다.
+                val source = ImageDecoder.createSource(mainActivity.contentResolver, it)
+                // Bitmap객체를 생성한다.
+                val bitmap = ImageDecoder.decodeBitmap(source)
+
+                imageView.setImageBitmap(bitmap)
+            } else {
+                // 컨텐츠 프로바이더를 통해 이미지 데이터 정보를 가져온다.
+                val cursor = mainActivity.contentResolver.query(it, null, null, null, null)
+                if(cursor != null){
+                    cursor.moveToNext()
+
+                    // 이미지의 경로를 가져온다.
+                    val idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+                    val source = cursor.getString(idx)
+
+                    // 이미지를 생성하여 보여준다.
+                    val bitmap = BitmapFactory.decodeFile(source)
+                    imageView.setImageBitmap(bitmap)
+                }
+            }
+
             linearLayoutHorizontal.addView(imageView)
-            Glide.with(imageView)
-                .load(it)
-                .into(imageView)
-            imgCnt++
+
         }
         fragmentAddPhotoMemoBinding.addImageListLayout.addView(linearLayoutHorizontal)
         val params = fragmentAddPhotoMemoBinding.photoMemoTextInputLayout.layoutParams as ConstraintLayout.LayoutParams
