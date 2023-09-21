@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayout.Tab
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.adapter.AccountListAdapter
-import com.hifi.redeal.account.repository.model.vm.AccountListViewModel
+import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.FragmentAccountListBinding
 import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
 

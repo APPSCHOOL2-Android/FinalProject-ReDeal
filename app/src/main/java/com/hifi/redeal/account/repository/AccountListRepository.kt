@@ -37,6 +37,10 @@ class AccountListRepository {
             val scheduleRef =
                 db.collection("userData").document(userId).collection("scheduleData")
 
+            if (clientList.isEmpty()) {
+                callback(emptyList(), listOf(0, 0, 0, 0))
+            }
+
             for (client in clientList) {
                 contactRef.whereEqualTo("clientIdx", client.clientIdx).orderBy("contactDate", Query.Direction.DESCENDING).limit(1)
                     .get()

@@ -1,7 +1,11 @@
 package com.hifi.redeal.account.adapter
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +13,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.repository.model.ClientData
-import com.hifi.redeal.account.repository.model.vm.AccountListViewModel
+import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.RowFooterAccountListBinding
 import com.hifi.redeal.databinding.RowItemAccountListBinding
 import java.text.SimpleDateFormat
@@ -112,10 +117,6 @@ class AccountListAdapter(
                 imageViewRowItemAccountListTransactionState.setImageResource(accountStateResIdList[(clientData.clientState?.toInt() ?: 1) - 1] )
                 textViewRowItemAccountListRepresentative.text = clientData.clientManagerName
 
-                buttonRowItemAccountListCall.setOnClickListener {
-                    Toast.makeText(mainActivity, "전화 걸기", Toast.LENGTH_SHORT).show()
-                }
-
                 textViewRowItemAccountListRecentVisitDate.run {
                     if (clientData.recentVisitDate == null) {
                         visibility = View.INVISIBLE
@@ -126,6 +127,29 @@ class AccountListAdapter(
                         val visitTime = dateFormat.format(clientData.recentVisitDate!!.toDate())
 
                         text = "최근 방문 ${mainActivity.intervalBetweenDateText(visitTime)}"
+                    }
+                }
+
+                buttonRowItemAccountListCall.setOnClickListener {
+                    val formattedPhoneNumber = PhoneNumberUtils.formatNumber(clientData.clientManagerPhone, "KR")
+                    if (clientData.clientManagerPhone?.isNotEmpty() == true) {
+                        AlertDialog.Builder(mainActivity)
+                            .setTitle("담당자 연락처 통화")
+                            .setMessage("${formattedPhoneNumber}\n이 번호로 통화하시겠습니까?")
+                            .setPositiveButton("확인") { _, _ ->
+                                mainActivity.startActivity(
+                                    Intent(
+                                        "android.intent.action.CALL",
+                                        Uri.parse("tel:${clientData.clientManagerPhone}")
+                                    )
+                                )
+                            }
+                            .setNegativeButton("취소", null)
+                            .show()
+                    } else {
+                        Snackbar.make(mainActivity.activityMainBinding.root, "등록된 담당자 연락처가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                        }.show()
                     }
                 }
             }
