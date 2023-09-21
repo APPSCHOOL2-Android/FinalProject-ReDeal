@@ -1,12 +1,20 @@
 package com.hifi.redeal.account.repository
 
+import android.util.Log
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.hifi.redeal.BuildConfig
 import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.ContactData
+import com.hifi.redeal.account.repository.model.Coordinate
+import com.hifi.redeal.account.repository.model.FullAddrResponse
 import com.hifi.redeal.account.repository.model.ScheduleData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.net.URLEncoder
 
 class AccountDetailRepository {
     val db = Firebase.firestore
@@ -75,5 +83,25 @@ class AccountDetailRepository {
             .addOnSuccessListener {
                 callback()
             }
+    }
+
+    fun getFullAddrGeocoding(fullAddr: String, callback: (Coordinate?) -> Unit) {
+        val encodedFullAddr = URLEncoder.encode(fullAddr, "UTF-8")
+
+        RetrofitManager.tMapTapiService.tMapFullTextGeocoding(fullAddr = encodedFullAddr, appKey = BuildConfig.TMAP_APP_KEY)
+            .enqueue(object : Callback<FullAddrResponse> {
+                override fun onResponse(
+                    call: Call<FullAddrResponse>,
+                    response: Response<FullAddrResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        callback(response.body()?.coordinateInfo?.coordinate?.get(0))
+                    }
+                }
+
+                override fun onFailure(call: Call<FullAddrResponse>, t: Throwable) {
+                    Log.d("brudenell", "네트워크 통신 실패")
+                }
+            })
     }
 }
