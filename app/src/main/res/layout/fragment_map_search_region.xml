@@ -3,7 +3,81 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".map.view.MapSearchRegionFragment"/>
+    tools:context=".map.view.MapSearchRegionFragment">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/mapSearchRegionAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/mapSearchRegionToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:clickable="true"
+            android:minHeight="?attr/actionBarSize"
+            app:itemIconTint="@color/primary20"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:navigationIconTint="@color/primary20"
+            app:title="지역 검색"
+            app:titleCentered="false"
+            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+            app:titleTextColor="@color/primary20" />
+
+        <View
+            android:id="@+id/mapSearchRegionToolbarDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <SearchView
+        android:id="@+id/mapSearchRegionSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp" >
+
+    </SearchView>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/text50" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapSearchRegionRecyclerViewSiDo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapSearchRegionRecyclerViewSiGunGu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapSearchRegionRecyclerViewDong"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="36dp"
+        android:background="@color/text50" />
+</LinearLayout>
