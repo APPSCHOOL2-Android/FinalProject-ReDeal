@@ -12,7 +12,7 @@ import java.util.Date
 
 class PhotoMemoRepository {
     companion object{
-        fun getPhotoMemoAll(userIdx:Long, clientIdx:Long, callback1: (QuerySnapshot) -> Unit){
+        fun getPhotoMemoAll(userIdx:String, clientIdx:Long, callback1: (QuerySnapshot) -> Unit){
             val db = Firebase.firestore
             val photoMemoRef = db.collection("userData")
                 .document("$userIdx")
@@ -22,7 +22,7 @@ class PhotoMemoRepository {
                 .addOnSuccessListener(callback1)
         }
 
-        fun addPhotoMemo(userIdx:Long, clientIdx:Long, photoMemoContext:String, uriList:MutableList<Uri>, callback:(Task<Void>) -> Unit){
+        fun addPhotoMemo(userIdx:String, clientIdx:Long, photoMemoContext:String, uriList:MutableList<Uri>, callback:(Task<Void>) -> Unit){
             val db = Firebase.firestore
             val photoMemoRef = db.collection("userData")
                 .document("$userIdx")
@@ -60,7 +60,7 @@ class PhotoMemoRepository {
                 }
         }
 
-        fun getPhotoMemoImgUrl(userIdx: Long, filename: String, callback: (String) -> Unit) {
+        fun getPhotoMemoImgUrl(userIdx: String, filename: String, callback: (String) -> Unit) {
             val storage = FirebaseStorage.getInstance()
             val fileRef = storage.reference.child("user${userIdx}/$filename")
             fileRef.downloadUrl.addOnCompleteListener{
@@ -68,7 +68,7 @@ class PhotoMemoRepository {
             }
         }
 
-        private fun uploadImage(userIdx: Long, uploadUri: Uri, fileName:String, callback:(Boolean)-> Unit){
+        private fun uploadImage(userIdx: String, uploadUri: Uri, fileName:String, callback:(Boolean)-> Unit){
             val storage = FirebaseStorage.getInstance()
             val imageRef = storage.reference.child("user${userIdx}/$fileName")
             imageRef.putFile(uploadUri).addOnCompleteListener{ task ->

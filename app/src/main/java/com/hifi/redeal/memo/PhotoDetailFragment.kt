@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentPhotoDetailBinding
@@ -23,7 +25,7 @@ class PhotoDetailFragment : Fragment() {
     private lateinit var gestureDetector: GestureDetector
     var imgSrcArr = arrayListOf<String>()
     var imgOrder = 0
-    var userIdx = 0L
+    private val userIdx = Firebase.auth.uid!!
     lateinit var previousView: View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +35,6 @@ class PhotoDetailFragment : Fragment() {
         mainActivity = activity as MainActivity
         imgOrder = arguments?.getInt("order")!!
         imgSrcArr = arguments?.getStringArrayList("srcArr")!!
-        userIdx = arguments?.getLong("userIdx")!!
 
         PhotoMemoRepository.getPhotoMemoImgUrl(userIdx, imgSrcArr[imgOrder]){url ->
             Glide.with(fragmentPhotoDetailBinding.detailImageView)
