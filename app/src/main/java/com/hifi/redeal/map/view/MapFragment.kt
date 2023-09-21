@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -55,6 +56,7 @@ import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.shape.Polyline
+import kotlinx.coroutines.awaitAll
 import java.text.SimpleDateFormat
 
 
@@ -583,9 +585,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
     private fun moveCamera(position: LatLng) {
         Log.d("주소 확인 3",position.toString())
-        kakaoMapTemp!!.moveCamera(
-            CameraUpdateFactory.newCenterPosition(position)
-        )
+        if(kakaoMapTemp==null){
+            SystemClock.sleep(100)
+        }else{
+            kakaoMapTemp!!.moveCamera(
+                CameraUpdateFactory.newCenterPosition(position)
+            )
+        }
 
     }
 
