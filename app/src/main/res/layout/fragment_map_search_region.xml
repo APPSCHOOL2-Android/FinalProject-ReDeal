@@ -40,7 +40,10 @@
         android:id="@+id/mapSearchRegionSearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" >
+        android:layout_margin="16dp"
+        android:background="@drawable/search_view_round"
+        android:queryHint="지역 명 검색 ex)서초, 강남역, 홍대"
+        android:searchIcon="@drawable/search_24px_primary20">
 
     </SearchView>
 
