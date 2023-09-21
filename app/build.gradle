@@ -20,6 +20,7 @@ android {
         versionName "1.0"
         buildConfigField "String", "KAKAO_REST_API_KEY", "\"${properties['kakao.rest.api.key']}\""
         buildConfigField "String", "REGION_REST_API_KEY", "\"${properties['region.rest.api.key']}\""
+        buildConfigField "String", "TMAP_APP_KEY", "\"${properties['tmap.app.key']}\""
         manifestPlaceholders["KAKAO_API_KEY"] = properties['kakao.key']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -97,5 +98,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
+
+    implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
+    implementation files('libs/tmap-sdk-1.2.aar')
 
 }

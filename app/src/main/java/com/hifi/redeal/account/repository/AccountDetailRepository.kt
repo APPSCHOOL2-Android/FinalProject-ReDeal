@@ -11,8 +11,8 @@ import com.hifi.redeal.account.repository.model.ScheduleData
 class AccountDetailRepository {
     val db = Firebase.firestore
 
-    fun getClient(userId: Long, clientIdx: Long, callback: (ClientData?) -> Unit) {
-        val userRef = db.collection("userData").document("$userId").collection("clientData").document("$clientIdx")
+    fun getClient(userId: String, clientIdx: Long, callback: (ClientData?) -> Unit) {
+        val userRef = db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .get()
             .addOnSuccessListener {
                 val client = it.toObject<ClientData>()
@@ -20,7 +20,7 @@ class AccountDetailRepository {
                 var contactFetch = false
                 var scheduleFetch = false
 
-                db.collection("userData").document("$userId").collection("contactData")
+                db.collection("userData").document(userId).collection("contactData")
                     .whereEqualTo("clientIdx", client?.clientIdx)
                     .orderBy("contactDate", Query.Direction.DESCENDING).limit(1)
                     .get()
@@ -38,7 +38,7 @@ class AccountDetailRepository {
                         it.printStackTrace()
                     }
 
-                db.collection("userData").document("$userId").collection("scheduleData")
+                db.collection("userData").document(userId).collection("scheduleData")
                     .whereEqualTo("clientIdx", client?.clientIdx)
                     .whereEqualTo("isVisitSchedule", true)
                     .whereEqualTo("isScheduleFinish", true)
@@ -64,13 +64,13 @@ class AccountDetailRepository {
             }
     }
 
-    fun updateBookmark(userId: Long, clientIdx: Long, isBookmark: Boolean) {
-        db.collection("userData").document("$userId").collection("clientData").document("$clientIdx")
+    fun updateBookmark(userId: String, clientIdx: Long, isBookmark: Boolean) {
+        db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .update("isBookmark", isBookmark)
     }
 
-    fun deleteClient(userId: Long, clientIdx: Long, callback: () -> Unit) {
-        db.collection("userData").document("$userId").collection("clientData").document("$clientIdx")
+    fun deleteClient(userId: String, clientIdx: Long, callback: () -> Unit) {
+        db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .delete()
             .addOnSuccessListener {
                 callback()

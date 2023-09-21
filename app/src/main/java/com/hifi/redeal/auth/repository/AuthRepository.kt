@@ -1,5 +1,6 @@
 package com.hifi.redeal.auth.repository
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.EmailAuthProvider
@@ -7,113 +8,117 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.hifi.redeal.auth.model.UserDataClass
+import com.google.firebase.firestore.Query
 
 class AuthRepository {
     companion object {
         private val auth = FirebaseAuth.getInstance()
+
+        @SuppressLint("StaticFieldLeak")
         private val firestore = FirebaseFirestore.getInstance()
-        fun loginUser(email: String, password: String, callback1: (AuthResult) -> Unit) {
+
+        fun loginUser(
+            email: String,
+            password: String,
+            successCallback: (AuthResult) -> Unit,
+            errorCallback: (String) -> Unit
+        ) {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("testloginUserRepo", "리포지트리 loginUser 성공")
                     val result = task.result
-                    callback1(result)
+                    successCallback(result)
                 } else {
                     val exception = task.exception
                     if (exception is FirebaseAuthException) {
-                        // Firebase Authentication 예외 처리
-                        when (exception) {
-                            is FirebaseAuthInvalidCredentialsException -> {
-                                Log.d("testRefologinUser", "Invalid credentials: ${exception.localizedMessage}"
-                                )
-                            }
-
-                            is FirebaseAuthInvalidUserException -> {
-                                Log.d("testRefologinUser", "Invalid user: ${exception.localizedMessage}")
-                            }
-                            else -> {
-                                Log.d(
-                                    "testRefologinUser",
-                                    "Authentication failed: ${exception.localizedMessage}"
-                                )
-                            }
+                        val errorMessage = when (exception) {
+                            is FirebaseAuthInvalidCredentialsException -> "잘못된 이메일 또는 비밀번호입니다. 다시 확인해주세요."
+                            is FirebaseAuthInvalidUserException -> "존재하지 않는 사용자입니다. 회원가입을 진행해주세요."
+                            else -> "인증에 실패했습니다. 나중에 다시 시도해주세요."
                         }
+                        errorCallback(errorMessage)
                     } else {
-                        Log.d("testRefologinUser", "Authentication failed: ${exception?.localizedMessage}")
+                        errorCallback("인증에 실패했습니다. 나중에 다시 시도해주세요.")
                     }
                 }
             }
         }
 
-        // 사용자 정보를 Firestore에 추가하고 사용자 UID를 콜백으로 처리
-        fun addUserToFirestore(uid: String, userData: Map<String, Any>, callback: (String?) -> Unit) {
+        fun addUserToFirestore(
+            uid: String,
+            userData: Map<String, Any>,
+            successCallback: (String) -> Unit,
+            errorCallback: (String) -> Unit
+        ) {
             firestore.collection("userData").document(uid).set(userData)
                 .addOnSuccessListener {
-                    // Firestore에 사용자 정보 추가 성공 시 사용자 UID를 반환
-                    callback(uid)
+                    successCallback(uid)
                 }
                 .addOnFailureListener { e ->
-                    // Firestore에 사용자 정보 추가 실패
-                    Log.e("FirestoreError", "Firestore에 사용자 정보 추가 실패: ${e.message}")
-                    callback(null)
+                    val errorMessage = "사용자 정보를 저장하는 중 오류가 발생했습니다. 다시 시도해주세요."
+                    errorCallback(errorMessage)
                 }
         }
 
-        fun registerUser(email: String, password: String, callback1: (AuthResult) -> Unit) {
-            // 이미 가입된 이메일인지 확인
+        fun registerUser(
+            email: String,
+            password: String,
+            successCallback: (AuthResult) -> Unit,
+            errorCallback: (String) -> Unit
+        ) {
             auth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val signInMethods = task.result?.signInMethods
                         if (signInMethods != null && signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
                             val errorMessage = "이미 가입된 이메일 주소입니다. 다른 이메일 주소를 사용하세요."
-                            Log.d("registerUser", errorMessage) // 또는 다른 방법으로 사용자에게 알릴 수 있음
+                            errorCallback(errorMessage)
                         } else {
-                            // 이미 가입되지 않은 이메일 주소인 경우, Firebase Authentication을 통해 사용자 등록
                             auth.createUserWithEmailAndPassword(email, password)
-                                .addOnSuccessListener(callback1)
+                                .addOnSuccessListener(successCallback)
+                                .addOnFailureListener { e ->
+                                    val errorMessage = when (e) {
+                                        is FirebaseAuthInvalidCredentialsException -> "잘못된 이메일 형식이거나 비밀번호가 너무 간단합니다. 다시 확인해주세요."
+                                        is FirebaseAuthInvalidUserException -> "이미 가입된 이메일 주소입니다. 다른 이메일을 사용하세요."
+                                        else -> "회원가입 중 오류가 발생했습니다. 다시 시도해주세요."
+                                    }
+                                    errorCallback(errorMessage)
+                                }
                         }
                     } else {
-                        // 이메일 확인 작업에 실패한 경우 처리
-                        Log.e("registerUser", "Failed to check email: ${task.exception?.message}")
+                        val errorMessage = "이메일 확인 작업 중 오류가 발생했습니다. 다시 시도해주세요."
+                        errorCallback(errorMessage)
                     }
                 }
         }
 
-
-        // 사용자 아이디를 통해 사용자 정보를 가져온다. (FindPw용)
-        fun getUserInfoByUserId(loginUserEmail: String, callback1: (UserDataClass?) -> Unit) {
-            // Firestore에서 사용자 정보를 가져옵니다. (예: 이메일로 검색)
+        fun getNextIdx(callback: (Long) -> Unit, errorCallback: (String) -> Unit) {
             firestore.collection("userData")
-                .whereEqualTo("userEmail", loginUserEmail)
+                .orderBy("userIdx", Query.Direction.DESCENDING)
+                .limit(1)
                 .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val querySnapshot = task.result
-                        if (!querySnapshot.isEmpty) {
-                            // 검색 결과가 비어있지 않으면 첫 번째 문서의 데이터를 가져와서 UserDataClass로 변환합니다.
-                            val documentSnapshot = querySnapshot.documents[0]
-                            val userIdx = documentSnapshot.getLong("userIdx") ?: 0
-                            val userName = documentSnapshot.getString("userName") ?: ""
-                            val userData = UserDataClass(userIdx, loginUserEmail, "", userName)
-                            callback1(userData)
-                        } else {
-                            // 검색 결과가 비어있으면 null을 반환합니다.
-                            callback1(null)
-                        }
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val lastUser = querySnapshot.documents[0]
+                        val currentIdx = lastUser.getLong("userIdx") ?: 0
+                        Log.d("getNextIdx", "가져온 IDX: $currentIdx")
+                        // 다음 인덱스 계산
+                        val nextIdx = currentIdx + 1
+                        // 결과를 반환합니다.
+                        callback(nextIdx)
                     } else {
-                        // 실패 처리
-                        Log.e(
-                            "FirestoreError",
-                            "Firestore에서 사용자 정보 가져오기 실패: ${task.exception?.message}"
-                        )
-                        callback1(null)
+                        // 컬렉션에 아무 문서도 없을 경우 기본값 0을 반환합니다.
+                        callback(0)
                     }
                 }
+                .addOnFailureListener { e ->
+                    // 실패 시 처리
+                    val errorMessage = "인터넷 연결을 확인해주세요"
+                    errorCallback(errorMessage)
+                    Log.e("getNextIdx", errorMessage)
+                }
         }
+
     }
 }
 

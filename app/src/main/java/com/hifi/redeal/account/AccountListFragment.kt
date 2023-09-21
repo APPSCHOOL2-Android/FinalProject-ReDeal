@@ -2,30 +2,23 @@ package com.hifi.redeal.account
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.adapter.AccountListAdapter
-import com.hifi.redeal.account.vm.AccountListViewModel
+import com.hifi.redeal.account.repository.model.vm.AccountListViewModel
 import com.hifi.redeal.databinding.FragmentAccountListBinding
-import com.hifi.redeal.databinding.RowFooterAccountListBinding
-import com.hifi.redeal.databinding.RowItemAccountListBinding
 import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
 
 class AccountListFragment : Fragment() {
@@ -58,6 +51,7 @@ class AccountListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mainActivity = activity as MainActivity
+        mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.VISIBLE
         fragmentAccountListBinding = FragmentAccountListBinding.inflate(layoutInflater)
 
         accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
@@ -114,7 +108,7 @@ class AccountListFragment : Fragment() {
                         }
                         setSelectedTabIndicatorColor(indicatorColor)
                     }
-                    accountListViewModel.getClientList(mainActivity.userId)
+                    accountListViewModel.getClientList(mainActivity.uid)
                 }
             }
 
@@ -138,7 +132,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(0)
                         }
-                        accountListViewModel.getClientList(mainActivity.userId)
+                        accountListViewModel.getClientList(mainActivity.uid)
                     }
                 }
 
@@ -149,7 +143,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(1)
                         }
-                        accountListViewModel.getClientList(mainActivity.userId)
+                        accountListViewModel.getClientList(mainActivity.uid)
                     }
                 }
 
@@ -160,7 +154,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(2)
                         }
-                        accountListViewModel.getClientList(mainActivity.userId)
+                        accountListViewModel.getClientList(mainActivity.uid)
                     }
                 }
 
@@ -171,7 +165,7 @@ class AccountListFragment : Fragment() {
                         } else {
                             selectTabSort(3)
                         }
-                        accountListViewModel.getClientList(mainActivity.userId)
+                        accountListViewModel.getClientList(mainActivity.uid)
                     }
                 }
             }
@@ -220,12 +214,12 @@ class AccountListFragment : Fragment() {
             if (i == tabIdx) {
                 accountListViewModel.tabItemCheckedListSort[i] = true
                 tabItemChipListSort[i].run {
-                    isCloseIconVisible = true
+                    setCloseIconTintResource(R.color.primary20)
                 }
             } else {
                 accountListViewModel.tabItemCheckedListSort[i] = false
                 tabItemChipListSort[i].run {
-                    isCloseIconVisible = false
+                    setCloseIconTintResource(R.color.text50)
                 }
             }
         }

@@ -71,7 +71,7 @@
         android:layout_width="330dp"
         android:layout_height="56dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="40dp"
         android:fontFamily="@font/nanumsquareneo_bold"
         android:text="비밀번호 재설정 메일 전송"

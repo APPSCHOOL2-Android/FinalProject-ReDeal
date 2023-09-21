@@ -7,12 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.Timestamp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.repository.model.ClientData
@@ -41,20 +36,19 @@ class AccountDetailFragment : Fragment() {
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
-        Log.d("ttt", "$clientIdx")
+        accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
 
-        accountDetailRepository.getClient(mainActivity.userId, clientIdx) { client ->
             if (client != null) {
                 accountDetailViewInit(client)
             }
         }
 
         fragmentAccountDetailBinding.run {
-//            mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-//                override fun onMapReady(kakaoMap: KakaoMap) {
+            mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+                override fun onMapReady(kakaoMap: KakaoMap) {
 //                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
-//                }
-//            })
+                }
+            })
 //            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
@@ -107,7 +101,7 @@ class AccountDetailFragment : Fragment() {
                                 .setTitle("거래처 삭제")
                                 .setMessage("거래처 정보를 삭제하시겠습니까?")
                                 .setPositiveButton("확인") { _, _ ->
-                                    accountDetailRepository.deleteClient(mainActivity.userId, clientIdx) {
+                                    accountDetailRepository.deleteClient(mainActivity.uid, clientIdx) {
                                         Snackbar.make(root, "거래처가 삭제되었습니다", Snackbar.LENGTH_SHORT).show()
                                         mainActivity.removeFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT)
 //                                        findNavController().popBackStack()
@@ -164,7 +158,7 @@ class AccountDetailFragment : Fragment() {
                     imageViewAccountDetailFavorite.setImageResource(R.drawable.star_fill_24px)
                     client.isBookmark = true
                 }
-                accountDetailRepository.updateBookmark(mainActivity.userId, clientIdx, client.isBookmark ?: false)
+                accountDetailRepository.updateBookmark(mainActivity.uid, clientIdx, client.isBookmark ?: false)
             }
 
             textViewAccountDetailShortDescription.text = client.clientExplain
