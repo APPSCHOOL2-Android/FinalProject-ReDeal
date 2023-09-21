@@ -34,6 +34,9 @@ class AuthFindPwFragment : Fragment() {
 
             buttonFindPwComplete.setOnClickListener {
                 resetPassword()
+                // 키보드 내림
+                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             }
 
             // 터치 시 키보드 숨기기 처리
