@@ -108,10 +108,16 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 Log.d("하단", it.toString())
 
                 fragmentMapBinding.mapBottomSheet.run {
-                    mapBottomSheetTextViewEmpty.visibility = View.GONE
-                    mapBottomSheetRecyclerView.run {
-                        visibility = View.VISIBLE
-                        adapter?.notifyDataSetChanged()
+                    if (clientDataListAll.value!!.isEmpty() || clientDataListAll.value==null ){
+                        mapBottomSheetTextViewEmpty.visibility = View.VISIBLE
+                        mapBottomSheetRecyclerView.visibility = View.GONE
+                    }
+                    else{
+                        mapBottomSheetTextViewEmpty.visibility = View.GONE
+                        mapBottomSheetRecyclerView.run {
+                            visibility = View.VISIBLE
+                            adapter?.notifyDataSetChanged()
+                        }
                     }
                 }
             }
