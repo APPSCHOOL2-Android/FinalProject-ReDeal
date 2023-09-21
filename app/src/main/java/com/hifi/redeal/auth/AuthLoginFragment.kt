@@ -13,7 +13,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.auth.vm.AuthViewModel
-import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
 
 class AuthLoginFragment : Fragment() {
@@ -80,7 +79,6 @@ class AuthLoginFragment : Fragment() {
         }
     }
 
-
     // 자동 로그인 상태를 확인하고 시도하는 함수
     private fun checkAutoLoginStateAndAttempt() {
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -97,11 +95,11 @@ class AuthLoginFragment : Fragment() {
         // SharedPreferences에서 UID 가져오기
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedUid = sharedPreferences.getString("user_uid", null)
-        val currentUser = auth.currentUser
 
         // UID가 저장되어 있다면 자동 로그인 시도
         if (savedUid != null) {
             Log.d("authlogin", "저장된 UID: $savedUid")
+            val currentUser = auth.currentUser
 
             if (currentUser != null) {
                 Log.d("authlogin", "사용자 로그인 상태: ${currentUser.email}")
@@ -117,7 +115,6 @@ class AuthLoginFragment : Fragment() {
         }
     }
 
-
     // 자동 로그인 상태를 저장하는 함수
     private fun saveAutoLoginState(isChecked: Boolean) {
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -125,7 +122,6 @@ class AuthLoginFragment : Fragment() {
         editor.putBoolean("auto_login", isChecked)
         editor.apply()
     }
-
 
     // 로그인 버튼 클릭 처리 함수
     private fun handleLoginButtonClick() {
@@ -144,7 +140,7 @@ class AuthLoginFragment : Fragment() {
             }
         } else {
             // 이메일과 비밀번호가 입력되었다면 로그인 처리 함수 호출
-            authViewModel.loginUser(email, password)
+            authViewModel.loginUser(email, password, fragmentAuthLoginBinding.root)
             // 포커스와 키보드 클리어
             fragmentAuthLoginBinding.textInputEditTextLoginUserId.clearFocus()
             fragmentAuthLoginBinding.textInputEditTextLoginUserPw.clearFocus()

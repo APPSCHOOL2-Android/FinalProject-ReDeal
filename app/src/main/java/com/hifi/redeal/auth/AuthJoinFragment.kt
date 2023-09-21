@@ -1,10 +1,13 @@
 package com.hifi.redeal.auth
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -12,8 +15,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.FragmentAuthJoinBinding
 import com.hifi.redeal.auth.vm.AuthViewModel
+import com.hifi.redeal.databinding.FragmentAuthJoinBinding
 
 class AuthJoinFragment : Fragment() {
 
@@ -25,6 +28,8 @@ class AuthJoinFragment : Fragment() {
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}",
         "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "/", "?"
     )
+    private val PASSWORD_POLICY =
+        "^(?=.*[0-9])(?=.*[!@#\$%^&*()\\-_+\\=\\[\\]{}|\\\\:;\"'<>,./?])(?=.*[a-z]).{8,}$".toRegex()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,12 +57,15 @@ class AuthJoinFragment : Fragment() {
                 warningJoinPasswordCheck.visibility = View.GONE
                 warningJoinNameFormat.visibility = View.GONE
                 warningJoinEmailAlready.visibility = View.GONE
+                warningJoinPasswordContinuity.visibility = View.GONE
 
                 // 예외처리
                 val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                val isPasswordValid = password.length >= 8
+                val isPasswordValid = password.length >= 8 && PASSWORD_POLICY.matches(password)
                 val isPasswordMatch = password == passwordCheck
-                val isNameValid = name.length in 2..12 && !INVALID_NICKNAME_CHARACTERS.any { name.contains(it) }
+                val isNameValid =
+                    name.length in 2..12 && !INVALID_NICKNAME_CHARACTERS.any { name.contains(it) }
+                val isContinuitycheck = containsConsecutiveOrSequentialNumbers(password)
 
                 // 이메일 패턴 유효 검사
                 if (!isEmailValid) {
@@ -88,8 +96,16 @@ class AuthJoinFragment : Fragment() {
                     warningJoinNameFormat.visibility = View.GONE
                 }
 
+                if (isContinuitycheck) {
+                    warningJoinPasswordContinuity.visibility = View.VISIBLE
+                    return@setOnClickListener
+                } else {
+                    warningJoinPasswordContinuity.visibility = View.GONE
+                }
+
+
                 // Firebase Authentication을 사용하여 사용자 등록
-                val registrationLiveData = authViewModel.registerUser(email, password, name)
+                val registrationLiveData = authViewModel.registerUser(email, password, name, fragmentAuthJoinBinding.root)
 
                 registrationLiveData.observe(viewLifecycleOwner, Observer { authResult ->
                     val user = authResult.user
@@ -104,9 +120,12 @@ class AuthJoinFragment : Fragment() {
                 })
             }
         }
+
+        // 터치 시 키보드 숨기기 처리
+        hideKeyboardOnTouch(fragmentAuthJoinBinding.root)
+
         return fragmentAuthJoinBinding.root
     }
-
 
     // 가입 성공 다이얼로그를 보여주는 함수
     private fun showRegistrationSuccessDialog() {
@@ -131,4 +150,32 @@ class AuthJoinFragment : Fragment() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
+
+    // 연속된 문자나 숫자 검사 함수 추가
+    private fun containsConsecutiveOrSequentialNumbers(password: String): Boolean {
+        var sameNumberCount = 1 // 동일한 숫자의 개수를 추적
+
+        for (i in 0 until password.length - 1) {
+            if (password[i] == password[i + 1]) {
+                sameNumberCount++
+                if (sameNumberCount >= 2) {
+                    return true // 2개 이상의 동일한 숫자 패턴을 검사
+                }
+            } else {
+                sameNumberCount = 1 // 동일한 숫자가 아니라면 초기화
+            }
+        }
+        return false
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun hideKeyboardOnTouch(view: View) {
+        view.setOnTouchListener { _, _ ->
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            false
+        }
+    }
+
 }
