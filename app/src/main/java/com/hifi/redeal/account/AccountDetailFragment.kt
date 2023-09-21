@@ -13,8 +13,8 @@ import com.hifi.redeal.R
 import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.AccountDetailRepository
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
+//import com.kakao.vectormap.KakaoMap
+//import com.kakao.vectormap.KakaoMapReadyCallback
 import java.text.SimpleDateFormat
 
 class AccountDetailFragment : Fragment() {
@@ -44,11 +44,11 @@ class AccountDetailFragment : Fragment() {
         }
 
         fragmentAccountDetailBinding.run {
-            mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {
-//                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
-                }
-            })
+//            mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+//                override fun onMapReady(kakaoMap: KakaoMap) {
+////                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
+//                }
+//            })
 //            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {

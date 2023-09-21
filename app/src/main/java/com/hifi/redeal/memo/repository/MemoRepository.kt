@@ -21,7 +21,7 @@ class MemoRepository {
             val db = Firebase.firestore
             val photoMemoRef = db.collection("userData")
                 .document(userIdx)
-                .collection("ClientData")
+                .collection("clientData")
                 .document("$clientIdx")
             photoMemoRef.get()
                 .addOnSuccessListener(callback1)
