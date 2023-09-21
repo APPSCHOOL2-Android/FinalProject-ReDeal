@@ -11,8 +11,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
@@ -65,9 +67,9 @@ class TransactionFragment : Fragment() {
         transactionVM.run{
 
             clientSimpleDataListVM.observe(viewLifecycleOwner){list ->
-                tempClientSimpleDataList.clear()
+                clientSimpleDataList.clear()
                 list.forEach {
-                    tempClientSimpleDataList.add(it)
+                    clientSimpleDataList.add(it)
                 }
             }
 
@@ -286,14 +288,33 @@ class TransactionFragment : Fragment() {
                     val selDialog = selBulider.create()
                     val transactionSelectClientBinding = TransactionSelectClientBinding.inflate(layoutInflater)
 
-                    transactionSelectClientBinding.run{
-                        searchClientEditText.setOnEditorActionListener { v, actionId, event ->
+                    clientSimpleDataList.clear()
+                    transactionVM.clientSimpleDataListVM.value?.forEach {
+                        clientSimpleDataList.add(it)
+                    }
 
+                    transactionSelectClientBinding.run{
+                        searchClientResultRecyclerView.run{
+                            adapter = SearchClientAdapter()
+                            layoutManager = LinearLayoutManager(context)
+                            addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
+                        }
+                        searchClientEditText.setOnEditorActionListener { v, actionId, event ->
+                            clientSimpleDataList.clear()
+                            transactionVM.clientSimpleDataListVM.value?.forEach {
+                                if(it.clientName.contains(v.editableText) || it.clientManagerName.contains(v.editableText)){
+                                    clientSimpleDataList.add(it)
+                                }
+                                // 어댑터 갱신
+                                searchClientResultRecyclerView.adapter?.notifyDataSetChanged()
+                            }
                             true
                         }
                     }
 
-                    //clientSimpleDataList
+                    selDialog.setView(transactionSelectClientBinding.root)
+                    selDialog.show()
+
                 }
             }
         }
@@ -351,16 +372,29 @@ class TransactionFragment : Fragment() {
         inner class SearchClientViewHolder(transactionSelectClientItemBinding: TransactionSelectClientItemBinding):
             ViewHolder(transactionSelectClientItemBinding.root){
 
-            val selectScheduleClientName = transactionSelectClientItemBinding.selectTransactionClientName
-            val selectScheduleClinetState = transactionSelectClientItemBinding.selectTransactionClinetState
+            val selectTransactionClientName = transactionSelectClientItemBinding.selectTransactionClientName
+            val selectTransactionClinetState = transactionSelectClientItemBinding.selectTransactionClinetState
             val selectClientBtn = transactionSelectClientItemBinding.selectClientBtn
-            val selectScheduleClientManagerName = transactionSelectClientItemBinding.selectTransactionClientManagerName
-            val selectScheduleClientBookmarkView = transactionSelectClientItemBinding.selectTransactionClientBookmarkView
+            val selectTransactionClientManagerName = transactionSelectClientItemBinding.selectTransactionClientManagerName
+            val selectTransactionClientBookmarkView = transactionSelectClientItemBinding.selectTransactionClientBookmarkView
+
+            init{
+                selectClientBtn.setOnClickListener {
+                    selectClientIdx = clientSimpleDataList[bindingAdapterPosition].clientIdx
+
+                }
+            }
+
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchClientViewHolder {
             val transactionSelectClientItemBinding = TransactionSelectClientItemBinding.inflate(layoutInflater)
             val viewHolder = SearchClientViewHolder(transactionSelectClientItemBinding)
+
+            transactionSelectClientItemBinding.root.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
 
             return viewHolder
         }
@@ -369,7 +403,26 @@ class TransactionFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: SearchClientViewHolder, position: Int) {
-            TODO("Not yet implemented")
+            when(clientSimpleDataList[position].clientState){
+                1L -> {
+                    holder.selectTransactionClinetState.setBackgroundResource(R.drawable.client_state_circle_trading)
+                }
+                2L -> {
+                    holder.selectTransactionClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
+                }
+                3L -> {
+                    holder.selectTransactionClinetState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
+                }
+                else -> return
+            }
+            if(clientSimpleDataList[position].isBookmark){
+                holder.selectTransactionClientBookmarkView.visibility = View.VISIBLE
+                holder.selectTransactionClientBookmarkView.setBackgroundResource(R.drawable.star_fill_24px)
+            } else {
+                holder.selectTransactionClientBookmarkView.visibility = View.GONE
+            }
+            holder.selectTransactionClientName.text = clientSimpleDataList[position].clientName
+            holder.selectTransactionClientManagerName.text = clientSimpleDataList[position].clientManagerName
         }
 
     }
