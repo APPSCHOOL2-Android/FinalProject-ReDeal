@@ -2,6 +2,7 @@ package com.hifi.redeal.account
 
 import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -74,9 +75,11 @@ class AccountEditFragment : Fragment(){
                 }
             }
 
-            textEditTextAccountEditDirectNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-            textEditTextAccountEditFaxNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-            textEditTextAccountEditGeneralNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+            val phoneNumberFormattingTextWatcher = PhoneNumberFormattingTextWatcher()
+
+            textEditTextAccountEditDirectNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
+            textEditTextAccountEditFaxNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
+            textEditTextAccountEditGeneralNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
 
             buttonAccountEditAddressSearch.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)

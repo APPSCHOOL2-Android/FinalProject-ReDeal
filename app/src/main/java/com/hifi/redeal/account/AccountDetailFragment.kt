@@ -2,6 +2,7 @@ package com.hifi.redeal.account
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
@@ -19,6 +20,17 @@ import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraPosition
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.mapwidget.InfoWindowOptions
+import com.kakao.vectormap.mapwidget.component.GuiImage
+import com.kakao.vectormap.mapwidget.component.GuiLayout
+import com.kakao.vectormap.mapwidget.component.GuiText
+import com.kakao.vectormap.mapwidget.component.Orientation
 import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 
@@ -27,6 +39,8 @@ class AccountDetailFragment : Fragment() {
 
     lateinit var mainActivity: MainActivity
     lateinit var fragmentAccountDetailBinding: FragmentAccountDetailBinding
+
+    lateinit var kakaoMap: KakaoMap
 
     val accountDetailRepository = AccountDetailRepository()
 
@@ -43,17 +57,18 @@ class AccountDetailFragment : Fragment() {
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
         accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
-//            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-//                override fun onMapReady(kakaoMap: KakaoMap) {
-//                    if (client != null) {
-//                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
-//                            if (it != null) {
-//                                mapInit(it)
-//                            }
-//                        }
-//                    }
-//                }
-//            })
+            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+                override fun onMapReady(map: KakaoMap) {
+                    kakaoMap = map
+                    if (client != null) {
+                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
+                            if (it != null) {
+                                mapInit(it, client.clientName ?: "")
+                            }
+                        }
+                    }
+                }
+            })
 
             if (client != null) {
                 accountDetailViewInit(client)
@@ -97,8 +112,36 @@ class AccountDetailFragment : Fragment() {
         return fragmentAccountDetailBinding.root
     }
 
-    fun mapInit(coordinate: Coordinate) {
+    fun mapInit(coordinate: Coordinate, clientName: String) {
         fragmentAccountDetailBinding.run {
+            val latLng = LatLng.from(coordinate.newLat.toDouble(), coordinate.newLon.toDouble())
+
+            val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng, 16)
+            kakaoMap.moveCamera(cameraUpdate)
+
+//            val labelOptions = LabelOptions.from(latLng).setStyles(R.drawable.location_on_primary10)
+//            val labelLayer = kakaoMap.labelManager?.layer
+//            labelLayer?.addLabel(labelOptions)
+
+            val body = GuiLayout(Orientation.Horizontal)
+            body.setPadding(0, -20, 0, -20)
+
+            val bgImage = GuiImage(R.drawable.window_info_bg, true)
+            bgImage.setFixedArea(39, 39, 39, 39)
+            body.setBackground(bgImage)
+
+            val text = GuiText(clientName)
+            text.textSize = 30
+            text.textColor = Color.DKGRAY
+            body.addView(text)
+
+            val options = InfoWindowOptions.from(latLng)
+            options.setBody(body)
+            options.setBodyOffset(0f, -41f)
+            val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
+
+            kakaoMap.mapWidgetManager?.infoWindowLayer?.addInfoWindow(infoWindowOptions)
+
             buttonAccountDetailDirectionsCar.setOnClickListener {
                 AlertDialog.Builder(mainActivity)
                     .setTitle("길 안내")
