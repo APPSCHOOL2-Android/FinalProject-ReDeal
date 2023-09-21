@@ -92,6 +92,28 @@ class MapSearchRegionFragment : Fragment() {
 
             }
 
+            mapSearchRegionBtnToMap.setOnClickListener {
+
+                MapRepository.searchSiDo {
+                    var regionResult = ""
+                    if(mapViewModel.currentSiDoPosition.value!=-1){
+                        regionResult += it!!.sortedBy { it.admCode }.get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
+                    }
+
+                    if(mapViewModel.currentSiGunGuPosition.value!=-1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()){
+                        regionResult += mapViewModel.currentSiGunGuList.value!!.get(mapViewModel.currentSiGunGuPosition.value!!).lowestAdmCodeNm
+
+                    }
+                    if(mapViewModel.currentDongPosition.value!=-1 && mapViewModel.currentDongList.value!!.isNotEmpty()){
+                        regionResult += mapViewModel.currentDongList.value!!.get(mapViewModel.currentDongPosition.value!!).lowestAdmCodeNm
+
+                    }
+
+                    setCurrentAddress(regionResult)
+                }
+
+            }
+
         }
 
 
@@ -101,6 +123,7 @@ class MapSearchRegionFragment : Fragment() {
 
 
     fun setCurrentAddress(addr: String) {
+        Log.d("지역3",addr)
         MapRepository.searchAddr(addr!!) { list ->
             if (list?.isNotEmpty() == true && list != null) {
                 val lat = list[0].y.toDouble()
@@ -108,6 +131,11 @@ class MapSearchRegionFragment : Fragment() {
                 Log.d("주소 확인1", lat.toString())
                 Log.d("주소 확인2", long.toString())
                 clientViewModel.currentAddress.value = LatLng.from(lat,long)
+                mapViewModel.run {
+                    currentSiDoPosition.value=-1
+                    currentSiGunGuList.value= mutableListOf()
+                    currentDongList.value= mutableListOf()
+                }
                 mainActivity.removeFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT)
             }else{
                 showDialog("주소 오류","지역 명으로 입력해주세요.",mainActivity)
