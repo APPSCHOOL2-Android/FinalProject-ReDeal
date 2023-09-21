@@ -180,4 +180,40 @@ class AccountListRepository {
                 it.printStackTrace()
             }
     }
+
+    fun getSearchResult(userId: String, word: String, callback: (List<ClientData>) -> Unit) {
+        db.collection("userData").document(userId).collection("clientData")
+            .get()
+            .addOnSuccessListener { docs ->
+                val clientList = docs.map {
+                    it.toObject<ClientData>()
+                }.filter {
+                    it.clientName?.contains(word, true) == true || it.clientManagerName?.contains(word, true) == true
+                }
+
+                callback(clientList)
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
+    }
+
+    fun getRecentVisitDate(userId: String, clientIdx: Long?, callback: (ScheduleData) -> Unit) {
+        db.collection("userData").document(userId).collection("scheduleData")
+            .whereEqualTo("clientIdx", clientIdx)
+            .whereEqualTo("isVisitSchedule", true)
+            .whereEqualTo("isScheduleFinish", true)
+            .orderBy("scheduleFinishTime", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    val scheduleData = doc.toObject<ScheduleData>()
+                    callback(scheduleData)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
+    }
 }

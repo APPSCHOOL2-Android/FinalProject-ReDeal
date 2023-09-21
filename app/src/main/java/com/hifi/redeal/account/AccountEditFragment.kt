@@ -1,5 +1,7 @@
 package com.hifi.redeal.account
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.Log
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResultListener
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
@@ -80,6 +83,28 @@ class AccountEditFragment : Fragment(){
             textEditTextAccountEditDirectNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
             textEditTextAccountEditFaxNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
             textEditTextAccountEditGeneralNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
+
+//            textEditTextAccountEditZipCode.setOnFocusChangeListener { v, hasFocus ->
+//                if (hasFocus) {
+//                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(R.color.primary20, null)
+//                } else if (textEditTextAccountEditZipCode.text.toString().isEmpty()) {
+//                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(android.R.color.transparent, null)
+//                } else {
+//                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(R.color.text30, null)
+//                }
+//            }
+
+            textEditTextAccountEditZipCode.addTextChangedListener {
+                if (textEditTextAccountEditZipCode.text.toString().isEmpty()) {
+                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(android.R.color.transparent, null)
+                } else {
+                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(R.color.text30, null)
+                }
+            }
+
+            textEditTextAccountEditZipCode.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
+            }
 
             buttonAccountEditAddressSearch.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
