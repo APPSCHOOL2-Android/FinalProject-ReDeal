@@ -35,10 +35,10 @@ import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
 import com.hifi.redeal.memo.AddPhotoMemoFragment
 import com.hifi.redeal.memo.AddRecordMemoFragment
+import com.hifi.redeal.memo.MemoFragment
 import com.hifi.redeal.memo.PhotoDetailFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
-import com.hifi.redeal.memo.SelectFragment
 import com.hifi.redeal.schedule.EditScheduleFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 import com.hifi.redeal.schedule.ScheduleManageFragment
@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity() {
         val ADDRESS_SEARCH_FRAGMENT = "AddressSearchFragment"
         val PHOTO_MEMO_FRAGMENT = "PhotoMemoFragment"
         val RECORD_MEMO_FRAGMENT = "RecrodMemoFragment"
+        val MEMO_FRAGMENT = "MemoFragment"
         val ADD_PHOTO_MEMO_FRAGMENT = "AddPhotoMemoFragment"
         val ADD_RECORD_MEMO_FRAGMENT = "AddRecordMemoFragment"
-        val SELECT_FRAGMENT = "SelectFragment"
         val PHOTO_DETAIL_FRAGMENT = "PhotoDetailFragment"
         val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
         val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
@@ -171,8 +171,8 @@ class MainActivity : AppCompatActivity() {
                     R.id.transactionFragment -> {
                         replaceFragment(TRANSACTION_FRAGMENT, true)
                     }
-                    R.id.selectFragment -> {
-                        replaceFragment(SELECT_FRAGMENT, true)
+                    R.id.memoFragment -> {
+                        replaceFragment(MEMO_FRAGMENT, true)
                     }
                 }
                 true
@@ -187,7 +187,8 @@ class MainActivity : AppCompatActivity() {
                             || fragment is ScheduleManageFragment
                             || fragment is UnvisitedScheduleFragment
                             || fragment is VisitedScheduleFragment
-                            || fragment is MapFragment)
+                            || fragment is MapFragment
+                            || fragment is MemoFragment)
 
                     when (fragment) {
                         is AccountListFragment -> {
@@ -226,10 +227,10 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        is SelectFragment -> {
+                        is MemoFragment -> {
                             activityMainBinding.bottomNavigationViewMain.run {
                                 menu.forEach {
-                                    if (it.itemId == R.id.selectFragment) {
+                                    if (it.itemId == R.id.memoFragment) {
                                         it.isChecked = true
                                     }
                                 }
@@ -315,7 +316,7 @@ class MainActivity : AppCompatActivity() {
             ACCOUNT_DETAIL_FRAGMENT -> AccountDetailFragment()
             ACCOUNT_EDIT_FRAGMENT -> AccountEditFragment()
             ADDRESS_SEARCH_FRAGMENT -> AddressSearchFragment()
-            SELECT_FRAGMENT -> SelectFragment()
+            MEMO_FRAGMENT -> MemoFragment()
             PHOTO_MEMO_FRAGMENT -> PhotoMemoFragment()
             ADD_PHOTO_MEMO_FRAGMENT -> AddPhotoMemoFragment()
             PHOTO_DETAIL_FRAGMENT -> PhotoDetailFragment()
