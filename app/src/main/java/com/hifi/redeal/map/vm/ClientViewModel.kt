@@ -45,10 +45,16 @@ class ClientViewModel : ViewModel() {
 
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
+                val clientData = snapshot.toObject(ClientDataClass::class.java)
                 Log.d("검색 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
-                if (snapshot.getString("clientName")!!.contains(keyword)) {
-                    var item = snapshot.toObject(ClientDataClass::class.java)
-                    tempList.add(item!!)
+                if (clientData!=null) {
+                    val clientName = clientData.clientName
+                    val managerName = clientData.clientManagerName
+
+                    // "clientName" 또는 "managerName" 중 하나라도 키워드를 포함하면 tempList에 추가
+                    if (clientName.contains(keyword) || managerName.contains(keyword)) {
+                        tempList.add(clientData)
+                    }
                     Log.d("검색 테스트", tempList.toString())
                 }
             }
