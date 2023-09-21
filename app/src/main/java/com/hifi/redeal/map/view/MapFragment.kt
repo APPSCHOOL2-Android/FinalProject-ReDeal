@@ -45,6 +45,7 @@ import com.hifi.redeal.databinding.RowMapClientListBinding
 import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.model.ScheduleDataClass
 import com.hifi.redeal.map.repository.ClientRepository
+import com.hifi.redeal.map.repository.MapRepository
 import com.hifi.redeal.map.vm.ClientViewModel
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
@@ -506,7 +507,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     }
 
     fun setClientAddress(addr: String) {
-        ClientRepository.searchAddr(addr!!) {list ->
+        MapRepository.searchAddr(addr!!) { list ->
             if (list?.isNotEmpty() == true && list != null) {
                 val lat = list[0].y.toDouble()
                 val long = list[0].x.toDouble()

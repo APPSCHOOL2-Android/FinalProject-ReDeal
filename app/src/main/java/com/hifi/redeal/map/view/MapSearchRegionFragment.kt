@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentMapSearchRegionBinding
-import com.hifi.redeal.map.repository.ClientRepository
+import com.hifi.redeal.map.repository.MapRepository
 
 class MapSearchRegionFragment : Fragment() {
 
@@ -21,21 +21,24 @@ class MapSearchRegionFragment : Fragment() {
         fragmentMapSearchRegionBinding = FragmentMapSearchRegionBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        fragmentMapSearchRegionBinding.run {
+
+        }
         val TAG = "지역"
 
-        ClientRepository.searchSiDo {
+        MapRepository.searchSiDo {
             Log.d(TAG+"1",it.toString())
         }
 
-        ClientRepository.searchSiGunGu(45){
+        MapRepository.searchSiGunGu(45){
             Log.d(TAG,it.toString())
         }
 
-        ClientRepository.searchDong(45790){
+        MapRepository.searchDong(45790){
             Log.d(TAG,it.toString())
         }
 
-        ClientRepository.searchRee(45790420){
+        MapRepository.searchRee(45790420){
             Log.d(TAG,it.toString())
         }
 
