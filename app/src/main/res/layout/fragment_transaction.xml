@@ -193,72 +193,52 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="416dp"
+        android:layout_width="0dp"
         android:layout_height="74dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/divider2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
-            android:layout_width="412dp"
-            android:layout_height="73dp"
-            android:layout_gravity="bottom"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/primary95"
-            app:backgroundTint="@color/primary95"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:menu="@menu/menu_transaction_bottom_app_bar"
-            tools:ignore="BottomAppBar" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/ImgBtnAddDeposit"
-            android:layout_width="204dp"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/primary95"
-            android:src="@drawable/money_24px"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/bottomAppBar" />
+            <TextView
+                android:id="@+id/ImgBtnAddDeposit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/money_24px"
+                android:fontFamily="@font/nanumsquareneo_bold"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="입금 추가"
+                android:textColor="@color/primary10"
+                android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="74dp"
-            android:layout_marginTop="42dp"
-            android:fontFamily="@font/nanumsquareneo_bold"
-            android:gravity="center"
-            android:text="입금 추가"
-            android:textColor="@color/primary10"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@+id/bottomAppBar"
-            app:layout_constraintTop_toTopOf="@+id/ImgBtnAddDeposit" />
+            <TextView
+                android:id="@+id/ImgBtnAddTransaction"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/swap_horiz_24px"
+                android:fontFamily="@font/nanumsquareneo_bold"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="거래 추가"
+                android:textColor="@color/primary10"
+                android:textSize="14sp" />
 
-        <ImageButton
-            android:id="@+id/ImgBtnAddTransaction"
-            android:layout_width="204dp"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/primary95"
-            android:src="@drawable/swap_horiz_24px"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/bottomAppBar" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="42dp"
-            android:layout_marginEnd="74dp"
-            android:fontFamily="@font/nanumsquareneo_bold"
-            android:gravity="center"
-            android:text="거래 추가"
-            android:textColor="@color/primary10"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ImgBtnAddTransaction" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
