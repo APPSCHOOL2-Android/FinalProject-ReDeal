@@ -40,6 +40,14 @@ class TransactionFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var transactionVM: TransactionViewModel
     var clientSimpleDataList = mutableListOf<ClientSimpleData>()
+
+    lateinit var selBulider : AlertDialog.Builder
+    lateinit var selDialog : AlertDialog
+
+    lateinit var dialogAddDepositBinding :DialogAddDepositBinding
+    lateinit var addBuilder : AlertDialog.Builder
+    lateinit var addDialog : AlertDialog
+
     var clientIdx : Long? = null
     var selectClientIdx: Long? = null
     val uid = Firebase.auth.uid!!
@@ -53,6 +61,13 @@ class TransactionFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         clientIdx = arguments?.getLong("clientIdx")
+
+        selBulider = AlertDialog.Builder(requireContext())
+        selDialog = selBulider.create()
+
+        dialogAddDepositBinding = DialogAddDepositBinding.inflate(layoutInflater)
+        addBuilder = AlertDialog.Builder(requireContext())
+        addDialog = addBuilder.create()
 
         setViewModel()
         setClickEvent()
@@ -223,9 +238,9 @@ class TransactionFragment : Fragment() {
                 }
             }
 
-            transactionVM.getAllTransactionData()
-            transactionVM.getNextTransactionIdx()
-            transactionVM.getUserAllClient()
+            transactionVM.getAllTransactionData(uid)
+            transactionVM.getNextTransactionIdx(uid)
+            transactionVM.getUserAllClient(uid)
         }
 
     }
@@ -246,11 +261,10 @@ class TransactionFragment : Fragment() {
 
         // 입금 추가 다이얼 로그 생성 함수
     private fun showDepositDialog() {
-        val builder = AlertDialog.Builder(requireContext())
 
-        val dialogAddDepositBinding = DialogAddDepositBinding.inflate(layoutInflater)
-
-        val dialog = builder.create()
+        dialogAddDepositBinding = DialogAddDepositBinding.inflate(layoutInflater)
+        addBuilder = AlertDialog.Builder(requireContext())
+        addDialog = addBuilder.create()
 
         dialogAddDepositBinding.run{
             if(clientIdx != null){ // 거래처 화면에서 왔을 경우
@@ -269,10 +283,10 @@ class TransactionFragment : Fragment() {
                     )
                     TransactionRepository.setTransactionData(uid,newTransactionData){
                         TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
-                            dialog.dismiss()
+                            addDialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "입금 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                            transactionVM.getAllTransactionData()
-                            transactionVM.getNextTransactionIdx()
+                            transactionVM.getAllTransactionData(uid)
+                            transactionVM.getNextTransactionIdx(uid)
                         }
                     }
                 }
@@ -281,11 +295,29 @@ class TransactionFragment : Fragment() {
                     if(selectClientIdx == null){
                         addSelectClientDepositBtn.requestFocus()
                         addSelectClientDepositBtn.callOnClick()
+                    } else {
+                        val newTransactionData = TransactionData(
+                            selectClientIdx!!,
+                            Timestamp.now(),
+                            true,
+                            editTextNumber.editableText.toString(),
+                            transactionVM.nextTransactionIdx,
+                            0L,
+                            "0",
+                            ""
+                        )
+                        TransactionRepository.setTransactionData(uid,newTransactionData){
+                            TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
+                                addDialog.dismiss()
+                                Snackbar.make(fragmentTransactionBinding.root, "입금 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                                transactionVM.getAllTransactionData(uid)
+                                transactionVM.getNextTransactionIdx(uid)
+                            }
+                        }
                     }
                 }
                 addSelectClientDepositBtn.setOnClickListener {
-                    val selBulider = AlertDialog.Builder(requireContext())
-                    val selDialog = selBulider.create()
+
                     val transactionSelectClientBinding = TransactionSelectClientBinding.inflate(layoutInflater)
 
                     clientSimpleDataList.clear()
@@ -299,6 +331,7 @@ class TransactionFragment : Fragment() {
                             layoutManager = LinearLayoutManager(context)
                             addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
                         }
+
                         searchClientEditText.setOnEditorActionListener { v, actionId, event ->
                             clientSimpleDataList.clear()
                             transactionVM.clientSimpleDataListVM.value?.forEach {
@@ -318,8 +351,8 @@ class TransactionFragment : Fragment() {
                 }
             }
         }
-        dialog.setView(dialogAddDepositBinding.root)
-        dialog.show()
+        addDialog.setView(dialogAddDepositBinding.root)
+        addDialog.show()
     }
 
     private fun showTransactionDialog() {
@@ -348,8 +381,8 @@ class TransactionFragment : Fragment() {
                         TransactionRepository.setClientTransactionDataList(uid, newTransactionData){
                             dialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "거래 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                            transactionVM.getAllTransactionData()
-                            transactionVM.getNextTransactionIdx()
+                            transactionVM.getAllTransactionData(uid)
+                            transactionVM.getNextTransactionIdx(uid)
                         }
                     }
                 }
@@ -377,6 +410,14 @@ class TransactionFragment : Fragment() {
             val selectTransactionClientManagerName = transactionSelectClientItemBinding.selectTransactionClientManagerName
             val selectTransactionClientBookmarkView = transactionSelectClientItemBinding.selectTransactionClientBookmarkView
 
+            init{
+                transactionSelectClientItemBinding.root.setOnClickListener {
+                    selectClientIdx = clientSimpleDataList[bindingAdapterPosition].clientIdx
+                    Snackbar.make(dialogAddDepositBinding.root,
+                        "${clientSimpleDataList[bindingAdapterPosition].clientName} 선택 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                    selDialog.dismiss()
+                }
+            }
 
         }
 
