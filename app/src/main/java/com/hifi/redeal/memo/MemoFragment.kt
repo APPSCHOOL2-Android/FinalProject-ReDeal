@@ -89,7 +89,8 @@ class MemoFragment : Fragment() {
                 MemoRepository.getUserPhotoMemoClientInfo(userIdx!!, item.clientIdx){documentSnapshot ->
                     userPhotoMemoClientName.text = documentSnapshot.get("clientName") as String
                     userPhotoMemoClientManagerName.text = documentSnapshot.get("clientManagerName") as String
-                    userPhotoMemoClientState.setImageResource(drawableClientStateArr[(item.clientIdx.toInt()) - 1] )
+                    val clientState = documentSnapshot.get("clientState") as Long
+                    userPhotoMemoClientState.setImageResource(drawableClientStateArr[clientState.toInt() - 1] )
                 }
 
                 var linearLayoutHorizontal = LinearLayout(requireContext())
