@@ -84,7 +84,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     )
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,12 +95,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
         clientViewModel.run {
 
-            currentAddress.observe(viewLifecycleOwner){
-                Log.d("지도주소", currentAddress.toString())
-                if (currentAddress != null && kakaoMapTemp!=null) {
-                    moveCamera(currentAddress.value!!)
-                }
-            }
             clientDataListByKeyWord.observe(viewLifecycleOwner) {
 //                Log.d("검색",it.toString())
                 fragmentMapBinding.mapSearchRecyclerViewResult.adapter?.notifyDataSetChanged()
@@ -110,11 +103,10 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 Log.d("하단", it.toString())
 
                 fragmentMapBinding.mapBottomSheet.run {
-                    if (clientDataListAll.value!!.isEmpty() || clientDataListAll.value==null ){
+                    if (clientDataListAll.value!!.isEmpty() || clientDataListAll.value == null) {
                         mapBottomSheetTextViewEmpty.visibility = View.VISIBLE
                         mapBottomSheetRecyclerView.visibility = View.GONE
-                    }
-                    else{
+                    } else {
                         mapBottomSheetTextViewEmpty.visibility = View.GONE
                         mapBottomSheetRecyclerView.run {
                             visibility = View.VISIBLE
@@ -181,12 +173,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             mapSearchView.run {
 
-                Log.d("상태",currentTransitionState.toString())
+                Log.d("상태", currentTransitionState.toString())
                 addTransitionListener { searchView, previousState, newState ->
                     if (newState == SearchView.TransitionState.SHOWING) {
                         clientViewModel.resetClientListByKeyword()
                         // SearchView의 레이아웃 파라미터 가져오기
-                        val searchViewLayoutParams = mapSearchView.layoutParams as CoordinatorLayout.LayoutParams
+                        val searchViewLayoutParams =
+                            mapSearchView.layoutParams as CoordinatorLayout.LayoutParams
 
                         // SearchView의 layout_height 값을 변경 (예: match_parent로 설정)
                         searchViewLayoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -219,8 +212,14 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             mapBottomSheet.run {
 
-                val distanceAdapter = ArrayAdapter(mainActivity, R.layout.item_map_bottom_sheet_distance, mutableListOf("주변 4km","주변 8km"))
-                (mapBottomSheetDistanceList.editText as AutoCompleteTextView).setAdapter(distanceAdapter)
+                val distanceAdapter = ArrayAdapter(
+                    mainActivity,
+                    R.layout.item_map_bottom_sheet_distance,
+                    mutableListOf("주변 4km", "주변 8km")
+                )
+                (mapBottomSheetDistanceList.editText as AutoCompleteTextView).setAdapter(
+                    distanceAdapter
+                )
                 // AutoCompleteTextView의 값이 변경될 때마다 호출되는 리스너를 추가
                 mapBottomSheetDistanceList.editText?.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
@@ -231,7 +230,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                     ) {
                     }
 
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                    }
 
                     override fun afterTextChanged(s: Editable?) {
 
@@ -303,6 +308,12 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                             kakaoMap?.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
 
                     }
+                    currentAddress.observe(viewLifecycleOwner) {
+                        Log.d("지도주소", currentAddress.value.toString())
+                        if (currentAddress != null) {
+                            moveCamera(currentAddress.value!!)
+                        }
+                    }
                 }
 
 
@@ -355,8 +366,12 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
                 val regex = "\\([^)]*\\)"
-                val clientAddr = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
-                Log.d("거래처지역1",clientAddr)
+                val clientAddr =
+                    clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!.replace(
+                        regex.toRegex(),
+                        ""
+                    )
+                Log.d("거래처지역1", clientAddr)
                 setClientAddress(clientAddr)
 
                 fragmentMapBinding.mapSearchView.hide()
@@ -427,9 +442,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 val position = allViewHolder.adapterPosition
                 val regex = "\\([^)]*\\)"
 
-                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
-                Log.d("거래처지역1",clientAddr)
-               setClientAddress(clientAddr)
+                val clientAddr =
+                    clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!.replace(
+                        regex.toRegex(),
+                        ""
+                    )
+                Log.d("거래처지역1", clientAddr)
+                setClientAddress(clientAddr)
                 BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout).state =
                     BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -449,24 +468,27 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             holder.rowMapClientListManagerName.text =
                 clientViewModel.clientDataListAll.value?.get(position)?.clientManagerName
 
-            when(clientViewModel.clientDataListAll.value?.get(position)?.clientState){
-                1L ->{
+            when (clientViewModel.clientDataListAll.value?.get(position)?.clientState) {
+                1L -> {
                     holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary20)
                 }
-                2L ->{
+
+                2L -> {
                     holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary50)
                 }
-                3L ->{
+
+                3L -> {
                     holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary80)
                 }
-                else ->{
+
+                else -> {
                     holder.rowMapClientListTransactionType.setImageResource(R.drawable.circle_24px_primary20)
                 }
             }
 
             if (clientViewModel.clientDataListAll.value?.get(position)?.isBookmark == false) {
                 holder.rowMapClientListBookMark.visibility = View.INVISIBLE
-            } else{
+            } else {
                 holder.rowMapClientListBookMark.visibility = View.VISIBLE
             }
             val clientIdx = clientViewModel.clientDataListAll.value?.get(position)?.clientIdx
@@ -513,9 +535,9 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 val long = list[0].x.toDouble()
                 Log.d("주소 확인1", lat.toString())
                 Log.d("주소 확인2", long.toString())
-                clientViewModel.currentAddress.value = LatLng.from(lat,long)
-            }else{
-                showDialog("주소 오류","현 주소는 지원하지 않습니다.",mainActivity)
+                clientViewModel.currentAddress.value = LatLng.from(lat, long)
+            } else {
+                showDialog("주소 오류", "현 주소는 지원하지 않습니다.", mainActivity)
             }
         }
     }
@@ -541,7 +563,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                     val latlng2 = locationToLatLng(location2)
                     clientViewModel.currentAddress.value = LatLng.from(latlng2)
                 }
-
 
 
             } catch (e: java.lang.NullPointerException) {
@@ -601,10 +622,10 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
 
     private fun moveCamera(position: LatLng) {
-        Log.d("주소 확인 3",position.toString())
-        if(kakaoMapTemp==null){
+        Log.d("주소 확인 3", position.toString())
+        if (kakaoMapTemp == null) {
             SystemClock.sleep(100)
-        }else{
+        } else {
             kakaoMapTemp!!.moveCamera(
                 CameraUpdateFactory.newCenterPosition(position)
             )
@@ -612,7 +633,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
     }
 
-    private fun showDialog(title:String,message:String,context:Context) {
+    fun showDialog(title: String, message: String, context: Context) {
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder.setTitle(title)
         alertDialogBuilder.setMessage(message)
