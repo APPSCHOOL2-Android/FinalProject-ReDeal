@@ -1,21 +1,25 @@
 package com.hifi.redeal.account
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.AccountDetailRepository
+import com.hifi.redeal.account.repository.model.ClientData
+import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import java.text.SimpleDateFormat
+
 
 class AccountDetailFragment : Fragment() {
 
@@ -37,6 +41,17 @@ class AccountDetailFragment : Fragment() {
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
         accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
+            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+                override fun onMapReady(kakaoMap: KakaoMap) {
+                    if (client != null) {
+                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
+                            if (it != null) {
+                                mapInit(it)
+                            }
+                        }
+                    }
+                }
+            })
 
             if (client != null) {
                 accountDetailViewInit(client)
@@ -44,24 +59,29 @@ class AccountDetailFragment : Fragment() {
         }
 
         fragmentAccountDetailBinding.run {
-            mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {
-//                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
-                }
-            })
 //            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.transactionFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
-                        mainActivity.replaceFragment(MainActivity.TRANSACTION_FRAGMENT, true, bundle)
+                        mainActivity.replaceFragment(
+                            MainActivity.TRANSACTION_FRAGMENT,
+                            true,
+                            bundle
+                        )
                     }
+
                     R.id.recordMemoFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
-                        mainActivity.replaceFragment(MainActivity.RECORD_MEMO_FRAGMENT, true, bundle)
+                        mainActivity.replaceFragment(
+                            MainActivity.RECORD_MEMO_FRAGMENT,
+                            true,
+                            bundle
+                        )
                     }
+
                     R.id.photoMemoFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
@@ -73,6 +93,33 @@ class AccountDetailFragment : Fragment() {
         }
 
         return fragmentAccountDetailBinding.root
+    }
+
+    fun mapInit(coordinate: Coordinate) {
+        fragmentAccountDetailBinding.run {
+            buttonAccountDetailDirectionsCar.setOnClickListener {
+                AlertDialog.Builder(mainActivity)
+                    .setTitle("길 안내")
+                    .setMessage("티맵 길 안내를 시작하시겠습니까?")
+                    .setPositiveButton("확인") { _, _ ->
+                        if (!mainActivity.tMapTapi.isTmapApplicationInstalled) {
+                            mainActivity.tMapTapi.invokeRoute(coordinate.newBuildingName, coordinate.newLon.toFloat(), coordinate.newLat.toFloat())
+                        } else {
+                            Snackbar.make(fragmentAccountDetailBinding.root, "티맵 앱 설치 후 다시 시도해주세요", Snackbar.LENGTH_SHORT)
+                                .setAction("설치하기") {
+                                    val intent = Intent(Intent.ACTION_VIEW)
+                                    intent.data = Uri.parse("market://details?id=com.skt.tmap.ku")
+                                    startActivity(intent)
+                                }.apply {
+                                    anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                                }
+                                .show()
+                        }
+                    }
+                    .setNegativeButton("취소", null)
+                    .show()
+            }
+        }
     }
 
     fun accountDetailViewInit(client: ClientData) {
@@ -102,7 +149,9 @@ class AccountDetailFragment : Fragment() {
                                 .setMessage("거래처 정보를 삭제하시겠습니까?")
                                 .setPositiveButton("확인") { _, _ ->
                                     accountDetailRepository.deleteClient(mainActivity.uid, clientIdx) {
-                                        Snackbar.make(root, "거래처가 삭제되었습니다", Snackbar.LENGTH_SHORT).show()
+                                        Snackbar.make(root, "거래처가 삭제되었습니다", Snackbar.LENGTH_SHORT).apply {
+                                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                                        }.show()
                                         mainActivity.removeFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT)
 //                                        findNavController().popBackStack()
                                     }
@@ -112,6 +161,60 @@ class AccountDetailFragment : Fragment() {
                         }
                     }
                     true
+                }
+            }
+
+            buttonAccountDetailGeneralCall.setOnClickListener {
+                if (client.clientCeoPhone?.isNotEmpty() == true) {
+                    AlertDialog.Builder(mainActivity)
+                        .setTitle("대표 전화")
+                        .setMessage("대표 전화로 통화하시겠습니까?")
+                        .setPositiveButton("확인") { _, _ ->
+                            startActivity(
+                                Intent(
+                                    "android.intent.action.CALL",
+                                    Uri.parse("tel:${client.clientCeoPhone}")
+                                )
+                            )
+                        }
+                        .setNegativeButton("취소", null)
+                        .show()
+                }
+            }
+
+            buttonAccountDetailDirectCall.setOnClickListener {
+                if (client.clientManagerPhone?.isNotEmpty() == true) {
+                    AlertDialog.Builder(mainActivity)
+                        .setTitle("담당자 연락처 통화")
+                        .setMessage("담당자 연락처로 통화하시겠습니까?")
+                        .setPositiveButton("확인") { _, _ ->
+                            startActivity(
+                                Intent(
+                                    "android.intent.action.CALL",
+                                    Uri.parse("tel:${client.clientManagerPhone}")
+                                )
+                            )
+                        }
+                        .setNegativeButton("취소", null)
+                        .show()
+                }
+            }
+
+            buttonAccountDetailSendMessage.setOnClickListener {
+                if (client.clientManagerPhone?.isNotEmpty() == true) {
+                    AlertDialog.Builder(mainActivity)
+                        .setTitle("담당자 연락처 메시지")
+                        .setMessage("담당자 연락처로 전송할 메시지를 작성하시겠습니까?")
+                        .setPositiveButton("확인") { _, _ ->
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_SENDTO,
+                                    Uri.parse("smsto:${client.clientManagerPhone}")
+                                )
+                            )
+                        }
+                        .setNegativeButton("취소", null)
+                        .show()
                 }
             }
 
@@ -161,12 +264,16 @@ class AccountDetailFragment : Fragment() {
                 accountDetailRepository.updateBookmark(mainActivity.uid, clientIdx, client.isBookmark ?: false)
             }
 
+            val ceoPhoneNumber = PhoneNumberUtils.formatNumber(client.clientCeoPhone, "KR")
+            val managerPhoneNumber = PhoneNumberUtils.formatNumber(client.clientManagerPhone, "KR")
+            val faxNumber = PhoneNumberUtils.formatNumber(client.clientFaxNumber, "KR")
+
             textViewAccountDetailShortDescription.text = client.clientExplain
-            textViewAccountDetailGeneralNumber.append(client.clientCeoPhone)
-            textViewAccountDetailFaxNumber.append(client.clientFaxNumber)
+            textViewAccountDetailGeneralNumber.append(ceoPhoneNumber)
+            textViewAccountDetailFaxNumber.append(faxNumber)
             textViewAccountDetailAddress.text = "${client.clientAddress} ${client.clientDetailAdd}"
             textViewAccountDetailRepresentative.text = client.clientManagerName
-            textViewAccountDetailDirectNumber.text = client.clientManagerPhone
+            textViewAccountDetailDirectNumber.text = managerPhoneNumber
             textViewAccountDetailMemoContent.text = client.clientMemo
         }
     }

@@ -1,6 +1,7 @@
 package com.hifi.redeal.account
 
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -73,6 +74,10 @@ class AccountEditFragment : Fragment(){
                 }
             }
 
+            textEditTextAccountEditDirectNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+            textEditTextAccountEditFaxNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+            textEditTextAccountEditGeneralNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+
             buttonAccountEditAddressSearch.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
 //                mainActivity.navigateTo(R.id.addressSearchFragment)
@@ -132,13 +137,13 @@ class AccountEditFragment : Fragment(){
                     mainActivity.uid,
                     ClientInputData(
                         textEditTextAccountEditZipCode.text.toString(),
-                        textEditTextAccountEditGeneralNumber.text.toString(),
+                        textEditTextAccountEditGeneralNumber.text.toString().replace("-",""),
                         textEditTextAccountEditDetailAddress.text.toString(),
                         textEditTextAccountEditShortDescription.text.toString(),
-                        textEditTextAccountEditFaxNumber.text.toString(),
+                        textEditTextAccountEditFaxNumber.text.toString().replace("-",""),
                         newClientIdx,
                         textEditTextAccountEditRepresentative.text.toString(),
-                        textEditTextAccountEditDirectNumber.text.toString(),
+                        textEditTextAccountEditDirectNumber.text.toString().replace("-",""),
                         textEditTextAccountEditEntireDescription.text.toString(),
                         textEditTextAccountEditAccountName.text.toString(),
                         state,
@@ -149,7 +154,9 @@ class AccountEditFragment : Fragment(){
                         0L
                     )
                 ) {
-                    Snackbar.make(root, "거래처가 등록되었습니다", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(root, "거래처가 등록되었습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                     mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
 //                    findNavController().popBackStack()
                 }
@@ -208,13 +215,13 @@ class AccountEditFragment : Fragment(){
                         mainActivity.uid,
                         ClientInputData(
                             textEditTextAccountEditZipCode.text.toString(),
-                            textEditTextAccountEditGeneralNumber.text.toString(),
+                            textEditTextAccountEditGeneralNumber.text.toString().replace("-",""),
                             textEditTextAccountEditDetailAddress.text.toString(),
                             textEditTextAccountEditShortDescription.text.toString(),
-                            textEditTextAccountEditFaxNumber.text.toString(),
+                            textEditTextAccountEditFaxNumber.text.toString().replace("-",""),
                             clientIdx,
                             textEditTextAccountEditRepresentative.text.toString(),
-                            textEditTextAccountEditDirectNumber.text.toString(),
+                            textEditTextAccountEditDirectNumber.text.toString().replace("-",""),
                             textEditTextAccountEditEntireDescription.text.toString(),
                             textEditTextAccountEditAccountName.text.toString(),
                             state,
@@ -225,7 +232,9 @@ class AccountEditFragment : Fragment(){
                             client.viewCount
                         )
                     ) {
-                        Snackbar.make(root, "거래처 정보가 수정되었습니다", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(root, "거래처 정보가 수정되었습니다", Snackbar.LENGTH_SHORT).apply {
+                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                        }.show()
                         mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
 //                        findNavController().popBackStack()
                     }
