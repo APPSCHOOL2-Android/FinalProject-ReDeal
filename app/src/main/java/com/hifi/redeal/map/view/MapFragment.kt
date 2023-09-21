@@ -96,7 +96,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             currentAddress.observe(viewLifecycleOwner){
                 Log.d("지도주소", currentAddress.toString())
-                if (currentAddress != null) {
+                if (currentAddress != null && kakaoMapTemp!=null) {
                     moveCamera(currentAddress.value!!)
                 }
             }
