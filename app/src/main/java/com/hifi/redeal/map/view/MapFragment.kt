@@ -23,6 +23,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -98,6 +99,8 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 Log.d("지도주소", currentAddress.toString())
                 if (currentAddress != null && kakaoMapTemp!=null) {
                     moveCamera(currentAddress.value!!)
+                } else {
+                    showDialog("주소 오류","현 주소는 지원하지 않습니다.",mainActivity)
                 }
             }
             clientDataListByKeyWord.observe(viewLifecycleOwner) {
@@ -352,7 +355,10 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-                setClientAddress(clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!)
+                val regex = "\\([^)]*\\)"
+                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
+                Log.d("거래처지역1",clientAddr)
+                setClientAddress(clientAddr)
 
                 fragmentMapBinding.mapSearchView.hide()
 
@@ -420,7 +426,11 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-               setClientAddress(clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!)
+                val regex = "\\([^)]*\\)"
+
+                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
+                Log.d("거래처지역1",clientAddr)
+               setClientAddress(clientAddr)
                 BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout).state =
                     BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -498,13 +508,15 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     }
 
     fun setClientAddress(addr: String) {
-        ClientRepository.searchAddr(addr!!) {
-            if (it != null) {
-                val lat = it[0].y.toDouble()
-                val long = it[0].x.toDouble()
+        ClientRepository.searchAddr(addr!!) {list ->
+            if (list?.isNotEmpty() == true && list != null) {
+                val lat = list[0].y.toDouble()
+                val long = list[0].x.toDouble()
                 Log.d("주소 확인1", lat.toString())
                 Log.d("주소 확인2", long.toString())
                 clientViewModel.currentAddress.value = LatLng.from(lat,long)
+            }else{
+                showDialog("주소 오류","현 주소는 지원하지 않습니다.",mainActivity)
             }
         }
     }
@@ -599,6 +611,19 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             )
         }
 
+    }
+
+    private fun showDialog(title:String,message:String,context:Context) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle(title)
+        alertDialogBuilder.setMessage(message)
+        alertDialogBuilder.setPositiveButton("확인") { dialog, which ->
+            // 확인 버튼을 클릭했을 때 수행할 동작
+            dialog.dismiss() // 다이얼로그 닫기
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     override fun onCameraMoveEnd(
