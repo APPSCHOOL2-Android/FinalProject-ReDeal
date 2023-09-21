@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/searchClientEditText"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_margin="20dp"
+        android:layout_margin="12dp"
         android:background="@drawable/date_selection_background"
         android:ems="10"
         android:hint="찾으시는 거래처를 입력하세요"
@@ -16,7 +17,8 @@
         android:padding="4dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchClientResultRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp" />
+        android:layout_height="240dp"
+        android:layout_margin="12dp" />
 </LinearLayout>

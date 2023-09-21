@@ -286,7 +286,7 @@ class ScheduleManageFragment : Fragment(){
         spaceTextView.text = if(scheduleVM.selectedScheduleIsVisit) {
             "방문 일정 ${count}개"
         } else {
-            "미방문 일정 ${count}개"
+            "비 방문 일정 ${count}개"
         }
         spaceTextView.setTextColor(mainActivity.getColor(R.color.text50))
         spaceTextView.gravity = Gravity.CENTER_HORIZONTAL
@@ -349,6 +349,7 @@ class ScheduleManageFragment : Fragment(){
                     container.headerYearTextView.text = "${month.year}"
                     container.headerGotoTextView.setOnClickListener {
                         scheduleVM.selectDate = LocalDate.now()
+                        scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
                         calendarView.notifyCalendarChanged()
                         calendarView.scrollToDate(scheduleVM.selectDate, DayOwner.THIS_MONTH)
                     }
