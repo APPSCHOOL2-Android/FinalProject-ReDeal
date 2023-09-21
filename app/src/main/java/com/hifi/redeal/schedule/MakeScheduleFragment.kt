@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
@@ -41,6 +43,7 @@ class MakeScheduleFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
     private var clientIdx = 0L
+    private val uid = Firebase.auth.uid!!
   
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -335,7 +338,7 @@ class MakeScheduleFragment : Fragment() {
                     makeScheduleEditTextScheduleTitle.editableText.toString()
                 )
 
-                scheduleVM.addUserSchedule(newScheduleData){
+                scheduleVM.addUserSchedule(uid, newScheduleData){
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정을 성공적으로 저장하였습니다.")
                     builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->

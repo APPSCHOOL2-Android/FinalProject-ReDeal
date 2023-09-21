@@ -374,16 +374,9 @@ class TransactionFragment : Fragment() {
 
             val selectTransactionClientName = transactionSelectClientItemBinding.selectTransactionClientName
             val selectTransactionClinetState = transactionSelectClientItemBinding.selectTransactionClinetState
-            val selectClientBtn = transactionSelectClientItemBinding.selectClientBtn
             val selectTransactionClientManagerName = transactionSelectClientItemBinding.selectTransactionClientManagerName
             val selectTransactionClientBookmarkView = transactionSelectClientItemBinding.selectTransactionClientBookmarkView
 
-            init{
-                selectClientBtn.setOnClickListener {
-                    selectClientIdx = clientSimpleDataList[bindingAdapterPosition].clientIdx
-
-                }
-            }
 
         }
 

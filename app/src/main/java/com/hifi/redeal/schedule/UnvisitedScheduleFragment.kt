@@ -49,7 +49,7 @@ class UnvisitedScheduleFragment : Fragment() {
 
             selectScheduleData.observe(viewLifecycleOwner){ scheduleInfo ->
 
-                getClientInfo(scheduleInfo.clientIdx)
+                getClientInfo(uid, scheduleInfo.clientIdx)
 
                 fragmentUnvisitedScheduleBinding.run{
                     var crateDate = Date(scheduleInfo.scheduleDataCreateTime.toDate().time).toString().replace("-",".")
@@ -138,7 +138,7 @@ class UnvisitedScheduleFragment : Fragment() {
                 }
             }
 
-            getSelectScheduleInfo("${scheduleVM.selectScheduleIdx}")
+            getSelectScheduleInfo(uid, "${scheduleVM.selectScheduleIdx}")
 
         }
     }
@@ -162,9 +162,9 @@ class UnvisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
                                     ScheduleRepository.setUserSchedule(uid,updateScheduleData,{
-                                        scheduleVM.getSelectClientLastVisitDate(scheduleVM.selectScheduleData.value!!.clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate(uid, scheduleVM.selectScheduleData.value!!.clientIdx)
                                     },{
-                                        scheduleVM.getSelectScheduleInfo("${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                        scheduleVM.getSelectScheduleInfo(uid, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
                                     })
                                 }
                                 cancelBuilder.setPositiveButton("취소",null)
@@ -176,9 +176,9 @@ class UnvisitedScheduleFragment : Fragment() {
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
                                     ScheduleRepository.setUserSchedule(uid,updateScheduleData,{
-                                        scheduleVM.getSelectClientLastVisitDate(scheduleVM.selectScheduleData.value!!.clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate(uid, scheduleVM.selectScheduleData.value!!.clientIdx)
                                     },{
-                                        scheduleVM.getSelectScheduleInfo("${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                        scheduleVM.getSelectScheduleInfo(uid, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
                                     })
                                 }
                                 completeBuilder.setPositiveButton("취소",null)
