@@ -52,6 +52,11 @@ class MapSearchRegionFragment : Fragment() {
 
 
         fragmentMapSearchRegionBinding.run {
+            mapSearchRegionToolbar.run {
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT)
+                }
+            }
             MapRepository.searchSiDo { result ->
                 mapSearchRegionRecyclerViewSiDo.run {
                     adapter = SearchRegionSiDoRecyclerViewAdapter(mainActivity, result!!.sortedBy { it.admCode })
