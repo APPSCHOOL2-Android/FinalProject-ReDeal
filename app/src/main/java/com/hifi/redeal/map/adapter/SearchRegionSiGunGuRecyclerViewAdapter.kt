@@ -46,9 +46,9 @@ class SearchRegionSiGunGuRecyclerViewAdapter(private val mainActivity: MainActiv
             val position = allViewHolder.adapterPosition
             mapViewModel.run {
                 getDongList(dataList.get(position).admCode)//전달
-                currentDong.value = -1
-                currentSiGunGu.value=position
-                currentSiGunGu.observe(mainActivity){
+                currentDongPosition.value = -1
+                currentSiGunGuPosition.value=position
+                currentSiGunGuPosition.observe(mainActivity){
                     notifyDataSetChanged()
                 }
             }
@@ -66,7 +66,7 @@ class SearchRegionSiGunGuRecyclerViewAdapter(private val mainActivity: MainActiv
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.rowMapRegionSearchName.text= dataList.get(position).lowestAdmCodeNm
 
-        if (position == mapViewModel.currentSiGunGu.value) {
+        if (position == mapViewModel.currentSiGunGuPosition.value) {
             holder.rowMapRegionSearchLayout.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.primary95))
             holder.rowMapRegionSearchName.setTextColor(ContextCompat.getColor(mainActivity, R.color.primary20))
         } else {

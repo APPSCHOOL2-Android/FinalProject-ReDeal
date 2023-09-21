@@ -1,7 +1,5 @@
 package com.hifi.redeal.map.adapter
 
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -45,9 +43,9 @@ class SearchRegionDongRecyclerViewAdapter(private val mainActivity: MainActivity
         rowMapRegionSearchBinding.root.setOnClickListener {
             val position = allViewHolder.adapterPosition
             mapViewModel.run {
-                currentDong.value=position
+                currentDongPosition.value=position
 
-                currentDong.observe(mainActivity){
+                currentDongPosition.observe(mainActivity){
                     notifyDataSetChanged()
                 }
             }
@@ -64,7 +62,7 @@ class SearchRegionDongRecyclerViewAdapter(private val mainActivity: MainActivity
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.rowMapRegionSearchName.text= dataList.get(position).lowestAdmCodeNm
 
-        if (position == mapViewModel.currentDong.value) {
+        if (position == mapViewModel.currentDongPosition.value) {
             holder.rowMapRegionSearchName.setTextColor(ContextCompat.getColor(mainActivity, R.color.primary20))
         } else {
             holder.rowMapRegionSearchName.setTextColor(ContextCompat.getColor(mainActivity, R.color.text10))
