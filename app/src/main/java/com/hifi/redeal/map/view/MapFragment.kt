@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -22,6 +23,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -55,6 +57,7 @@ import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.shape.Polyline
+import kotlinx.coroutines.awaitAll
 import java.text.SimpleDateFormat
 
 
@@ -94,7 +97,7 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             currentAddress.observe(viewLifecycleOwner){
                 Log.d("지도주소", currentAddress.toString())
-                if (currentAddress != null) {
+                if (currentAddress != null && kakaoMapTemp!=null) {
                     moveCamera(currentAddress.value!!)
                 }
             }
@@ -106,10 +109,16 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 Log.d("하단", it.toString())
 
                 fragmentMapBinding.mapBottomSheet.run {
-                    mapBottomSheetTextViewEmpty.visibility = View.GONE
-                    mapBottomSheetRecyclerView.run {
-                        visibility = View.VISIBLE
-                        adapter?.notifyDataSetChanged()
+                    if (clientDataListAll.value!!.isEmpty() || clientDataListAll.value==null ){
+                        mapBottomSheetTextViewEmpty.visibility = View.VISIBLE
+                        mapBottomSheetRecyclerView.visibility = View.GONE
+                    }
+                    else{
+                        mapBottomSheetTextViewEmpty.visibility = View.GONE
+                        mapBottomSheetRecyclerView.run {
+                            visibility = View.VISIBLE
+                            adapter?.notifyDataSetChanged()
+                        }
                     }
                 }
             }
@@ -344,7 +353,10 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-                setClientAddress(clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!)
+                val regex = "\\([^)]*\\)"
+                val clientAddr = clientViewModel.clientDataListByKeyWord.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
+                Log.d("거래처지역1",clientAddr)
+                setClientAddress(clientAddr)
 
                 fragmentMapBinding.mapSearchView.hide()
 
@@ -412,7 +424,11 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             rowMapClientListBinding.root.setOnClickListener {
                 val position = allViewHolder.adapterPosition
-               setClientAddress(clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!)
+                val regex = "\\([^)]*\\)"
+
+                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress!!.replace(regex.toRegex(), "")
+                Log.d("거래처지역1",clientAddr)
+               setClientAddress(clientAddr)
                 BottomSheetBehavior.from(fragmentMapBinding.mapBottomSheet.mapBottomSheetLayout).state =
                     BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -490,13 +506,15 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
     }
 
     fun setClientAddress(addr: String) {
-        ClientRepository.searchAddr(addr!!) {
-            if (it != null) {
-                val lat = it[0].y.toDouble()
-                val long = it[0].x.toDouble()
+        ClientRepository.searchAddr(addr!!) {list ->
+            if (list?.isNotEmpty() == true && list != null) {
+                val lat = list[0].y.toDouble()
+                val long = list[0].x.toDouble()
                 Log.d("주소 확인1", lat.toString())
                 Log.d("주소 확인2", long.toString())
                 clientViewModel.currentAddress.value = LatLng.from(lat,long)
+            }else{
+                showDialog("주소 오류","현 주소는 지원하지 않습니다.",mainActivity)
             }
         }
     }
@@ -583,10 +601,27 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
     private fun moveCamera(position: LatLng) {
         Log.d("주소 확인 3",position.toString())
-        kakaoMapTemp!!.moveCamera(
-            CameraUpdateFactory.newCenterPosition(position)
-        )
+        if(kakaoMapTemp==null){
+            SystemClock.sleep(100)
+        }else{
+            kakaoMapTemp!!.moveCamera(
+                CameraUpdateFactory.newCenterPosition(position)
+            )
+        }
 
+    }
+
+    private fun showDialog(title:String,message:String,context:Context) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle(title)
+        alertDialogBuilder.setMessage(message)
+        alertDialogBuilder.setPositiveButton("확인") { dialog, which ->
+            // 확인 버튼을 클릭했을 때 수행할 동작
+            dialog.dismiss() // 다이얼로그 닫기
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     override fun onCameraMoveEnd(

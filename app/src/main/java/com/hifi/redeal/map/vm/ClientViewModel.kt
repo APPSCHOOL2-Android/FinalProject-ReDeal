@@ -31,8 +31,6 @@ class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
     var clientDataListAll = MutableLiveData<MutableList<ClientDataClass>>()
     var currentAddress = MutableLiveData<LatLng>()
-    var clientDataListTemp = MutableLiveData<MutableList<ClientDataClass>>()
-    var scheduleDataClassListByClient = MutableLiveData<MutableList<ScheduleDataClass>>()
     var clientDataListLabel = MutableLiveData<MutableList<LabelOptions>>()
     val selectedButtonId = MutableLiveData<Int>()
 
@@ -62,7 +60,7 @@ class ClientViewModel : ViewModel() {
         val tempList = mutableListOf<ClientDataClass>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
-                Log.d("거래처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
+                Log.d("거래처처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 var item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
@@ -113,7 +111,7 @@ class ClientViewModel : ViewModel() {
         val tempList = mutableListOf<ClientDataClass>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
-                Log.d("거래처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
+                Log.d("거래처처처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 var item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
@@ -131,9 +129,22 @@ class ClientViewModel : ViewModel() {
                 var item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
+            Log.d("거래처 테스트2", tempList.toString())
+            for(c in tempList) {
+                Log.d("거래처 테스트3",c.clientAddress.toString())
+                if(c.clientAddress==""){
+                    continue
+                }
+                // 괄호와 괄호 안의 글자를 삭제하기 위한 정규 표현식
+                val regex = "\\([^)]*\\)"
 
-            tempList.forEach { c ->
-                ClientRepository.searchAddr(c.clientAddress!!) {
+                val clientAddr = c.clientAddress!!.replace(regex.toRegex(), "")
+                Log.d("거래처 테스트4",clientAddr)
+                ClientRepository.searchAddr(clientAddr) {
+                    Log.d("거래처 테스트5",it.toString())
+                    if (it!!.isEmpty()) {
+                        return@searchAddr
+                    }
                     val lat = it!!.get(0).y.toDouble()
                     val long = it!!.get(0).x.toDouble()
                     val latLng = LatLng.from(lat, long)
