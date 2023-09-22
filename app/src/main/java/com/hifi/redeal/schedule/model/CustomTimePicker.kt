@@ -1,4 +1,4 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.model
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint

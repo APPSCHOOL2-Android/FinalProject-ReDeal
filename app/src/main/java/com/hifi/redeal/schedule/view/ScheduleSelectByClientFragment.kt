@@ -1,4 +1,4 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

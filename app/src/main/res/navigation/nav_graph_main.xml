@@ -57,32 +57,32 @@
         tools:layout="@layout/fragment_add_record_memo"/>
     <fragment
         android:id="@+id/scheduleManageFragment"
-        android:name="com.hifi.redeal.schedule.ScheduleManageFragment"
+        android:name="com.hifi.redeal.schedule.view.ScheduleManageFragment"
         android:label="fragment_schedule_manage"
         tools:layout="@layout/fragment_schedule_manage" />
     <fragment
         android:id="@+id/unvisitedScheduleFragment"
-        android:name="com.hifi.redeal.schedule.UnvisitedScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.UnvisitedScheduleFragment"
         android:label="fragment_unvisited_schedule"
         tools:layout="@layout/fragment_unvisited_schedule" />
     <fragment
         android:id="@+id/visitedScheduleFragment"
-        android:name="com.hifi.redeal.schedule.VisitedScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.VisitedScheduleFragment"
         android:label="fragment_visited_schedule"
         tools:layout="@layout/fragment_visited_schedule" />
     <fragment
         android:id="@+id/makeScheduleFragment"
-        android:name="com.hifi.redeal.schedule.MakeScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.MakeScheduleFragment"
         android:label="fragment_make_schedule"
         tools:layout="@layout/fragment_make_schedule" />
     <fragment
         android:id="@+id/scheduleSelectByClientFragment"
-        android:name="com.hifi.redeal.schedule.ScheduleSelectByClientFragment"
+        android:name="com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment"
         android:label="fragment_schedule_select_by_client"
         tools:layout="@layout/fragment_schedule_select_by_client" />
     <fragment
         android:id="@+id/editScheduleFragment"
-        android:name="com.hifi.redeal.schedule.EditScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.EditScheduleFragment"
         android:label="fragment_edit_schedule"
         tools:layout="@layout/fragment_edit_schedule" />
     <fragment

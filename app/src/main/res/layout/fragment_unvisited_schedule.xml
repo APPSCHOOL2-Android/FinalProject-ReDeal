@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:transitionGroup="true"
-    tools:context=".schedule.UnvisitedScheduleFragment">
+    tools:context=".schedule.view.UnvisitedScheduleFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/unvisitedScheduleToolbar"

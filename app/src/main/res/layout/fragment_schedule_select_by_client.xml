@@ -7,7 +7,7 @@
     android:background="@color/background"
     android:orientation="vertical"
     android:transitionGroup="true"
-    tools:context=".schedule.ScheduleSelectByClientFragment">
+    tools:context=".schedule.view.ScheduleSelectByClientFragment">
 
     <com.google.android.material.search.SearchBar
         android:id="@+id/scheduleClientBySearchBar"

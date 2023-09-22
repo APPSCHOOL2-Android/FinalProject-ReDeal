@@ -1,9 +1,8 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +14,8 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentUnvisitedScheduleBinding
-import com.hifi.redeal.databinding.FragmentVisitedScheduleBinding
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import com.hifi.redeal.schedule.vm.ScheduleVM
-import org.threeten.bp.DateTimeUtils.toDate
 import java.sql.Date
 import java.util.Calendar
 

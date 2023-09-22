@@ -1,4 +1,4 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.content.DialogInterface
 import android.graphics.Color
@@ -21,7 +21,6 @@ import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
 import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
-import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getSelectScheduleInfo
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
