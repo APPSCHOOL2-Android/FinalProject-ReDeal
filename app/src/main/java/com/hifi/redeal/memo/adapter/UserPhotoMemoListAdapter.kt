@@ -54,7 +54,8 @@ class UserPhotoMemoListAdapter(
         private val userPhotoMemoClientManagerName = rowUserPhotoMemoBinding.userPhotoMemoClientManagerName
         fun bindItem(item: UserPhotoMemoData){
             userPhotoDateTextView.text = dateFormat.format(item.date * 1000)
-            userPhotoMemoTextView.text = item.context
+            userPhotoMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
+
             userPhotoMemoClientName.text = "로딩 중"
             userPhotoMemoClientManagerName.text = "로딩 중"
             userPhotoMemoEnterClientDetailBtn.setOnClickListener {
@@ -62,7 +63,7 @@ class UserPhotoMemoListAdapter(
                 newBundle.putLong("clientIdx", item.clientIdx)
                 mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, newBundle)
             }
-            MemoRepository.getUserPhotoMemoClientInfo(mainActivity.uid, item.clientIdx){ documentSnapshot ->
+            MemoRepository.getUserMemoClientInfo(mainActivity.uid, item.clientIdx){ documentSnapshot ->
                 userPhotoMemoClientName.text = documentSnapshot.get("clientName") as String
                 userPhotoMemoClientManagerName.text = documentSnapshot.get("clientManagerName") as String
                 val clientState = documentSnapshot.get("clientState") as Long
