@@ -212,37 +212,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
 
             mapBottomSheet.run {
 
-                val distanceAdapter = ArrayAdapter(
-                    mainActivity,
-                    R.layout.item_map_bottom_sheet_distance,
-                    mutableListOf("주변 4km", "주변 8km")
-                )
-                (mapBottomSheetDistanceList.editText as AutoCompleteTextView).setAdapter(
-                    distanceAdapter
-                )
-                // AutoCompleteTextView의 값이 변경될 때마다 호출되는 리스너를 추가
-                mapBottomSheetDistanceList.editText?.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
-                    }
-
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                    }
-
-                    override fun afterTextChanged(s: Editable?) {
-
-                    }
-                })
-
                 mapBottomSheetRecyclerView.run {
                     adapter = MapBottomSheetRecyclerViewAdapter()
                     layoutManager = LinearLayoutManager(context)
