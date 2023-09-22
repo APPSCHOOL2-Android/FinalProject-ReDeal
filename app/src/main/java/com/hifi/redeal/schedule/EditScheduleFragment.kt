@@ -69,6 +69,13 @@ class EditScheduleFragment : Fragment() {
     private fun setClickEvent(){
 
         fragmentEditScheduleBinding.run{
+
+            editScheduleToolbar.run{
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.EDIT_SCHEDULE_FRAGMENT)
+                }
+            }
+
             editScheduleBtnVisit.run{
                 setOnClickListener {
                     scheduleVM.editScheduleData.value?.isVisitSchedule = true

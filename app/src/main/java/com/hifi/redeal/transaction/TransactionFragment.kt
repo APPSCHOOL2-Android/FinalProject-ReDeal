@@ -245,18 +245,25 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setClickEvent(){
-        // 입금 버튼 클릭 이벤트 처리
-        val addButtonLeft = fragmentTransactionBinding.ImgBtnAddDeposit
-        addButtonLeft.setOnClickListener {
-            inoutMode = true
-            showDepositDialog()
-        }
 
-        // 거래 버튼 클릭 이벤트 처리
-        val addButtonRight = fragmentTransactionBinding.ImgBtnAddTransaction
-        addButtonRight.setOnClickListener {
-            inoutMode = false
-            showTransactionDialog()
+        fragmentTransactionBinding.run{
+            // 입금 버튼 클릭 이벤트 처리
+            ImgBtnAddDeposit.setOnClickListener {
+                inoutMode = true
+                showDepositDialog()
+            }
+
+            // 거래 버튼 클릭 이벤트 처리
+            ImgBtnAddTransaction.setOnClickListener {
+                inoutMode = false
+                showTransactionDialog()
+            }
+
+            toolbarTransactionMain.run{
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.TRANSACTION_FRAGMENT)
+                }
+            }
         }
     }
 
