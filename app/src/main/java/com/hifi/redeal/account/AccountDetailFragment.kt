@@ -53,6 +53,8 @@ class AccountDetailFragment : Fragment() {
         mainActivity = activity as MainActivity
         fragmentAccountDetailBinding = FragmentAccountDetailBinding.inflate(layoutInflater)
 
+        mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
+
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 

@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -23,7 +26,7 @@ import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.FragmentAccountListBinding
 import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
 
-class AccountListFragment : Fragment() {
+@ExperimentalBadgeUtils class AccountListFragment : Fragment() {
 
     lateinit var fragmentAccountListBinding: FragmentAccountListBinding
     lateinit var mainActivity: MainActivity
@@ -63,6 +66,19 @@ class AccountListFragment : Fragment() {
         }
 
         fragmentAccountListBinding.run {
+
+            val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+                number = 5
+                backgroundColor = ContextCompat.getColor(requireContext(), R.color.calendarRed)
+                badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
+                badgeGravity = BadgeDrawable.TOP_END
+            }
+
+            frameLayoutAccountListNotification.foreground = badgeDrawable
+            frameLayoutAccountListNotification.addOnLayoutChangeListener {v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                BadgeUtils.attachBadgeDrawable(badgeDrawable, buttonAccountListNotification, frameLayoutAccountListNotification)
+                BadgeUtils.attachBadgeDrawable(badgeDrawable, buttonAccountListNotification, frameLayoutAccountListNotification)
+            }
 
             val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)
 
