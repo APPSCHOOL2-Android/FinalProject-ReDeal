@@ -112,6 +112,8 @@ class AccountListFragment : Fragment() {
                 }
             }
 
+            imageViewAccountListUserThumb.setOnClickListener {
+            }
             tabItemChipListSort.clear()
 
             tabItemChipListSort.add(chipAccountListSortReference)

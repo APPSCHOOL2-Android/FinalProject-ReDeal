@@ -31,45 +31,33 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/imageViewAccountListUserThumb"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/primary70"
-        android:paddingHorizontal="8dp"
-        android:src="@drawable/card_account_detail_24px_primary99"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayoutAccountList" />
+        app:layout_constraintTop_toBottomOf="@id/appBarLayoutAccountList">
 
-    <TextView
-        android:id="@+id/textViewAccountListUserName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/nanumsquareneo_regular"
-        android:maxLines="1"
-        android:text="임보성"
-        android:textColor="@color/text10"
-        app:layout_constraintBottom_toTopOf="@id/textViewAccountListUserInfo"
-        app:layout_constraintEnd_toStartOf="@id/tabLayoutAccountListState"
-        app:layout_constraintStart_toEndOf="@id/imageViewAccountListUserThumb"
-        app:layout_constraintTop_toTopOf="@id/imageViewAccountListUserThumb" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:src="@drawable/card_account_detail_24px_primary20" />
 
-    <TextView
-        android:id="@+id/textViewAccountListUserInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/nanumsquareneo_regular"
-        android:text="내 정보"
-        android:textColor="@color/text50"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@id/imageViewAccountListUserThumb"
-        app:layout_constraintStart_toStartOf="@id/textViewAccountListUserName"
-        app:layout_constraintTop_toBottomOf="@id/textViewAccountListUserName" />
-
+        <TextView
+            android:id="@+id/textViewAccountListUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:text="내 정보"
+            android:textColor="@color/text50"
+            android:textSize="10sp"
+            tools:layout_editor_absoluteX="64dp" />
+    </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutAccountListState"
