@@ -93,6 +93,7 @@
         android:id="@+id/mapSearchView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:hint="거래처 또는 담당자 이름으로 검색"
         app:layout_anchor="@id/mapSearchBar"
         app:layout_anchorGravity="center">
 
