@@ -172,7 +172,7 @@ class EditScheduleFragment : Fragment() {
 
             editScheduleData.observe(viewLifecycleOwner){schedule ->
                 newEditScheduleData = schedule
-                getUserSelectClientInfo(schedule.clientIdx)
+                getUserSelectClientInfo(uid, schedule.clientIdx)
 
                 fragmentEditScheduleBinding.run{
                     if(schedule.isVisitSchedule){

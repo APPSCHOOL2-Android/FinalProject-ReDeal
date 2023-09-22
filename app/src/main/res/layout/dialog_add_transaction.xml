@@ -17,63 +17,97 @@
             android:padding="10dp"
             android:transitionGroup="false">
 
-            <EditText
-                android:id="@+id/transactionNameEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/transactionNameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/date_selection_background"
-                android:ems="10"
-                android:fontFamily="@font/nanumsquareneo_regular"
-                android:gravity="left|center_vertical"
-                android:hint="제품명"
-                android:inputType="text"
-                android:padding="10dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
+                android:hint="품명"
+                android:textColorHint="@color/text30"
+                app:boxStrokeColor="@color/primary20"
+                app:endIconMode="clear_text">
 
-            <EditText
-                android:id="@+id/transactionItemCountEditText"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/transactionNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="text"
+                    android:textColor="@color/text10" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/transactionItemCountLayout"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/date_selection_background"
-                android:ems="10"
-                android:fontFamily="@font/nanumsquareneo_regular"
-                android:gravity="left|center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
                 android:hint="수량"
-                android:inputType="number"
-                android:padding="10dp" />
+                android:textColorHint="@color/text30"
+                app:boxStrokeColor="@color/primary20"
+                app:endIconMode="clear_text">
 
-            <EditText
-                android:id="@+id/transactionItemPriceEditText"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/transactionItemCountEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="number"
+                    android:textColor="@color/text10" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/transactionItemPriceLayout"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/date_selection_background"
-                android:ems="10"
-                android:fontFamily="@font/nanumsquareneo_regular"
-                android:gravity="left|center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
                 android:hint="단가"
-                android:inputType="number"
-                android:padding="10dp" />
+                android:textColorHint="@color/text30"
+                app:boxStrokeColor="@color/primary20"
+                app:endIconMode="clear_text">
 
-            <EditText
-                android:id="@+id/transactionAmountReceivedEditText"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/transactionItemPriceEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="number"
+                    android:textColor="@color/text10" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/transactionAmountReceivedLayout"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/date_selection_background"
-                android:ems="10"
-                android:fontFamily="@font/nanumsquareneo_regular"
-                android:gravity="left|center_vertical"
-                android:hint="받은 금액"
-                android:inputType="number"
-                android:padding="10dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
+                android:hint="받은금액"
+                android:textColorHint="@color/text30"
+                app:boxStrokeColor="@color/primary20"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/transactionAmountReceivedEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="number"
+                    android:textColor="@color/text10" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/selectTransactionClientBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/btn_round_primary20"
                 android:fontFamily="@font/nanumsquareneo_bold"
                 android:text="거래처 선택"
@@ -84,7 +118,10 @@
                 android:id="@+id/addTransactionBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="60dp"
                 android:background="@drawable/btn_round_primary20"
                 android:fontFamily="@font/nanumsquareneo_bold"
                 android:text="거래 추가"

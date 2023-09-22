@@ -132,6 +132,7 @@ class AccountListAdapter(
 
                 buttonRowItemAccountListCall.setOnClickListener {
                     val formattedPhoneNumber = PhoneNumberUtils.formatNumber(clientData.clientManagerPhone, "KR")
+
                     if (clientData.clientManagerPhone?.isNotEmpty() == true) {
                         AlertDialog.Builder(mainActivity)
                             .setTitle("담당자 연락처 통화")
