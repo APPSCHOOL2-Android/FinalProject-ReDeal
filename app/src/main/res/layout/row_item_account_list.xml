@@ -32,14 +32,13 @@
             android:ellipsize="end"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:maxLines="1"
-            android:text="ABC Company"
             android:textColor="@color/text10"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -68,7 +67,6 @@
         android:ellipsize="end"
         android:fontFamily="@font/nanumsquareneo_regular"
         android:maxLines="1"
-        android:text="이소은"
         android:textColor="@color/text10"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -82,7 +80,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/nanumsquareneo_regular"
-        android:text="최근 방문 4 시간 전"
         android:textColor="@color/text50"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@id/buttonRowItemAccountListCall"

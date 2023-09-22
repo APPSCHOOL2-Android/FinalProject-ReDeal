@@ -35,4 +35,12 @@ class AccountListViewModel: ViewModel() {
             clientList.value = filteredClientList
         }
     }
+
+    val searchResultList = MutableLiveData<List<ClientData>>()
+
+    fun getSearchResult(userId: String, word: String) {
+        accountListRepository.getSearchResult(userId, word) {
+            searchResultList.value = it
+        }
+    }
 }

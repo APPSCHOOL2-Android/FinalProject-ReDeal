@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.ContactData
 import com.hifi.redeal.account.repository.model.ScheduleData
+import com.hifi.redeal.account.repository.model.UserData
 import java.util.UUID
 
 class AccountListRepository {
@@ -164,5 +165,55 @@ class AccountListRepository {
 
         db.collection("userData").document(userId).collection("clientData").document("$clientIdx")
             .update("viewCount", viewCount + 1)
+    }
+
+    fun getUserData(userId: String, callback: (UserData) -> Unit) {
+        db.collection("userData").document(userId)
+            .get()
+            .addOnSuccessListener {
+                val user = it.toObject<UserData>()
+                if (user != null) {
+                    callback(user)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
+    }
+
+    fun getSearchResult(userId: String, word: String, callback: (List<ClientData>) -> Unit) {
+        db.collection("userData").document(userId).collection("clientData")
+            .get()
+            .addOnSuccessListener { docs ->
+                val clientList = docs.map {
+                    it.toObject<ClientData>()
+                }.filter {
+                    it.clientName?.contains(word, true) == true || it.clientManagerName?.contains(word, true) == true
+                }
+
+                callback(clientList)
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
+    }
+
+    fun getRecentVisitDate(userId: String, clientIdx: Long?, callback: (ScheduleData) -> Unit) {
+        db.collection("userData").document(userId).collection("scheduleData")
+            .whereEqualTo("clientIdx", clientIdx)
+            .whereEqualTo("isVisitSchedule", true)
+            .whereEqualTo("isScheduleFinish", true)
+            .orderBy("scheduleFinishTime", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it) {
+                    val scheduleData = doc.toObject<ScheduleData>()
+                    callback(scheduleData)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
     }
 }

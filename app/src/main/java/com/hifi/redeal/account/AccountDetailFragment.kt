@@ -2,9 +2,11 @@ package com.hifi.redeal.account
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,21 @@ import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraPosition
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.mapwidget.InfoWindowOptions
+import com.kakao.vectormap.mapwidget.component.GuiImage
+import com.kakao.vectormap.mapwidget.component.GuiLayout
+import com.kakao.vectormap.mapwidget.component.GuiText
+import com.kakao.vectormap.mapwidget.component.Orientation
+import java.lang.NullPointerException
+import com.kakao.vectormap.KakaoMap
+import com.kakao.vectormap.KakaoMapReadyCallback
+
 import java.text.SimpleDateFormat
 
 
@@ -25,6 +42,8 @@ class AccountDetailFragment : Fragment() {
 
     lateinit var mainActivity: MainActivity
     lateinit var fragmentAccountDetailBinding: FragmentAccountDetailBinding
+
+    lateinit var kakaoMap: KakaoMap
 
     val accountDetailRepository = AccountDetailRepository()
 
@@ -42,11 +61,12 @@ class AccountDetailFragment : Fragment() {
 
         accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
             fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {
+                override fun onMapReady(map: KakaoMap) {
+                    kakaoMap = map
                     if (client != null) {
                         accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
                             if (it != null) {
-                                mapInit(it)
+                                mapInit(it, client.clientName ?: "")
                             }
                         }
                     }
@@ -59,7 +79,6 @@ class AccountDetailFragment : Fragment() {
         }
 
         fragmentAccountDetailBinding.run {
-//            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.transactionFragment -> {
@@ -81,7 +100,6 @@ class AccountDetailFragment : Fragment() {
                             bundle
                         )
                     }
-
                     R.id.photoMemoFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
@@ -95,8 +113,36 @@ class AccountDetailFragment : Fragment() {
         return fragmentAccountDetailBinding.root
     }
 
-    fun mapInit(coordinate: Coordinate) {
+    fun mapInit(coordinate: Coordinate, clientName: String) {
         fragmentAccountDetailBinding.run {
+            val latLng = LatLng.from(coordinate.newLat.toDouble(), coordinate.newLon.toDouble())
+
+            val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng, 16)
+            kakaoMap.moveCamera(cameraUpdate)
+
+//            val labelOptions = LabelOptions.from(latLng).setStyles(R.drawable.location_on_primary10)
+//            val labelLayer = kakaoMap.labelManager?.layer
+//            labelLayer?.addLabel(labelOptions)
+
+            val body = GuiLayout(Orientation.Horizontal)
+            body.setPadding(0, -20, 0, -20)
+
+            val bgImage = GuiImage(R.drawable.window_info_bg, true)
+            bgImage.setFixedArea(39, 39, 39, 39)
+            body.setBackground(bgImage)
+
+            val text = GuiText(clientName)
+            text.textSize = 30
+            text.textColor = Color.DKGRAY
+            body.addView(text)
+
+            val options = InfoWindowOptions.from(latLng)
+            options.setBody(body)
+            options.setBodyOffset(0f, -41f)
+            val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
+
+            kakaoMap.mapWidgetManager?.infoWindowLayer?.addInfoWindow(infoWindowOptions)
+
             buttonAccountDetailDirectionsCar.setOnClickListener {
                 AlertDialog.Builder(mainActivity)
                     .setTitle("길 안내")
@@ -179,6 +225,10 @@ class AccountDetailFragment : Fragment() {
                         }
                         .setNegativeButton("취소", null)
                         .show()
+                } else {
+                    Snackbar.make(root, "등록된 대표 전화가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                 }
             }
 
@@ -197,6 +247,10 @@ class AccountDetailFragment : Fragment() {
                         }
                         .setNegativeButton("취소", null)
                         .show()
+                } else {
+                    Snackbar.make(root, "등록된 연락처가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                 }
             }
 
@@ -215,6 +269,10 @@ class AccountDetailFragment : Fragment() {
                         }
                         .setNegativeButton("취소", null)
                         .show()
+                } else {
+                    Snackbar.make(root, "등록된 연락처가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                 }
             }
 
@@ -264,13 +322,23 @@ class AccountDetailFragment : Fragment() {
                 accountDetailRepository.updateBookmark(mainActivity.uid, clientIdx, client.isBookmark ?: false)
             }
 
-            val ceoPhoneNumber = PhoneNumberUtils.formatNumber(client.clientCeoPhone, "KR")
-            val managerPhoneNumber = PhoneNumberUtils.formatNumber(client.clientManagerPhone, "KR")
-            val faxNumber = PhoneNumberUtils.formatNumber(client.clientFaxNumber, "KR")
+            var ceoPhoneNumber = PhoneNumberUtils.formatNumber(client.clientCeoPhone, "KR")
+            if (ceoPhoneNumber == null)
+                ceoPhoneNumber = client.clientCeoPhone
+
+            var managerPhoneNumber = PhoneNumberUtils.formatNumber(client.clientManagerPhone, "KR")
+            if (managerPhoneNumber == null)
+                managerPhoneNumber = client.clientManagerPhone
+
+            var faxNumber = PhoneNumberUtils.formatNumber(client.clientFaxNumber, "KR")
+            if (faxNumber == null)
+                faxNumber = client.clientFaxNumber
 
             textViewAccountDetailShortDescription.text = client.clientExplain
             textViewAccountDetailGeneralNumber.append(ceoPhoneNumber)
-            textViewAccountDetailFaxNumber.append(faxNumber)
+            if(faxNumber != null) {
+                textViewAccountDetailFaxNumber.append(faxNumber)
+            }
             textViewAccountDetailAddress.text = "${client.clientAddress} ${client.clientDetailAdd}"
             textViewAccountDetailRepresentative.text = client.clientManagerName
             textViewAccountDetailDirectNumber.text = managerPhoneNumber

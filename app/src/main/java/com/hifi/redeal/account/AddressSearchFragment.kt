@@ -30,6 +30,12 @@ class AddressSearchFragment : Fragment() {
         fragmentAddressSearchBinding = FragmentAddressSearchBinding.inflate(layoutInflater)
 
         fragmentAddressSearchBinding.run {
+            materialToolbarAddressSearch.run {
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT)
+                }
+            }
+
             webViewAddressSearch.run {
                 settings.javaScriptEnabled = true
                 addJavascriptInterface(BridgeInterface(), "Android")
