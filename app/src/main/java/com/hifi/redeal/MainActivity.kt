@@ -39,6 +39,8 @@ import com.hifi.redeal.memo.MemoFragment
 import com.hifi.redeal.memo.PhotoDetailFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.myPage.MyPageEditNameFragment
+import com.hifi.redeal.myPage.MyPageFragment
 import com.hifi.redeal.schedule.EditScheduleFragment
 import com.hifi.redeal.schedule.MakeScheduleFragment
 import com.hifi.redeal.schedule.ScheduleManageFragment
@@ -107,6 +109,8 @@ class MainActivity : AppCompatActivity() {
         val MAP_FRAGMENT = "MapFragment"
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
         val TRANSACTION_FRAGMENT = "TransactionFragment"
+        val MY_PAGE_FRAGMENT = "MyPageFragment"
+        val MY_PAGE_EDIT_NAME_FRAGMENT = "MyPageEditNameFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -343,6 +347,8 @@ class MainActivity : AppCompatActivity() {
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
             TRANSACTION_FRAGMENT -> TransactionFragment()
+            MY_PAGE_FRAGMENT -> MyPageFragment()
+            MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             else -> Fragment()
         }
 

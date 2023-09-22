@@ -51,18 +51,18 @@ class AccountDetailFragment : Fragment() {
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
         accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
-            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-                override fun onMapReady(map: KakaoMap) {
-                    kakaoMap = map
-                    if (client != null) {
-                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
-                            if (it != null) {
-                                mapInit(it, client.clientName ?: "")
-                            }
-                        }
-                    }
-                }
-            })
+//            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+//                override fun onMapReady(map: KakaoMap) {
+//                    kakaoMap = map
+//                    if (client != null) {
+//                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
+//                            if (it != null) {
+//                                mapInit(it, client.clientName ?: "")
+//                            }
+//                        }
+//                    }
+//                }
+//            })
 
             if (client != null) {
                 accountDetailViewInit(client)

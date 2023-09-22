@@ -33,6 +33,8 @@ class AuthLoginFragment : Fragment() {
         authViewModel.initContext(requireContext()) // Context 초기화
         auth = Firebase.auth
 
+        mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
+
         // UI 요소에 대한 리스너 설정
         setupUiListeners()
 

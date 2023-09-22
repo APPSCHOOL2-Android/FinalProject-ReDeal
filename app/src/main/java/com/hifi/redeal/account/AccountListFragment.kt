@@ -68,7 +68,7 @@ class AccountListFragment : Fragment() {
         accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
 
         accountListViewModel.accountListRepository.getUserData(mainActivity.uid) {
-            fragmentAccountListBinding.textViewAccountListUserName.text = it.userName
+            fragmentAccountListBinding.textViewAccountListUserName.text = "${it.userName}님"
         }
 
         fragmentAccountListBinding.run {
@@ -155,6 +155,7 @@ class AccountListFragment : Fragment() {
             }
 
             imageViewAccountListUserThumb.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.MY_PAGE_FRAGMENT, true, null)
             }
             tabItemChipListSort.clear()
 
