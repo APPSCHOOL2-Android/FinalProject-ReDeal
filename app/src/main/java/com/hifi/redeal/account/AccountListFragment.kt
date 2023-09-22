@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.adapter.AccountListAdapter
@@ -54,11 +56,22 @@ class AccountListFragment : Fragment() {
         mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.VISIBLE
         fragmentAccountListBinding = FragmentAccountListBinding.inflate(layoutInflater)
 
+        if(arguments?.getLong("notifyClientIdx") != null){ // 알림을 통하여 왔을 경우
+            val clientIdx = arguments?.getLong("notifyClientIdx")!!
+            val bundle = Bundle()
+            bundle.putLong("clientIdx", clientIdx)
+            mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
+        }
+
         accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
 
         fragmentAccountListBinding.run {
 
             val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)
+
+            imageViewAccountListUserThumb.setOnClickListener {
+
+            }
 
             tabLayoutAccountListState.run {
 

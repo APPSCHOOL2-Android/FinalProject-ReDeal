@@ -158,6 +158,14 @@ class MainActivity : AppCompatActivity() {
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
         activityMainBinding.run {
+
+            if(intent.getLongExtra("notifyClientIdx", -1) != -1L){
+                val bundle = Bundle()
+                val notifyClientIdx = intent.getLongExtra("notifyClientIdx", -1)
+                bundle.putLong("notifyClientIdx", notifyClientIdx)
+                replaceFragment(ACCOUNT_LIST_FRAGMENT, true, bundle)
+            }
+
             bottomNavigationViewMain.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.accountListFragment -> {
