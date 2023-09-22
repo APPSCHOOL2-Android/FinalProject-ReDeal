@@ -51,15 +51,21 @@ import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
 
     val tabItemChipListSort = mutableListOf<Chip>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainActivity = activity as MainActivity
+
+        accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
+
+        accountListViewModel.getNotificationCnt(mainActivity.uid)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mainActivity = activity as MainActivity
         mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.VISIBLE
         fragmentAccountListBinding = FragmentAccountListBinding.inflate(layoutInflater)
-
-        accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
 
         accountListViewModel.accountListRepository.getUserData(mainActivity.uid) {
             fragmentAccountListBinding.textViewAccountListUserName.text = it.userName
@@ -67,17 +73,29 @@ import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
 
         fragmentAccountListBinding.run {
 
-            val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
-                number = 5
-                backgroundColor = ContextCompat.getColor(requireContext(), R.color.calendarRed)
-                badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
-                badgeGravity = BadgeDrawable.TOP_END
+            accountListViewModel.notificationCnt.observe(viewLifecycleOwner) { cnt ->
+
+                if (cnt == 0) {
+                    return@observe
+                }
+
+                val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+                    maxCharacterCount = 3
+                    number = cnt
+                    horizontalOffsetWithText = if (cnt > 99) 45 else 30
+                    backgroundColor = ContextCompat.getColor(requireContext(), R.color.calendarRed)
+                    badgeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
+                    badgeGravity = BadgeDrawable.TOP_END
+                }
+
+                frameLayoutAccountListNotification.foreground = badgeDrawable
+                frameLayoutAccountListNotification.addOnLayoutChangeListener {v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                    BadgeUtils.attachBadgeDrawable(badgeDrawable, buttonAccountListNotification, frameLayoutAccountListNotification)
+                }
             }
 
-            frameLayoutAccountListNotification.foreground = badgeDrawable
-            frameLayoutAccountListNotification.addOnLayoutChangeListener {v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-                BadgeUtils.attachBadgeDrawable(badgeDrawable, buttonAccountListNotification, frameLayoutAccountListNotification)
-                BadgeUtils.attachBadgeDrawable(badgeDrawable, buttonAccountListNotification, frameLayoutAccountListNotification)
+            frameLayoutAccountListNotification.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.NOTIFICATION_FRAGMENT, true)
             }
 
             val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)

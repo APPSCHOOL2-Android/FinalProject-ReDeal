@@ -1,6 +1,7 @@
 package com.hifi.redeal.account.repository
 
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -10,11 +11,13 @@ import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.ContactData
 import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.account.repository.model.FullAddrResponse
+import com.hifi.redeal.account.repository.model.NotificationData
 import com.hifi.redeal.account.repository.model.ScheduleData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.URLEncoder
+import java.util.Date
 
 class AccountDetailRepository {
     val db = Firebase.firestore
@@ -103,5 +106,36 @@ class AccountDetailRepository {
                     Log.d("brudenell", "네트워크 통신 실패")
                 }
             })
+    }
+
+    fun sendShareNotification(senderId: String, clientIdx: Long, receiverEmail: String, callback: (Boolean) -> Unit) {
+        db.collection("userData").whereEqualTo("userEmail", receiverEmail)
+            .get()
+            .addOnSuccessListener {
+                if (it.isEmpty) {
+                    callback(false)
+                }
+
+                for (doc in it){
+                    val notificationData = NotificationData(
+                        senderId,
+                        clientIdx,
+                        Timestamp(Date(System.currentTimeMillis())),
+                        false
+                    )
+
+                    db.collection("userData").document(doc.id).collection("notificationData")
+                        .add(notificationData)
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener {
+                            callback(false)
+                        }
+                }
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
     }
 }

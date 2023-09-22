@@ -27,6 +27,7 @@ import com.hifi.redeal.account.AccountDetailFragment
 import com.hifi.redeal.account.AccountEditFragment
 import com.hifi.redeal.account.AccountListFragment
 import com.hifi.redeal.account.AddressSearchFragment
+import com.hifi.redeal.account.NotificationFragment
 import com.hifi.redeal.auth.AuthFindPwFragment
 import com.hifi.redeal.auth.AuthJoinFragment
 import com.hifi.redeal.auth.AuthLoginFragment
@@ -107,6 +108,7 @@ class MainActivity : AppCompatActivity() {
         val MAP_FRAGMENT = "MapFragment"
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
         val TRANSACTION_FRAGMENT = "TransactionFragment"
+        val NOTIFICATION_FRAGMENT = "NotificationFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -335,6 +337,7 @@ class MainActivity : AppCompatActivity() {
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
             TRANSACTION_FRAGMENT -> TransactionFragment()
+            NOTIFICATION_FRAGMENT -> NotificationFragment()
             else -> Fragment()
         }
 

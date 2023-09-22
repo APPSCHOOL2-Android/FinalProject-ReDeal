@@ -37,6 +37,10 @@ class AccountEditFragment : Fragment(){
 
     val items = listOf("거래 중", "거래 시도", "거래 중지")
 
+    var fromNotification = false
+
+    var senderId = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +50,10 @@ class AccountEditFragment : Fragment(){
 
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0
+
+        senderId = arguments?.getString("senderId") ?: ""
+
+        fromNotification = arguments?.getBoolean("fromNotification") ?: false
 
         setFragmentResultListener("addressSearchResult") { _, bundle ->
             val data = bundle.getString("address")
@@ -129,7 +137,9 @@ class AccountEditFragment : Fragment(){
         if (clientIdx == 0L) {
             registerViewInit()
         } else if (!create) {
-            accountEditRepository.getClient(mainActivity.uid, clientIdx) {
+            val userId = if (fromNotification) senderId else mainActivity.uid
+
+            accountEditRepository.getClient(userId, clientIdx) {
                 client = it
                 editViewInit()
                 create = true
@@ -212,7 +222,7 @@ class AccountEditFragment : Fragment(){
 
     fun editViewInit() {
         fragmentAccountEditBinding.run {
-            materialToolbarAccountEdit.title = "거래처 정보 수정"
+            materialToolbarAccountEdit.title = if (fromNotification) "공유 거래처 정보" else "거래처 정보 수정"
 
             textEditTextAccountEditState.run {
                 val scale = resources.displayMetrics.density // 화면 밀도를 가져옴
@@ -247,7 +257,7 @@ class AccountEditFragment : Fragment(){
             textEditTextAccountEditEntireDescription.setText(client.clientMemo)
 
             buttonAccountEditSubmit.run {
-                text = "거래처 정보 수정"
+                text = if (fromNotification) "공유 거래처 등록" else "거래처 정보 수정"
 
                 setOnClickListener {
                     if (!validationCheck()) {
@@ -261,32 +271,46 @@ class AccountEditFragment : Fragment(){
                         else -> 1L
                     }
 
-                    accountEditRepository.updateClient(
-                        mainActivity.uid,
-                        ClientInputData(
-                            textEditTextAccountEditZipCode.text.toString(),
-                            textEditTextAccountEditGeneralNumber.text.toString().replace("-",""),
-                            textEditTextAccountEditDetailAddress.text.toString(),
-                            textEditTextAccountEditShortDescription.text.toString(),
-                            textEditTextAccountEditFaxNumber.text.toString().replace("-",""),
-                            clientIdx,
-                            textEditTextAccountEditRepresentative.text.toString(),
-                            textEditTextAccountEditDirectNumber.text.toString().replace("-",""),
-                            textEditTextAccountEditEntireDescription.text.toString(),
-                            textEditTextAccountEditAccountName.text.toString(),
-                            state,
-                            client.isBookmark,
-                            emptyList(),
-                            emptyList(),
-                            emptyList(),
-                            client.viewCount
-                        )
-                    ) {
-                        Snackbar.make(root, "거래처 정보가 수정되었습니다", Snackbar.LENGTH_SHORT).apply {
-                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
-                        }.show()
-                        mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
+                    val clientInputData = ClientInputData(
+                        textEditTextAccountEditZipCode.text.toString(),
+                        textEditTextAccountEditGeneralNumber.text.toString().replace("-",""),
+                        textEditTextAccountEditDetailAddress.text.toString(),
+                        textEditTextAccountEditShortDescription.text.toString(),
+                        textEditTextAccountEditFaxNumber.text.toString().replace("-",""),
+                        if (fromNotification) System.currentTimeMillis() else clientIdx,
+                        textEditTextAccountEditRepresentative.text.toString(),
+                        textEditTextAccountEditDirectNumber.text.toString().replace("-",""),
+                        textEditTextAccountEditEntireDescription.text.toString(),
+                        textEditTextAccountEditAccountName.text.toString(),
+                        state,
+                        if (fromNotification) false else client.isBookmark,
+                        emptyList(),
+                        emptyList(),
+                        emptyList(),
+                        if (fromNotification) 0 else client.viewCount
+                    )
+
+                    if (fromNotification) {
+                        accountEditRepository.registerClient(
+                            mainActivity.uid,
+                            clientInputData
+                        ) {
+                            Snackbar.make(root, "거래처가 등록되었습니다", Snackbar.LENGTH_SHORT).apply {
+                                anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                            }.show()
+                            mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
+                        }
+                    } else {
+                        accountEditRepository.updateClient(
+                            mainActivity.uid,
+                            clientInputData
+                        ) {
+                            Snackbar.make(root, "거래처 정보가 수정되었습니다", Snackbar.LENGTH_SHORT).apply {
+                                anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                            }.show()
+                            mainActivity.removeFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT)
 //                        findNavController().popBackStack()
+                        }
                     }
                 }
             }
