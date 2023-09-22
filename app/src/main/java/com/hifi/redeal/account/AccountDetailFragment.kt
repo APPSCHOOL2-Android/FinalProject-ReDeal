@@ -224,6 +224,10 @@ class AccountDetailFragment : Fragment() {
                         }
                         .setNegativeButton("취소", null)
                         .show()
+                } else {
+                    Snackbar.make(root, "등록된 대표 전화가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                 }
             }
 
@@ -242,6 +246,10 @@ class AccountDetailFragment : Fragment() {
                         }
                         .setNegativeButton("취소", null)
                         .show()
+                } else {
+                    Snackbar.make(root, "등록된 연락처가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                 }
             }
 
@@ -260,6 +268,10 @@ class AccountDetailFragment : Fragment() {
                         }
                         .setNegativeButton("취소", null)
                         .show()
+                } else {
+                    Snackbar.make(root, "등록된 연락처가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                    }.show()
                 }
             }
 
