@@ -19,6 +19,7 @@ import com.hifi.redeal.memo.model.UserRecordMemoData
 import com.hifi.redeal.memo.repository.MemoRepository
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
+import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.MemoViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -28,7 +29,7 @@ class UserRecordMemoListAdapter(
     val memoViewModel: MemoViewModel
 ): ListAdapter<UserRecordMemoData, RecyclerView.ViewHolder>(diffUtil){
 
-    private val dateFormat = SimpleDateFormat("yyyy년 M월 d일 a h시", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val drawableClientStateArr = arrayOf(
         R.drawable.circle_big_24px_primary20,
         R.drawable.circle_big_24px_primary50,
@@ -88,7 +89,7 @@ class UserRecordMemoListAdapter(
             }
         }
         fun bindItem(item: UserRecordMemoData){
-            userRecordDateTextView.text = dateFormat.format(item.date * 1000)
+            userRecordDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
             userRecordMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
 
             userRecordMemoClientName.text = "로딩 중"

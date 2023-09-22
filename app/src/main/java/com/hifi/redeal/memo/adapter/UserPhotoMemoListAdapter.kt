@@ -16,6 +16,7 @@ import com.hifi.redeal.databinding.RowUserPhotoMemoBinding
 import com.hifi.redeal.memo.model.UserPhotoMemoData
 import com.hifi.redeal.memo.repository.MemoRepository
 import com.hifi.redeal.memo.utils.dpToPx
+import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.MemoViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,7 +26,7 @@ class UserPhotoMemoListAdapter(
     val memoViewModel: MemoViewModel
 ): ListAdapter<UserPhotoMemoData, RecyclerView.ViewHolder>(diffUtil){
 
-    private val dateFormat = SimpleDateFormat("yyyy년 M월 d일 a h시", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val drawableClientStateArr = arrayOf(
         R.drawable.circle_big_24px_primary20,
         R.drawable.circle_big_24px_primary50,
@@ -53,7 +54,7 @@ class UserPhotoMemoListAdapter(
         private val userPhotoMemoClientName = rowUserPhotoMemoBinding.userPhotoMemoClientName
         private val userPhotoMemoClientManagerName = rowUserPhotoMemoBinding.userPhotoMemoClientManagerName
         fun bindItem(item: UserPhotoMemoData){
-            userPhotoDateTextView.text = dateFormat.format(item.date * 1000)
+            userPhotoDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
             userPhotoMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
 
             userPhotoMemoClientName.text = "로딩 중"

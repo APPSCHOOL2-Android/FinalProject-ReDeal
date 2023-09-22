@@ -23,13 +23,14 @@ import com.hifi.redeal.databinding.RowRecordMemoBinding
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
+import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class RecordMemoFragment : Fragment() {
 
-    private val dateFormat = SimpleDateFormat("yyyy년 M월 d일 a h시", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     private lateinit var fragmentRecordMemoBinding : FragmentRecordMemoBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var recordMemoViewModel: RecordMemoViewModel
@@ -104,8 +105,8 @@ class RecordMemoFragment : Fragment() {
                 }
             }
             fun bindItem(item: RecordMemoData){
-                recordDateTextView.text = dateFormat.format(item.date * 1000)
-                recordMemoTextView.text = item.context
+                recordDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
+                recordMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
                 recordMemoFilenameTextView.text = item.audioFilename
                 recordMemoAudioSeekBar.progress = 0
                 recordMemoAudioSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
