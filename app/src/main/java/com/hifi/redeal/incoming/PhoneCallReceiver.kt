@@ -50,7 +50,7 @@ class PhoneCallReceiver: BroadcastReceiver() {
                                 .build()
                             WorkManager.getInstance(context).enqueue(request)
                             Log.d("tttt","통화 수신 워커 실행 / 실행 시간 : ${System.currentTimeMillis()}")
-                        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && context != null) {
+                        } else if( context != null) {
                             ContextCompat.startForegroundService(context, serviceIntent)
                             Log.d("tttt","통화 수신 서비스 실행 / 실행 시간 : ${System.currentTimeMillis()}")
                         } else {

@@ -147,6 +147,12 @@ class UnvisitedScheduleFragment : Fragment() {
         fragmentUnvisitedScheduleBinding.run{
             unvisitedScheduleToolbar.run{
 
+                unVisitedClientDetail.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putLong("clientIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
+                    mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
+                }
+
                 setNavigationOnClickListener {
                     mainActivity.removeFragment(MainActivity.UNVISITED_SCHEDULE_FRAGMENT)
                 }
