@@ -6,18 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -27,22 +23,21 @@ import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.exoplayer2.text.Cue.AnchorType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.search.SearchView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
+import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.FragmentMapBinding
 import com.hifi.redeal.databinding.RowMapClientListBinding
-import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.model.ScheduleDataClass
 import com.hifi.redeal.map.repository.ClientRepository
 import com.hifi.redeal.map.repository.MapRepository
@@ -55,10 +50,7 @@ import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.shape.Polyline
-import kotlinx.coroutines.awaitAll
 import java.text.SimpleDateFormat
 
 
@@ -364,6 +356,16 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
             if (clientViewModel.clientDataListByKeyWord.value?.get(position)?.isBookmark == false) {
                 holder.rowMapClientListBookMark.visibility = View.INVISIBLE
             }
+            holder.rowMapClientListBtnToNavi.visibility = View.INVISIBLE
+
+//            holder.rowMapClientListBtnToNavi.setOnClickListener {
+//                fragmentMapBinding.mapSearchView.hide()
+//                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress
+//                if(!clientAddr.isNullOrBlank()){
+//                    getTMapAddress(clientAddr)
+//                }
+//
+//            }
         }
     }
 
@@ -436,6 +438,13 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 clientViewModel.clientDataListAll.value?.get(position)?.clientName
             holder.rowMapClientListManagerName.text =
                 clientViewModel.clientDataListAll.value?.get(position)?.clientManagerName
+            holder.rowMapClientListBtnToNavi.setOnClickListener {
+                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress
+                if(!clientAddr.isNullOrBlank()){
+                    getTMapAddress(clientAddr)
+                }
+
+            }
 
             when (clientViewModel.clientDataListAll.value?.get(position)?.clientState) {
                 1L -> {
@@ -497,6 +506,45 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
         }
     }
 
+    fun getTMapAddress(addr : String){
+        MapRepository.getFullAddrGeocoding(addr){ coordinate ->
+            Log.d("티맵",coordinate.toString())
+            if(coordinate!=null){
+                goToTMap(coordinate!!)
+            }
+        }
+    }
+    private fun goToTMap(coordinate: Coordinate) {
+        android.app.AlertDialog.Builder(mainActivity)
+            .setTitle("길 안내")
+            .setMessage("티맵 길 안내를 시작하시겠습니까?")
+            .setPositiveButton("확인") { _, _ ->
+                if (mainActivity.tMapTapi.isTmapApplicationInstalled) {
+                    mainActivity.tMapTapi.invokeRoute(
+                        coordinate.newBuildingName,
+                        coordinate.newLon.toFloat(),
+                        coordinate.newLat.toFloat()
+                    )
+                } else {
+                    Snackbar.make(
+                        fragmentMapBinding.root,
+                        "티맵 앱 설치 후 다시 시도해주세요",
+                        Snackbar.LENGTH_SHORT
+                    )
+                        .setAction("설치하기") {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = Uri.parse("market://details?id=com.skt.tmap.ku")
+                            startActivity(intent)
+                        }.apply {
+                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                        }
+                        .show()
+                }
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
     fun setClientAddress(addr: String) {
         MapRepository.searchAddr(addr!!) { list ->
             if (list?.isNotEmpty() == true && list != null) {
@@ -506,7 +554,14 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 Log.d("주소 확인2", long.toString())
                 clientViewModel.currentAddress.value = LatLng.from(lat, long)
             } else {
-                showDialog("주소 오류", "현 주소는 지원하지 않습니다.", mainActivity)
+                MapRepository.getFullAddrGeocoding(addr!!){
+                    val lat = it!!.newLat.toDouble()
+                    val long = it!!.newLon.toDouble()
+                    Log.d("티맵 주소 확인1", lat.toString())
+                    Log.d("티맵 주소 확인2", long.toString())
+                    clientViewModel.currentAddress.value = LatLng.from(lat, long)
+
+                }
             }
         }
     }

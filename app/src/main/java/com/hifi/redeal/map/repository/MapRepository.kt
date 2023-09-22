@@ -7,6 +7,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.BuildConfig
 import com.hifi.redeal.MainActivity
+import com.hifi.redeal.account.repository.RetrofitManager
+import com.hifi.redeal.account.repository.model.Coordinate
+import com.hifi.redeal.account.repository.model.FullAddrResponse
 import com.hifi.redeal.map.model.AdmVO
 import com.hifi.redeal.map.model.KakaoMapAPI
 import com.hifi.redeal.map.model.Place
@@ -18,6 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.URLEncoder
 
 class MapRepository {
     companion object {
@@ -214,6 +218,26 @@ class MapRepository {
                 }
             })
 
+        }
+
+        fun getFullAddrGeocoding(fullAddr: String, callback: (Coordinate?) -> Unit) {
+            val encodedFullAddr = URLEncoder.encode(fullAddr, "UTF-8")
+
+            RetrofitManager.tMapTapiService.tMapFullTextGeocoding(fullAddr = encodedFullAddr, appKey = BuildConfig.TMAP_APP_KEY)
+                .enqueue(object : Callback<FullAddrResponse> {
+                    override fun onResponse(
+                        call: Call<FullAddrResponse>,
+                        response: Response<FullAddrResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            callback(response.body()?.coordinateInfo?.coordinate?.get(0))
+                        }
+                    }
+
+                    override fun onFailure(call: Call<FullAddrResponse>, t: Throwable) {
+                        Log.d("brudenell", "네트워크 통신 실패")
+                    }
+                })
         }
 
 
