@@ -32,6 +32,9 @@ import com.kakao.vectormap.mapwidget.component.GuiLayout
 import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
 import java.lang.NullPointerException
+import com.kakao.vectormap.KakaoMap
+import com.kakao.vectormap.KakaoMapReadyCallback
+
 import java.text.SimpleDateFormat
 
 
@@ -76,7 +79,6 @@ class AccountDetailFragment : Fragment() {
         }
 
         fragmentAccountDetailBinding.run {
-//            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.transactionFragment -> {
@@ -98,7 +100,6 @@ class AccountDetailFragment : Fragment() {
                             bundle
                         )
                     }
-
                     R.id.photoMemoFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
@@ -335,7 +336,9 @@ class AccountDetailFragment : Fragment() {
 
             textViewAccountDetailShortDescription.text = client.clientExplain
             textViewAccountDetailGeneralNumber.append(ceoPhoneNumber)
-            textViewAccountDetailFaxNumber.append(faxNumber)
+            if(faxNumber != null) {
+                textViewAccountDetailFaxNumber.append(faxNumber)
+            }
             textViewAccountDetailAddress.text = "${client.clientAddress} ${client.clientDetailAdd}"
             textViewAccountDetailRepresentative.text = client.clientManagerName
             textViewAccountDetailDirectNumber.text = managerPhoneNumber

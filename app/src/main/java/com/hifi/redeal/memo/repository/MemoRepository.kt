@@ -8,6 +8,16 @@ import com.google.firebase.storage.FirebaseStorage
 
 class MemoRepository {
     companion object{
+
+        fun getUserRecordMemoAll(userIdx:String, callback1: (QuerySnapshot) -> Unit){
+            val db = Firebase.firestore
+            val photoMemoRef = db.collection("userData")
+                .document("$userIdx")
+                .collection("recordMemoData")
+            photoMemoRef.get()
+                .addOnSuccessListener(callback1)
+        }
+
         fun getUserPhotoMemoAll(userIdx:String, callback1: (QuerySnapshot) -> Unit){
             val db = Firebase.firestore
             val photoMemoRef = db.collection("userData")
@@ -17,7 +27,7 @@ class MemoRepository {
                 .addOnSuccessListener(callback1)
         }
 
-        fun getUserPhotoMemoClientInfo(userIdx:String, clientIdx:Long, callback1: (DocumentSnapshot) -> Unit){
+        fun getUserMemoClientInfo(userIdx:String, clientIdx:Long, callback1: (DocumentSnapshot) -> Unit){
             val db = Firebase.firestore
             val photoMemoRef = db.collection("userData")
                 .document(userIdx)
