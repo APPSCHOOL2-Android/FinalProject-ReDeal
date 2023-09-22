@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.work.ListenableWorker
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.R
@@ -24,7 +26,7 @@ class CallNumberCheckService: Service() {
         var clientExplain : String? = null
         var clientManagerName : String? = null
 
-        val uid = "1" // 추후 uid로 정보 찾음. 프리퍼런스를 이용.
+        val uid = Firebase.auth.uid ?: "-1"
         val db = Firebase.firestore
 
         // 대표 번호 조회
@@ -45,8 +47,7 @@ class CallNumberCheckService: Service() {
 
                     val notification = builder.build()
                     val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.notify(notiId, notification)
-                    notiId++
+                    notificationManager.notify(notiId+1, notification)
 
                 }
             }.addOnCompleteListener {
@@ -65,8 +66,7 @@ class CallNumberCheckService: Service() {
                             builder.setContentText("거래처 : $clientName \n담당자 : $clientManagerName")
                             val notification = builder.build()
                             val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                            notificationManager.notify(notiId, notification)
-                            notiId++
+                            notificationManager.notify(notiId+1, notification)
                         }
                     }
             }

@@ -1,6 +1,5 @@
 package com.hifi.redeal.account.adapter
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -9,7 +8,6 @@ import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +20,7 @@ import com.hifi.redeal.databinding.RowFooterAccountListBinding
 import com.hifi.redeal.databinding.RowItemAccountListBinding
 import java.text.SimpleDateFormat
 
-class AccountListAdapter(
+class SearchResultAdapter(
     val mainActivity: MainActivity,
     val accountListViewModel: AccountListViewModel
 ): ListAdapter<ClientData, RecyclerView.ViewHolder>(diffUtil) {
@@ -60,22 +58,22 @@ class AccountListAdapter(
             ITEM -> {
                 val rowItemAccountListBinding = RowItemAccountListBinding.inflate(inflater)
                 rowItemAccountListBinding.root.layoutParams = params
-                return AccountListViewHolder(rowItemAccountListBinding)
+                return SearchResultViewHolder(rowItemAccountListBinding)
             }
             else -> {
                 val rowFooterAccountListBinding = RowFooterAccountListBinding.inflate(inflater)
                 rowFooterAccountListBinding.root.layoutParams = params
-                return AccountListFooterViewHolder(rowFooterAccountListBinding)
+                return SearchResultFooterViewHolder(rowFooterAccountListBinding)
             }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is AccountListViewHolder -> {
+            is SearchResultViewHolder -> {
                 holder.bind(currentList[position])
             }
-            is AccountListFooterViewHolder -> {
+            is SearchResultFooterViewHolder -> {
                 holder.bind()
             }
         }
@@ -93,12 +91,29 @@ class AccountListAdapter(
         }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    val drawable = mainActivity.getDrawable(R.drawable.star_fill_16px)
-
-    inner class AccountListViewHolder(val rowItemAccountListBinding: RowItemAccountListBinding): RecyclerView.ViewHolder(rowItemAccountListBinding.root) {
+    inner class SearchResultViewHolder(val rowItemAccountListBinding: RowItemAccountListBinding): RecyclerView.ViewHolder(rowItemAccountListBinding.root) {
         fun bind(clientData: ClientData) {
+
             rowItemAccountListBinding.run {
+                accountListViewModel.accountListRepository.getRecentVisitDate(mainActivity.uid, clientData.clientIdx) {
+                    textViewRowItemAccountListRecentVisitDate.run {
+                        if (it.scheduleFinishTime == null) {
+                            visibility = View.INVISIBLE
+                        } else {
+                            visibility = View.VISIBLE
+
+                            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                            val visitTime = dateFormat.format(it.scheduleFinishTime!!.toDate())
+
+                            text = "최근 방문 ${mainActivity.intervalBetweenDateText(visitTime)}"
+                        }
+                    }
+                }
+
+                textViewRowItemAccountListAccountName.text = clientData.clientName
+
+                textViewRowItemAccountListRepresentative.text = clientData.clientManagerName
+
                 root.setOnClickListener {
                     accountListViewModel.accountListRepository.incClientViewCount(mainActivity.uid, clientData.clientIdx ?: 0, clientData.viewCount ?: 0)
 
@@ -108,31 +123,16 @@ class AccountListAdapter(
 //                    mainActivity.navigateTo(R.id.accountDetailFragment, bundle)
                 }
 
-                textViewRowItemAccountListAccountName.text = clientData.clientName
                 if (clientData.isBookmark == true) {
                     textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.star_fill_16px, 0)
                 } else {
                     textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
                 }
+
                 imageViewRowItemAccountListTransactionState.setImageResource(accountStateResIdList[(clientData.clientState?.toInt() ?: 1) - 1] )
-                textViewRowItemAccountListRepresentative.text = clientData.clientManagerName
-
-                textViewRowItemAccountListRecentVisitDate.run {
-                    if (clientData.recentVisitDate == null) {
-                        visibility = View.INVISIBLE
-                    } else {
-                        visibility = View.VISIBLE
-
-                        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                        val visitTime = dateFormat.format(clientData.recentVisitDate!!.toDate())
-
-                        text = "최근 방문 ${mainActivity.intervalBetweenDateText(visitTime)}"
-                    }
-                }
 
                 buttonRowItemAccountListCall.setOnClickListener {
                     val formattedPhoneNumber = PhoneNumberUtils.formatNumber(clientData.clientManagerPhone, "KR")
-
                     if (clientData.clientManagerPhone?.isNotEmpty() == true) {
                         AlertDialog.Builder(mainActivity)
                             .setTitle("담당자 연락처 통화")
@@ -157,20 +157,12 @@ class AccountListAdapter(
         }
     }
 
-    inner class AccountListFooterViewHolder(val rowFooterAccountListBinding: RowFooterAccountListBinding): RecyclerView.ViewHolder(rowFooterAccountListBinding.root) {
+    inner class SearchResultFooterViewHolder(val rowFooterAccountListBinding: RowFooterAccountListBinding): RecyclerView.ViewHolder(rowFooterAccountListBinding.root) {
         fun bind() {
             if (currentList.isEmpty()) {
-                rowFooterAccountListBinding.textViewRowFooterAccountList.text = "거래처가 없습니다"
+                rowFooterAccountListBinding.textViewRowFooterAccountList.text = "검색 결과가 없습니다"
             } else {
-                val criterion = when (accountListViewModel.selectedTabItemPosState.value) {
-                    0 -> "즐겨 찾기"
-                    1 -> "거래 중"
-                    2 -> "거래 시도"
-                    3 -> "거래 중지"
-                    else -> "총"
-                }
-
-                rowFooterAccountListBinding.textViewRowFooterAccountList.text = "$criterion ${currentList.size}개"
+                rowFooterAccountListBinding.textViewRowFooterAccountList.text = "검색 결과 ${currentList.size}개"
             }
         }
     }

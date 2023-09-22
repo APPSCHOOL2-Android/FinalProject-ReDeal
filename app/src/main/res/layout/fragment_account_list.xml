@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:transitionGroup="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".account.AccountListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutAccountList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/materialToolbarAccountList"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:background="@color/background"
-            android:minHeight="?attr/actionBarSize"
-            app:menu="@menu/toolbar_menu_account_list"
-            app:title="리딜"
-            app:titleTextAppearance="@style/account_list_toolbar_title_text_appearance" />
+            android:orientation="horizontal">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/materialToolbarAccountList"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:background="@color/background"
+                android:minHeight="?attr/actionBarSize"
+                app:title="리딜"
+                app:titleTextAppearance="@style/account_list_toolbar_title_text_appearance" />
+
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/searchBarAccountList"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:backgroundTint="@color/background"
+                android:paddingStart="0dp"
+                app:navigationIcon="@drawable/search_24px_primary20"
+                app:tintNavigationIcon="true"
+                app:navigationIconTint="@color/primary20"
+                app:defaultMarginsEnabled="false"/>
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="center"
+                app:srcCompat="@drawable/notifications_24px"
+                android:layout_marginEnd="4dp"/>
+
+        </LinearLayout>
 
         <View
             android:id="@+id/divider"
@@ -31,138 +59,174 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/imageViewAccountListUserThumb"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayoutAccountList">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="62dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/imageViewAccountListUserThumb"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:paddingHorizontal="8dp"
-            android:src="@drawable/card_account_detail_24px_primary20" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/rounded_rectangle_vertical_padding_primary90"
+            app:srcCompat="@drawable/card_account_detail_24px_primary99"
+            app:tint="@color/primary95" />
+
+        <TextView
+            android:id="@+id/textViewAccountListUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:maxLines="1"
+            android:textColor="@color/text10"
+            app:layout_constraintBottom_toTopOf="@id/textViewAccountListUserInfo"
+            app:layout_constraintEnd_toStartOf="@id/tabLayoutAccountListState"
+            app:layout_constraintStart_toEndOf="@id/imageViewAccountListUserThumb"
+            app:layout_constraintTop_toTopOf="@id/imageViewAccountListUserThumb" />
 
         <TextView
             android:id="@+id/textViewAccountListUserInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/nanumsquareneo_regular"
             android:text="내 정보"
+            android:fontFamily="@font/nanumsquareneo_regular"
             android:textColor="@color/text50"
             android:textSize="10sp"
-            tools:layout_editor_absoluteX="64dp" />
-    </LinearLayout>
+            app:layout_constraintStart_toStartOf="@id/textViewAccountListUserName"
+            app:layout_constraintTop_toBottomOf="@id/textViewAccountListUserName"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAccountListUserThumb"/>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutAccountListState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayoutAccountList"
-        app:tabIndicatorColor="@color/primary20"
-        app:tabPaddingEnd="2dp"
-        app:tabPaddingStart="2dp"
-        app:tabRippleColor="@color/background">
 
-        <!--        <com.google.android.material.tabs.TabItem-->
-        <!--            android:id="@+id/tabItemAccountListFavorites"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
 
-        <!--        <com.google.android.material.tabs.TabItem-->
-        <!--            android:id="@+id/tabItemAccountListTrading"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
-
-        <!--        <com.google.android.material.tabs.TabItem-->
-        <!--            android:id="@+id/tabItemAccountListTry"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
-
-        <!--        <com.google.android.material.tabs.TabItem-->
-        <!--            android:id="@+id/tabItemAccountListStop"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroupAccountList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:checkedChip="@id/chipAccountListSortReference"
-        app:chipSpacingHorizontal="4dp"
-        app:layout_constraintStart_toStartOf="@id/imageViewAccountListUserThumb"
-        app:layout_constraintTop_toBottomOf="@id/imageViewAccountListUserThumb"
-        app:selectionRequired="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAccountListSortReference"
-            style="@style/tab_item_chip_style_account_list"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutAccountListState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="조회순"
-            app:closeIconTint="@color/primary20" />
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/background"
+            app:tabIndicatorColor="@color/primary20"
+            app:tabPaddingStart="2dp"
+            app:tabPaddingEnd="2dp"
+            app:tabRippleColor="@color/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAccountListSortVisit"
-            style="@style/tab_item_chip_style_account_list"
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListFavorites"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListTrading"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListTry"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListStop"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupAccountList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="방문순" />
+            android:layout_marginTop="16dp"
+            app:chipSpacingHorizontal="4dp"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedChip="@id/chipAccountListSortReference"
+            app:layout_constraintStart_toStartOf="@id/imageViewAccountListUserThumb"
+            app:layout_constraintTop_toBottomOf="@id/imageViewAccountListUserThumb">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAccountListSortContact"
-            style="@style/tab_item_chip_style_account_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="연락순" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAccountListSortReference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="조회순"
+                style="@style/tab_item_chip_style_account_list"
+                app:closeIconTint="@color/primary20"/>
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAccountListSortRegister"
-            style="@style/tab_item_chip_style_account_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="등록순" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAccountListSortVisit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="방문순"
+                style="@style/tab_item_chip_style_account_list" />
 
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAccountListSortContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="연락순"
+                style="@style/tab_item_chip_style_account_list" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAccountList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/chipGroupAccountList"
-        app:layout_constraintTop_toBottomOf="@id/chipGroupAccountList"
-        tools:listitem="@layout/row_item_account_list" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAccountListSortRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="등록순"
+                style="@style/tab_item_chip_style_account_list" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAccountListAddAccount"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/primary80"
-        android:foreground="@drawable/fab_account_list_person_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        </com.google.android.material.chip.ChipGroup>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAccountList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/chipGroupAccountList"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chipGroupAccountList"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/row_item_account_list"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAccountListAddAccount"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:backgroundTint="@color/primary80"
+            android:foreground="@drawable/fab_account_list_person_add"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/searchViewAccountList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="거래처 또는 담당자 이름으로 검색"
+        app:layout_anchor="@id/searchBarAccountList"
+        app:layout_anchorGravity="center">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAccountListSearchResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"/>
+
+    </com.google.android.material.search.SearchView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

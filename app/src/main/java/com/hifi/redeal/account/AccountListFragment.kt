@@ -12,11 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
+import com.google.android.material.search.SearchView
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.adapter.AccountListAdapter
+import com.hifi.redeal.account.adapter.SearchResultAdapter
 import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.FragmentAccountListBinding
 import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
@@ -54,11 +58,49 @@ class AccountListFragment : Fragment() {
         mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.VISIBLE
         fragmentAccountListBinding = FragmentAccountListBinding.inflate(layoutInflater)
 
+        if(arguments?.getLong("notifyClientIdx") != null){ // 알림을 통하여 왔을 경우
+            val clientIdx = arguments?.getLong("notifyClientIdx")!!
+            val bundle = Bundle()
+            bundle.putLong("clientIdx", clientIdx)
+            mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
+        }
+
         accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
+
+        accountListViewModel.accountListRepository.getUserData(mainActivity.uid) {
+            fragmentAccountListBinding.textViewAccountListUserName.text = it.userName
+        }
 
         fragmentAccountListBinding.run {
 
             val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)
+            val searchResultAdapter = SearchResultAdapter(mainActivity, accountListViewModel)
+
+            searchViewAccountList.editText.setOnEditorActionListener { v, actionId, event ->
+                if (v.text.toString().isNotEmpty()) {
+                    accountListViewModel.getSearchResult(mainActivity.uid, v.text.toString())
+                } else {
+                    searchResultAdapter.run {
+                        submitList(emptyList()) {
+                            notifyItemChanged(itemCount - 1)
+                        }
+                    }
+                }
+                false
+            }
+
+            searchViewAccountList.run {
+                addTransitionListener { searchView, previousState, newState ->
+                    if (newState == SearchView.TransitionState.HIDING) {
+                        searchResultAdapter.run {
+                            submitList(emptyList()) {
+                                notifyItemChanged(itemCount - 1)
+                            }
+                        }
+                    }
+                }
+
+            }
 
             tabLayoutAccountListState.run {
 
@@ -183,6 +225,21 @@ class AccountListFragment : Fragment() {
                     submitList(it) {
                         notifyItemChanged(itemCount - 1)
                         recyclerViewAccountList.scrollToPosition(0)
+                    }
+                }
+            }
+
+            recyclerViewAccountListSearchResult.run {
+                adapter = searchResultAdapter
+                layoutManager = LinearLayoutManager(mainActivity)
+                addItemDecoration(DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL))
+            }
+
+            accountListViewModel.searchResultList.observe(viewLifecycleOwner) {
+                searchResultAdapter.run {
+                    submitList(it) {
+                        notifyItemChanged(itemCount - 1)
+                        recyclerViewAccountListSearchResult.scrollToPosition(0)
                     }
                 }
             }

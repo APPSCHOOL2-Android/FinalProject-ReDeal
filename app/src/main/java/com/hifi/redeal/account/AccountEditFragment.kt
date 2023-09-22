@@ -1,13 +1,18 @@
 package com.hifi.redeal.account
 
+import android.app.AlertDialog
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResultListener
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
@@ -72,11 +77,48 @@ class AccountEditFragment : Fragment(){
                         2 -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
                     }
                 }
+
+                addTextChangedListener {
+                    val scale = resources.displayMetrics.density // 화면 밀도를 가져옴
+                    val pixel = (4 * scale + 0.5f).toInt()
+
+                    compoundDrawablePadding = pixel
+
+                    when (it.toString()) {
+                        "거래 중" -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary20, 0, 0, 0)
+                        "거래 시도" -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary50, 0, 0, 0)
+                        "거래 중지" -> setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.circle_big_16px_primary80, 0, 0, 0)
+                    }
+                }
             }
 
-            textEditTextAccountEditDirectNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-            textEditTextAccountEditFaxNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
-            textEditTextAccountEditGeneralNumber.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+            val phoneNumberFormattingTextWatcher = PhoneNumberFormattingTextWatcher()
+
+            textEditTextAccountEditDirectNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
+            textEditTextAccountEditFaxNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
+            textEditTextAccountEditGeneralNumber.addTextChangedListener(phoneNumberFormattingTextWatcher)
+
+//            textEditTextAccountEditZipCode.setOnFocusChangeListener { v, hasFocus ->
+//                if (hasFocus) {
+//                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(R.color.primary20, null)
+//                } else if (textEditTextAccountEditZipCode.text.toString().isEmpty()) {
+//                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(android.R.color.transparent, null)
+//                } else {
+//                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(R.color.text30, null)
+//                }
+//            }
+
+            textEditTextAccountEditZipCode.addTextChangedListener {
+                if (textEditTextAccountEditZipCode.text.toString().isEmpty()) {
+                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(android.R.color.transparent, null)
+                } else {
+                    textInputLayoutAccountEditZipCode.defaultHintTextColor = resources.getColorStateList(R.color.text30, null)
+                }
+            }
+
+            textEditTextAccountEditZipCode.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
+            }
 
             buttonAccountEditAddressSearch.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
@@ -122,6 +164,10 @@ class AccountEditFragment : Fragment(){
             }
 
             buttonAccountEditSubmit.setOnClickListener {
+                if (!validationCheck()) {
+                    return@setOnClickListener
+                }
+
                 buttonAccountEditSubmit.text = "거래처 등록"
 
                 val state = when (textEditTextAccountEditState.text.toString()) {
@@ -204,6 +250,10 @@ class AccountEditFragment : Fragment(){
                 text = "거래처 정보 수정"
 
                 setOnClickListener {
+                    if (!validationCheck()) {
+                        return@setOnClickListener
+                    }
+
                     val state = when (textEditTextAccountEditState.text.toString()) {
                         "거래 중" -> 1L
                         "거래 시도" -> 2L
@@ -241,5 +291,50 @@ class AccountEditFragment : Fragment(){
                 }
             }
         }
+    }
+
+    fun validationCheck(): Boolean {
+        fragmentAccountEditBinding.run {
+            textEditTextAccountEditState.run {
+                if (text.toString().isEmpty()) {
+                    AlertDialog.Builder(mainActivity)
+                        .setTitle("거래 상태")
+                        .setMessage("거래 상태를 선택해주세요")
+                        .setPositiveButton("확인") { _, _ ->
+                            textEditTextAccountEditState.showDropDown()
+                            requestFocus()
+                        }
+                        .show()
+                    return false
+                }
+            }
+
+            textEditTextAccountEditAccountName.run {
+                if (text.toString().isEmpty()) {
+                    AlertDialog.Builder(mainActivity)
+                        .setTitle("거래처명")
+                        .setMessage("거래처명을 입력해주세요")
+                        .setPositiveButton("확인") { _, _ ->
+                            mainActivity.showSoftInput(this)
+                        }
+                        .show()
+                    return false
+                }
+            }
+
+            textEditTextAccountEditZipCode.run {
+                if (text.toString().isEmpty()) {
+                    AlertDialog.Builder(mainActivity)
+                        .setTitle("거래처 주소")
+                        .setMessage("거래처 주소를 입력해주세요")
+                        .setPositiveButton("확인") { _, _ ->
+                            mainActivity.replaceFragment(MainActivity.ADDRESS_SEARCH_FRAGMENT, true)
+                        }
+                        .show()
+                    return false
+                }
+            }
+        }
+        return true
     }
 }

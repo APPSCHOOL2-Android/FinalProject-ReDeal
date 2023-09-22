@@ -8,18 +8,8 @@ import com.hifi.redeal.R
 import com.hifi.redeal.map.model.ClientDataClass
 import com.hifi.redeal.map.model.ScheduleDataClass
 import com.hifi.redeal.map.repository.ClientRepository
+import com.hifi.redeal.map.repository.MapRepository
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapConfig
-import com.kakao.vectormap.MapLogger
-import com.kakao.vectormap.MapOverlay
-import com.kakao.vectormap.MapReadyCallback
-import com.kakao.vectormap.MapView
-import com.kakao.vectormap.RoadViewRequest.Marker
-import com.kakao.vectormap.graphics.MapRenderer
-import com.kakao.vectormap.internal.MapViewHolder
-import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayerOptions
-import com.kakao.vectormap.label.LabelManager
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -45,10 +35,16 @@ class ClientViewModel : ViewModel() {
 
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
+                val clientData = snapshot.toObject(ClientDataClass::class.java)
                 Log.d("검색 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
-                if (snapshot.getString("clientName")!!.contains(keyword)) {
-                    var item = snapshot.toObject(ClientDataClass::class.java)
-                    tempList.add(item!!)
+                if (clientData!=null) {
+                    val clientName = clientData.clientName
+                    val managerName = clientData.clientManagerName
+
+                    // "clientName" 또는 "managerName" 중 하나라도 키워드를 포함하면 tempList에 추가
+                    if (clientName.contains(keyword) || managerName.contains(keyword)) {
+                        tempList.add(clientData)
+                    }
                     Log.d("검색 테스트", tempList.toString())
                 }
             }
@@ -140,7 +136,7 @@ class ClientViewModel : ViewModel() {
 
                 val clientAddr = c.clientAddress!!.replace(regex.toRegex(), "")
                 Log.d("거래처 테스트4",clientAddr)
-                ClientRepository.searchAddr(clientAddr) {
+                MapRepository.searchAddr(clientAddr) {
                     Log.d("거래처 테스트5",it.toString())
                     if (it!!.isEmpty()) {
                         return@searchAddr
