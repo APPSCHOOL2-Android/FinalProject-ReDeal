@@ -257,7 +257,7 @@ class AccountEditFragment : Fragment(){
             textEditTextAccountEditEntireDescription.setText(client.clientMemo)
 
             buttonAccountEditSubmit.run {
-                text = if (fromNotification) "공유 거래처 등록" else "거래처 정보 수정"
+                text = if (fromNotification) "거래처 등록" else "거래처 정보 수정"
 
                 setOnClickListener {
                     if (!validationCheck()) {

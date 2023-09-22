@@ -33,8 +33,6 @@ import com.kakao.vectormap.mapwidget.component.GuiLayout
 import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
 import java.lang.NullPointerException
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
 
 import java.text.SimpleDateFormat
 
