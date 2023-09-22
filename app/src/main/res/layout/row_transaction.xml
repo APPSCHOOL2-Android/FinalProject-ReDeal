@@ -5,33 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textTransactionDate"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/nanumsquareneo_regular"
-        android:text="2000.01.01"
-        android:textColor="@color/text10"
-        android:textSize="12sp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textTransactionDate"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:text="2000.01.01"
+            android:textColor="@color/text10"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/transctionClientNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:text="거래처 명"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewTrasaction"
         android:layout_width="350dp"
         android:layout_height="142dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textTransactionDate">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
         <View
             android:id="@+id/divider5"
@@ -77,7 +91,7 @@
             android:layout_height="13dp"
             android:layout_gravity="left"
             android:layout_marginLeft="13dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
             android:text="수량"
@@ -89,8 +103,8 @@
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
             android:text="개"
@@ -99,11 +113,11 @@
 
         <TextView
             android:id="@+id/textProductCount"
-            android:layout_width="81dp"
+            android:layout_width="110dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
-            android:layout_marginTop="45dp"
-            android:layout_marginRight="230dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="200dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|right"
             android:hint="수량"
@@ -125,11 +139,11 @@
 
         <TextView
             android:id="@+id/textUnitPrice"
-            android:layout_width="80dp"
+            android:layout_width="110dp"
             android:layout_height="13dp"
             android:layout_gravity="right"
             android:layout_marginTop="68dp"
-            android:layout_marginRight="230dp"
+            android:layout_marginRight="200dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|right"
             android:hint="단가"
@@ -141,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="120dp"
+            android:layout_marginLeft="150dp"
             android:layout_marginTop="68dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:gravity="center|left"
@@ -267,18 +281,5 @@
             android:textSize="12dp" />
 
     </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/transctionClientNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/nanumsquareneo_regular"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewTrasaction"
-        app:layout_constraintStart_toEndOf="@+id/textTransactionDate"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
