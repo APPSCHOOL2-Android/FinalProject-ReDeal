@@ -134,6 +134,19 @@ class MainActivity : AppCompatActivity() {
 //        R.id.mapFragment,
 //    )
 
+    override fun onResume() {
+        super.onResume()
+        if(intent.getLongExtra("notifyClientIdx", -1) != -1L){
+            Log.d("RedealNotify", "메인 액티비티 실행 : ${intent.getLongExtra("notifyClientIdx", -1)}")
+            val bundle = Bundle()
+            val notifyClientIdx = intent.getLongExtra("notifyClientIdx", -1)
+            if(notifyClientIdx != -1L){
+                bundle.putLong("notifyClientIdx", notifyClientIdx)
+                replaceFragment(ACCOUNT_DETAIL_FRAGMENT, false, bundle)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -158,13 +171,6 @@ class MainActivity : AppCompatActivity() {
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
         activityMainBinding.run {
-
-            if(intent.getLongExtra("notifyClientIdx", -1) != -1L){
-                val bundle = Bundle()
-                val notifyClientIdx = intent.getLongExtra("notifyClientIdx", -1)
-                bundle.putLong("notifyClientIdx", notifyClientIdx)
-                replaceFragment(ACCOUNT_LIST_FRAGMENT, true, bundle)
-            }
 
             bottomNavigationViewMain.setOnItemSelectedListener {
                 when (it.itemId) {

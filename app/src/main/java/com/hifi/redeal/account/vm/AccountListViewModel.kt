@@ -29,7 +29,6 @@ class AccountListViewModel: ViewModel() {
         val sortBy = tabItemCheckedListSort.indexOf(true)
 
         val descending = tabItemDescListSort[sortBy]
-
         accountListRepository.getClientList(userId, filter, sortBy, descending) { filteredClientList, cntList ->
             filterCntList.value = cntList
             clientList.value = filteredClientList
