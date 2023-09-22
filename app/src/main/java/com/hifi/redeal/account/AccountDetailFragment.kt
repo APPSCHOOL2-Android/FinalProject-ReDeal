@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,8 @@ import com.hifi.redeal.account.repository.AccountDetailRepository
 import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
+//import com.kakao.vectormap.KakaoMap
+//import com.kakao.vectormap.KakaoMapReadyCallback
 import java.text.SimpleDateFormat
 
 
@@ -41,17 +42,17 @@ class AccountDetailFragment : Fragment() {
             clientIdx = arguments?.getLong("clientIdx") ?: 0
 
         accountDetailRepository.getClient(mainActivity.uid, clientIdx) { client ->
-            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {
-                    if (client != null) {
-                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
-                            if (it != null) {
-                                mapInit(it)
-                            }
-                        }
-                    }
-                }
-            })
+//            fragmentAccountDetailBinding.mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+//                override fun onMapReady(kakaoMap: KakaoMap) {
+//                    if (client != null) {
+//                        accountDetailRepository.getFullAddrGeocoding(client.clientAddress ?: "") {
+//                            if (it != null) {
+//                                mapInit(it)
+//                            }
+//                        }
+//                    }
+//                }
+//            })
 
             if (client != null) {
                 accountDetailViewInit(client)
@@ -59,6 +60,11 @@ class AccountDetailFragment : Fragment() {
         }
 
         fragmentAccountDetailBinding.run {
+//            mapViewAccountDetail.start(object : KakaoMapReadyCallback() {
+//                override fun onMapReady(kakaoMap: KakaoMap) {
+////                    Toast.makeText(mainActivity, "맵 로딩 성공", Toast.LENGTH_SHORT).show()
+//                }
+//            })
 //            bottomNavigationViewAccountDetail.setupWithNavController(findNavController())
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
@@ -81,7 +87,6 @@ class AccountDetailFragment : Fragment() {
                             bundle
                         )
                     }
-
                     R.id.photoMemoFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
@@ -270,7 +275,9 @@ class AccountDetailFragment : Fragment() {
 
             textViewAccountDetailShortDescription.text = client.clientExplain
             textViewAccountDetailGeneralNumber.append(ceoPhoneNumber)
-            textViewAccountDetailFaxNumber.append(faxNumber)
+            if(faxNumber != null) {
+                textViewAccountDetailFaxNumber.append(faxNumber)
+            }
             textViewAccountDetailAddress.text = "${client.clientAddress} ${client.clientDetailAdd}"
             textViewAccountDetailRepresentative.text = client.clientManagerName
             textViewAccountDetailDirectNumber.text = managerPhoneNumber
