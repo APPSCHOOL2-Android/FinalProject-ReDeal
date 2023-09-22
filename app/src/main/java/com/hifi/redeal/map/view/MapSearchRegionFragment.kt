@@ -57,7 +57,6 @@ class MapSearchRegionFragment : Fragment() {
             }
         }
 
-//        TODO("확인 버튼 클릭 시 현재 선택 되어 있는 지역들을 문자열로 만들어 clientViemodel의 currentAddress에 입력 후 프래그먼트 삭제")
 
         fragmentMapSearchRegionBinding.run {
             mapSearchRegionToolbar.run {
@@ -65,23 +64,6 @@ class MapSearchRegionFragment : Fragment() {
                     mainActivity.removeFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT)
                 }
             }
-
-            // 서치뷰에서 엔터쳤을 때 동작
-            mapSearchRegionSearchView.setOnQueryTextListener(object :
-                SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query != null) {
-                        setCurrentAddress(query)
-
-                    }
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return false
-                }
-            })
-
 
             MapRepository.searchSiDo { result ->
                 mapSearchRegionRecyclerViewSiDo.run {
@@ -94,22 +76,35 @@ class MapSearchRegionFragment : Fragment() {
 
             mapSearchRegionBtnToMap.setOnClickListener {
 
-                MapRepository.searchSiDo {
-                    var regionResult = ""
-                    if(mapViewModel.currentSiDoPosition.value!=-1){
-                        regionResult += it!!.sortedBy { it.admCode }.get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
-                    }
+                 if (mapViewModel.currentSiDoPosition.value!=-1 && mapSearchRegionSearchView.query.isNotBlank()){
+                    showDialog("입력 오류","검색 혹은 지역 선택 둘 중 하나만 해주세요.",mainActivity)
+                } else {
+                     if(mapViewModel.currentSiDoPosition.value==-1){
+                         setCurrentAddress( mapSearchRegionSearchView.query.toString())
+                     } else {
+                         MapRepository.searchSiDo {
+                             var regionResult = ""
+                             if (mapViewModel.currentSiDoPosition.value != -1) {
+                                 regionResult += it!!.sortedBy { it.admCode }
+                                     .get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
+                             }
 
-                    if(mapViewModel.currentSiGunGuPosition.value!=-1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()){
-                        regionResult += mapViewModel.currentSiGunGuList.value!!.get(mapViewModel.currentSiGunGuPosition.value!!).lowestAdmCodeNm
+                             if (mapViewModel.currentSiGunGuPosition.value != -1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()) {
+                                 regionResult += mapViewModel.currentSiGunGuList.value!!.get(
+                                     mapViewModel.currentSiGunGuPosition.value!!
+                                 ).lowestAdmCodeNm
 
-                    }
-                    if(mapViewModel.currentDongPosition.value!=-1 && mapViewModel.currentDongList.value!!.isNotEmpty()){
-                        regionResult += mapViewModel.currentDongList.value!!.get(mapViewModel.currentDongPosition.value!!).lowestAdmCodeNm
+                             }
+                             if (mapViewModel.currentDongPosition.value != -1 && mapViewModel.currentDongList.value!!.isNotEmpty()) {
+                                 regionResult += mapViewModel.currentDongList.value!!.get(
+                                     mapViewModel.currentDongPosition.value!!
+                                 ).lowestAdmCodeNm
 
-                    }
+                             }
 
-                    setCurrentAddress(regionResult)
+                             setCurrentAddress(regionResult)
+                         }
+                     }
                 }
 
             }
