@@ -172,8 +172,8 @@ class AddPhotoMemoFragment : Fragment() {
                     imageView.setImageBitmap(bitmap)
                 }
             }
+            imgCnt++
             linearLayoutHorizontal.addView(imageView)
-
         }
         fragmentAddPhotoMemoBinding.addImageListLayout.addView(linearLayoutHorizontal)
         val params = fragmentAddPhotoMemoBinding.photoMemoTextInputLayout.layoutParams as ConstraintLayout.LayoutParams
