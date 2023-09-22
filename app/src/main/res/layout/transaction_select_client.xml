@@ -12,7 +12,7 @@
         android:layout_margin="12dp"
         android:background="@drawable/date_selection_background"
         android:ems="10"
-        android:hint="찾으시는 거래처를 입력하세요"
+        android:hint="거래처 또는 담당자 이름으로 검색"
         android:inputType="text"
         android:padding="4dp" />
 
