@@ -55,6 +55,11 @@ class MapSearchRegionFragment : Fragment() {
                     layoutManager = LinearLayoutManager(context)
                 }
             }
+
+            currentSiDoPosition.observe(mainActivity){
+                fragmentMapSearchRegionBinding.mapSearchRegionBtnToMap.isEnabled =
+                    !(mapViewModel.currentSiDoPosition.value==-1 && fragmentMapSearchRegionBinding.mapSearchRegionSearchView.query.isNullOrBlank())
+            }
         }
 
 
@@ -74,39 +79,56 @@ class MapSearchRegionFragment : Fragment() {
 
             }
 
-            mapSearchRegionBtnToMap.setOnClickListener {
-
-                 if (mapViewModel.currentSiDoPosition.value!=-1 && mapSearchRegionSearchView.query.isNotBlank()){
-                    showDialog("입력 오류","검색 혹은 지역 선택 둘 중 하나만 해주세요.",mainActivity)
-                } else {
-                     if(mapViewModel.currentSiDoPosition.value==-1){
-                         setCurrentAddress( mapSearchRegionSearchView.query.toString())
-                     } else {
-                         MapRepository.searchSiDo {
-                             var regionResult = ""
-                             if (mapViewModel.currentSiDoPosition.value != -1) {
-                                 regionResult += it!!.sortedBy { it.admCode }
-                                     .get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
-                             }
-
-                             if (mapViewModel.currentSiGunGuPosition.value != -1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()) {
-                                 regionResult += mapViewModel.currentSiGunGuList.value!!.get(
-                                     mapViewModel.currentSiGunGuPosition.value!!
-                                 ).lowestAdmCodeNm
-
-                             }
-                             if (mapViewModel.currentDongPosition.value != -1 && mapViewModel.currentDongList.value!!.isNotEmpty()) {
-                                 regionResult += mapViewModel.currentDongList.value!!.get(
-                                     mapViewModel.currentDongPosition.value!!
-                                 ).lowestAdmCodeNm
-
-                             }
-
-                             setCurrentAddress(regionResult)
-                         }
-                     }
+            mapSearchRegionSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
                 }
 
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    mapSearchRegionBtnToMap.isEnabled =
+                        !(mapViewModel.currentSiDoPosition.value==-1 && newText.isNullOrBlank())
+                    return true
+                }
+            })
+
+            mapSearchRegionBtnToMap.run{
+                setOnClickListener {
+                    fragmentMapSearchRegionBinding.mapSearchRegionBtnToMap.isEnabled =
+                        !(mapViewModel.currentSiDoPosition.value==-1 && fragmentMapSearchRegionBinding.mapSearchRegionSearchView.query.isNullOrBlank())
+                    if (mapViewModel.currentSiDoPosition.value!=-1 && mapSearchRegionSearchView.query.isNotBlank()){
+                        showDialog("입력 오류","검색 혹은 지역 선택 둘 중 하나만 해주세요.",mainActivity)
+                        mapViewModel.currentSiDoPosition.value==-1
+                        mapSearchRegionSearchView.clearFocus()
+                    } else {
+                        if(mapViewModel.currentSiDoPosition.value==-1){
+                            setCurrentAddress( mapSearchRegionSearchView.query.toString())
+                        } else {
+                            MapRepository.searchSiDo {
+                                var regionResult = ""
+                                if (mapViewModel.currentSiDoPosition.value != -1) {
+                                    regionResult += it!!.sortedBy { it.admCode }
+                                        .get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
+                                }
+
+                                if (mapViewModel.currentSiGunGuPosition.value != -1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()) {
+                                    regionResult += mapViewModel.currentSiGunGuList.value!!.get(
+                                        mapViewModel.currentSiGunGuPosition.value!!
+                                    ).lowestAdmCodeNm
+
+                                }
+                                if (mapViewModel.currentDongPosition.value != -1 && mapViewModel.currentDongList.value!!.isNotEmpty()) {
+                                    regionResult += mapViewModel.currentDongList.value!!.get(
+                                        mapViewModel.currentDongPosition.value!!
+                                    ).lowestAdmCodeNm
+
+                                }
+
+                                setCurrentAddress(regionResult)
+                            }
+                        }
+                    }
+
+                }
             }
 
         }
