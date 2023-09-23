@@ -8,9 +8,14 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.FirebaseFirestore
+import com.hifi.redeal.R
 import com.hifi.redeal.auth.model.UserDataClass
 import com.hifi.redeal.auth.repository.AuthRepository
 import com.hifi.redeal.databinding.FragmentAuthJoinBinding
@@ -157,5 +162,53 @@ class AuthViewModel : ViewModel() {
     private fun showErrorSnackbar(view: View, errorMessage: String) {
         Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show()
     }
+
+
+    // 구글 로그인 함수 (+파이어베이스 처리)
+    fun googleSignIn(account: GoogleSignInAccount, view: View) {
+        AuthRepository.googleSignIn(account,
+            successCallback = { authResult ->
+                // Google 로그인 성공
+                Log.d("AuthViewModel", "Google 로그인 성공")
+                val firebaseUser = authResult.user
+                val userEmail = firebaseUser?.email
+                val userName = firebaseUser?.displayName
+
+                // IDX를 가져오는 로그
+                getNextIdx(
+                    successCallback = { idx ->
+                        Log.d("getNextIdx", "현재 IDX: $idx")
+                        // IDX를 얻은 후 Firestore에 추가
+                        addUserToFirestore(firebaseUser!!.uid, UserDataClass(idx,
+                            userEmail.toString(), userName.toString()
+                        ), view)
+                        onRegistrationSuccess?.invoke()
+                    },
+                    errorCallback = { errorMessage ->
+                        // IDX 오류 처리
+                        showErrorSnackbar(view, errorMessage)
+                    }
+                )
+
+                // 로그인 성공 시 처리
+                onLoginSuccess?.invoke()
+            },
+            errorCallback = { errorMessage ->
+                // Google 로그인 실패
+                Log.e("AuthViewModel", "Google 로그인 실패: $errorMessage")
+                showErrorSnackbar(view, errorMessage)
+            }
+        )
+    }
+
+    // 구글 로그인 클라이언트를 초기화하는 함수
+    fun getGoogleSignInClient(context: Context): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        return GoogleSignIn.getClient(context, gso)
+    }
+
 
 }

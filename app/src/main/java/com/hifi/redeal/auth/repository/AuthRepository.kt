@@ -2,12 +2,15 @@ package com.hifi.redeal.auth.repository
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -105,6 +108,26 @@ class AuthRepository {
                 }
         }
 
+        // 구글 로그인 처리 함수
+        fun googleSignIn(
+            account: GoogleSignInAccount,
+            successCallback: (AuthResult) -> Unit,
+            errorCallback: (String) -> Unit
+        ) {
+            // 구글 로그인 인증 정보를 Firebase에 전달하여 로그인 처리
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnSuccessListener { authResult ->
+                    // 로그인 성공
+                    successCallback(authResult)
+                }
+                .addOnFailureListener { e ->
+                    // 로그인 실패
+                    val errorMessage = e.message ?: "Google 로그인 실패"
+                    errorCallback(errorMessage)
+                }
+        }
     }
 }
+
 

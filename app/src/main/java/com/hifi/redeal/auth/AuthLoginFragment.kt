@@ -1,6 +1,7 @@
 package com.hifi.redeal.auth
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,9 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.rpc.context.AttributeContext.Auth
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.auth.vm.AuthViewModel
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
@@ -21,6 +26,9 @@ class AuthLoginFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var authViewModel: AuthViewModel
     private lateinit var auth: FirebaseAuth
+
+    private val RC_SIGN_IN = 123 // 구글 로그인 요청 코드
+    private var account: GoogleSignInAccount? = null // 구글 로그인 계정
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,6 +85,13 @@ class AuthLoginFragment : Fragment() {
         fragmentAuthLoginBinding.textInputEditTextLoginUserId.setOnClickListener {
             mainActivity.showSoftInput(it)
         }
+
+        // 구글 로그인 버튼
+        fragmentAuthLoginBinding.buttonAuthGoogleLogin.setOnClickListener {
+            // 구글 로그인 인텐트 생성 및 실행
+            val signInIntent = authViewModel.getGoogleSignInClient(requireContext()).signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+       }
     }
 
     // 자동 로그인 상태를 확인하고 시도하는 함수
@@ -146,4 +161,26 @@ class AuthLoginFragment : Fragment() {
             fragmentAuthLoginBinding.textInputEditTextLoginUserPw.clearFocus()
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    // Google 로그인 성공, AuthViewModel의 googleSignIn 메서드 호출
+                    authViewModel.googleSignIn(account, fragmentAuthLoginBinding.root)
+                } else {
+                    // Google 로그인 실패
+                    Log.e("AuthLoginFragment", "Google 로그인 실패")
+                }
+            } catch (e: ApiException) {
+                // Google 로그인 실패
+                Log.e("AuthLoginFragment", "Google 로그인 실패: ${e.message}")
+            }
+        }
+    }
+
 }
