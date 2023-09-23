@@ -121,66 +121,98 @@ class ClientViewModel : ViewModel() {
     }
 
 
+
+
+
+
+
     fun getClientListLabel(userIdx: String) {
         val tempList = mutableListOf<ClientDataClass>()
         val labelList = mutableListOf<InfoWindowOptions>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
                 Log.d("거래처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
-                var item = snapshot.toObject(ClientDataClass::class.java)
+                val item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
             Log.d("거래처 테스트2", tempList.toString())
-            for(c in tempList) {
-                Log.d("거래처 테스트3",c.clientAddress.toString())
-                if(c.clientAddress==""){
+            for (c in tempList) {
+                Log.d("거래처 테스트3", c.clientAddress.toString())
+                if (c.clientAddress == "") {
                     continue
                 }
                 // 괄호와 괄호 안의 글자를 삭제하기 위한 정규 표현식
                 val regex = "\\([^)]*\\)"
 
                 val clientAddr = c.clientAddress!!.replace(regex.toRegex(), "")
-                Log.d("거래처 테스트4",clientAddr)
-                MapRepository.searchAddr(clientAddr) {
-                    Log.d("거래처 테스트5",it.toString())
-                    if (it!!.isEmpty()) {
-                        return@searchAddr
+                Log.d("거래처 테스트4", clientAddr)
+                MapRepository.searchAddr(clientAddr) { addrResult ->
+                    Log.d("거래처 테스트5", addrResult.toString())
+                    if (addrResult!!.isEmpty()) {
+                        // 결과 리스트가 비어있으면 다른 함수 호출
+                        MapRepository.getFullAddrGeocoding(clientAddr) { tmapResult ->
+                            if (tmapResult!=null) {
+                                // 새로운 결과값을 처리
+                                val lat = tmapResult.newLat.toDouble()
+                                val long = tmapResult.newLon.toDouble()
+                                val latLng = LatLng.from(lat, long)
+
+                                val body = GuiLayout(Orientation.Horizontal)
+                                body.setPadding(0, -20, 0, -20)
+
+                                val bgImage = GuiImage(R.drawable.window_info_bg, true)
+                                bgImage.setFixedArea(39, 39, 39, 39)
+                                body.setBackground(bgImage)
+
+                                val text = GuiText(c.clientName)
+                                text.textSize = 30
+                                text.textColor = Color.DKGRAY
+                                body.addView(text)
+
+                                val options = InfoWindowOptions.from(latLng)
+                                options.setBody(body)
+                                options.setBodyOffset(0f, -41f)
+                                val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
+
+                                labelList.add(infoWindowOptions)
+
+                                clientDataListLabel.value = labelList
+
+                                Log.d("라벨3", clientDataListLabel.value.toString())
+                            }
+                        }
+                    } else {
+                        // 기존 결과값을 처리
+                        val lat = addrResult!!.get(0).y.toDouble()
+                        val long = addrResult!!.get(0).x.toDouble()
+                        val latLng = LatLng.from(lat, long)
+
+                        val body = GuiLayout(Orientation.Horizontal)
+                        body.setPadding(0, -20, 0, -20)
+
+                        val bgImage = GuiImage(R.drawable.window_info_bg, true)
+                        bgImage.setFixedArea(39, 39, 39, 39)
+                        body.setBackground(bgImage)
+
+                        val text = GuiText(c.clientName)
+                        text.textSize = 30
+                        text.textColor = Color.DKGRAY
+                        body.addView(text)
+
+                        val options = InfoWindowOptions.from(latLng)
+                        options.setBody(body)
+                        options.setBodyOffset(0f, -41f)
+                        val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
+
+                        labelList.add(infoWindowOptions)
+
+                        clientDataListLabel.value = labelList
+
+                        Log.d("라벨3", clientDataListLabel.value.toString())
                     }
-                    val lat = it!!.get(0).y.toDouble()
-                    val long = it!!.get(0).x.toDouble()
-                    val latLng = LatLng.from(lat, long)
-
-                    val body = GuiLayout(Orientation.Horizontal)
-                    body.setPadding(0, -20, 0, -20)
-
-                    val bgImage = GuiImage(R.drawable.window_info_bg, true)
-                    bgImage.setFixedArea(39, 39, 39, 39)
-                    body.setBackground(bgImage)
-
-                    val text = GuiText(c.clientName)
-                    text.textSize = 30
-                    text.textColor = Color.DKGRAY
-                    body.addView(text)
-
-                    val options =  InfoWindowOptions.from(latLng)
-                    options.setBody(body)
-                    options.setBodyOffset(0f, -41f)
-                    val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
-
-                    labelList.add(
-                        infoWindowOptions
-                    )
-
-                    clientDataListLabel.value = labelList
-
-                    Log.d("라벨3", clientDataListLabel.value.toString())
                 }
             }
-
-
         }
-
-
     }
 
 
