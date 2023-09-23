@@ -43,4 +43,12 @@ class AccountListViewModel: ViewModel() {
             searchResultList.value = it
         }
     }
+
+    val notificationCnt = MutableLiveData(0)
+
+    fun getNotificationCnt(userId: String) {
+        accountListRepository.getNotificationCnt(userId) {
+            notificationCnt.value = it
+        }
+    }
 }

@@ -17,6 +17,7 @@ import com.hifi.redeal.R
 import com.hifi.redeal.account.repository.AccountDetailRepository
 import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.Coordinate
+import com.hifi.redeal.databinding.DialogAccountShareBinding
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -48,10 +49,13 @@ class AccountDetailFragment : Fragment() {
         mainActivity = activity as MainActivity
         fragmentAccountDetailBinding = FragmentAccountDetailBinding.inflate(layoutInflater)
 
+        mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
+      
         if(arguments?.getLong("notifyClientIdx") != null){
             clientIdx = arguments?.getLong("notifyClientIdx")!!
             mainActivity.activityMainBinding.bottomNavigationViewMain.isVisible = false
         }
+
 
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0
@@ -178,7 +182,34 @@ class AccountDetailFragment : Fragment() {
                 setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.accountDetailMenuItemShare -> {
+                            val dialogAccountShareBinding = DialogAccountShareBinding.inflate(layoutInflater)
 
+                            AlertDialog.Builder(mainActivity)
+                                .setTitle("거래처 공유")
+                                .setView(dialogAccountShareBinding.root)
+                                .setPositiveButton("공유하기") { _, _ ->
+                                    accountDetailRepository.sendShareNotification(
+                                        mainActivity.uid,
+                                        clientIdx,
+                                        dialogAccountShareBinding.editTextDialogAccountShareEmail.text.toString()
+                                    ) { isSuccessful ->
+                                        if (isSuccessful) {
+                                            Snackbar.make(fragmentAccountDetailBinding.root, "거래처 정보가 공유되었습니다", Snackbar.LENGTH_SHORT)
+                                                .apply {
+                                                    anchorView = fragmentAccountDetailBinding.bottomNavigationViewAccountDetail
+                                                }
+                                                .show()
+                                        } else {
+                                            Snackbar.make(fragmentAccountDetailBinding.root, "거래처 정보 공유에 실패했습니다", Snackbar.LENGTH_SHORT)
+                                                .apply {
+                                                    anchorView = fragmentAccountDetailBinding.bottomNavigationViewAccountDetail
+                                                }
+                                                .show()
+                                        }
+                                    }
+                                }
+                                .setNegativeButton("취소", null)
+                                .show()
                         }
                         R.id.accountDetailMenuItemEdit -> {
                             val bundle = Bundle()
