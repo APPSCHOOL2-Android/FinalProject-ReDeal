@@ -118,13 +118,10 @@ class MapSearchRegionFragment : Fragment() {
 
 
     fun setCurrentAddress(addr: String) {
-        Log.d("지역3",addr)
         MapRepository.searchAddr(addr!!) { list ->
             if (list?.isNotEmpty() == true && list != null) {
                 val lat = list[0].y.toDouble()
                 val long = list[0].x.toDouble()
-                Log.d("주소 확인1", lat.toString())
-                Log.d("주소 확인2", long.toString())
                 clientViewModel.currentAddress.value = LatLng.from(lat,long)
                 mapViewModel.run {
                     currentSiDoPosition.value=-1
@@ -142,8 +139,7 @@ class MapSearchRegionFragment : Fragment() {
         alertDialogBuilder.setTitle(title)
         alertDialogBuilder.setMessage(message)
         alertDialogBuilder.setPositiveButton("확인") { dialog, which ->
-            // 확인 버튼을 클릭했을 때 수행할 동작
-            dialog.dismiss() // 다이얼로그 닫기
+            dialog.dismiss()
         }
 
         val alertDialog = alertDialogBuilder.create()

@@ -41,7 +41,6 @@ class ClientViewModel : ViewModel() {
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
                 val clientData = snapshot.toObject(ClientDataClass::class.java)
-                Log.d("검색 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 if (clientData!=null) {
                     val clientName = clientData.clientName
                     val managerName = clientData.clientManagerName
@@ -50,7 +49,6 @@ class ClientViewModel : ViewModel() {
                     if (clientName.contains(keyword) || managerName.contains(keyword)) {
                         tempList.add(clientData)
                     }
-                    Log.d("검색 테스트", tempList.toString())
                 }
             }
             clientDataListByKeyWord.value = tempList
@@ -61,7 +59,6 @@ class ClientViewModel : ViewModel() {
         val tempList = mutableListOf<ClientDataClass>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
-                Log.d("거래처처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 var item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
@@ -74,34 +71,23 @@ class ClientViewModel : ViewModel() {
         val clientTempList = mutableListOf<ClientDataClass>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
-                Log.d("거래처정 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 var item = snapshot.toObject(ClientDataClass::class.java)
                 ClientRepository.getVisitScheduleListByClientAndUser(userIdx, item!!.clientIdx) {
-                    Log.d("거래처정 테스트2", item.clientIdx.toString())
-                    var i = 0;
+                    var i = 0
                     while (i <= it.result.documents.size - 1) {
                         val snapshot = it.result.documents.get(i)
-                        Log.d("거래처정 테스트3", snapshot.toObject(ScheduleDataClass::class.java).toString())
                         val dateFormat = SimpleDateFormat("yyyy.MM.dd")
                         val tempSnapShotDate =
                             dateFormat.format(snapshot.getDate("scheduleDeadlineTime"))
                         val today = dateFormat.format(Calendar.getInstance().time)
-                        Log.d("일정정1", tempSnapShotDate)
-                        Log.d("일정정2", today)
                         if (tempSnapShotDate.equals(today)
                         ) {
-                            Log.d(
-                                "일정정3",
-                                snapshot.toObject(ScheduleDataClass::class.java).toString()
-                            )
                             clientTempList.add(item)
                             i++
                         } else {
                             i++
                         }
-                        Log.d("일정정4", clientTempList.toString())
                     }
-                    Log.d("일정정5", clientTempList.toString())
                     clientDataListAll.value = clientTempList
                 }
             }
@@ -112,7 +98,6 @@ class ClientViewModel : ViewModel() {
         val tempList = mutableListOf<ClientDataClass>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
-                Log.d("거래처처처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 var item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
@@ -131,28 +116,20 @@ class ClientViewModel : ViewModel() {
         val labelList = mutableListOf<InfoWindowOptions>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
-                Log.d("거래처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
                 val item = snapshot.toObject(ClientDataClass::class.java)
                 tempList.add(item!!)
             }
-            Log.d("거래처 테스트2", tempList.toString())
             for (c in tempList) {
-                Log.d("거래처 테스트3", c.clientAddress.toString())
                 if (c.clientAddress == "") {
                     continue
                 }
-                // 괄호와 괄호 안의 글자를 삭제하기 위한 정규 표현식
                 val regex = "\\([^)]*\\)"
 
                 val clientAddr = c.clientAddress!!.replace(regex.toRegex(), "")
-                Log.d("거래처 테스트4", clientAddr)
                 MapRepository.searchAddr(clientAddr) { addrResult ->
-                    Log.d("거래처 테스트5", addrResult.toString())
                     if (addrResult!!.isEmpty()) {
-                        // 결과 리스트가 비어있으면 다른 함수 호출
                         MapRepository.getFullAddrGeocoding(clientAddr) { tmapResult ->
                             if (tmapResult!=null) {
-                                // 새로운 결과값을 처리
                                 val lat = tmapResult.newLat.toDouble()
                                 val long = tmapResult.newLon.toDouble()
                                 val latLng = LatLng.from(lat, long)
@@ -178,11 +155,9 @@ class ClientViewModel : ViewModel() {
 
                                 clientDataListLabel.value = labelList
 
-                                Log.d("라벨3", clientDataListLabel.value.toString())
                             }
                         }
                     } else {
-                        // 기존 결과값을 처리
                         val lat = addrResult!!.get(0).y.toDouble()
                         val long = addrResult!!.get(0).x.toDouble()
                         val latLng = LatLng.from(lat, long)
@@ -208,7 +183,6 @@ class ClientViewModel : ViewModel() {
 
                         clientDataListLabel.value = labelList
 
-                        Log.d("라벨3", clientDataListLabel.value.toString())
                     }
                 }
             }
