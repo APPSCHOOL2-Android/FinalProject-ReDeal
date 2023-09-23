@@ -412,8 +412,9 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 clientViewModel.clientDataListAll.value?.get(position)?.clientManagerName
             holder.rowMapClientListBtnToNavi.setOnClickListener {
                 val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress
+                val clientName = clientViewModel.clientDataListAll.value?.get(position)?.clientName
                 if(!clientAddr.isNullOrBlank()){
-                    getTMapAddress(clientAddr)
+                    getTMapAddress(clientName!!,clientAddr)
                 }
 
             }
@@ -473,21 +474,21 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
         }
     }
 
-    fun getTMapAddress(addr : String){
+    fun getTMapAddress(name:String,addr : String){
         MapRepository.getFullAddrGeocoding(addr){ coordinate ->
             if(coordinate!=null){
-                goToTMap(coordinate!!)
+                goToTMap(name!!,coordinate!!)
             }
         }
     }
-    private fun goToTMap(coordinate: Coordinate) {
+    private fun goToTMap(name: String,coordinate: Coordinate) {
         android.app.AlertDialog.Builder(mainActivity)
             .setTitle("길 안내")
             .setMessage("티맵 길 안내를 시작하시겠습니까?")
             .setPositiveButton("확인") { _, _ ->
                 if (mainActivity.tMapTapi.isTmapApplicationInstalled) {
                     mainActivity.tMapTapi.invokeRoute(
-                        coordinate.newBuildingName,
+                        name,
                         coordinate.newLon.toFloat(),
                         coordinate.newLat.toFloat()
                     )
