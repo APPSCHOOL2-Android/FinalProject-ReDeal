@@ -17,13 +17,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="메모 전체 보기" />
+        app:title="메모 전체 보기"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/memoDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:dividerColor="@color/primary20"
         app:dividerThickness="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/memoToolbar" />
 
@@ -31,13 +34,12 @@
         android:id="@+id/tapLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:background="@drawable/add_record_file_container"
         android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/memoToolbar">
+        app:layout_constraintTop_toBottomOf="@id/memoDivider">
 
         <TextView
             android:id="@+id/photoMemoTabItem"

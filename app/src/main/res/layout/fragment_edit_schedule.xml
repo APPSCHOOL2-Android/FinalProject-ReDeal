@@ -27,7 +27,7 @@
             app:navigationIconTint="@color/primary20"
             app:title="일정 수정"
             app:titleCentered="false"
-            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
             app:titleTextColor="@color/primary20" />
 
         <View

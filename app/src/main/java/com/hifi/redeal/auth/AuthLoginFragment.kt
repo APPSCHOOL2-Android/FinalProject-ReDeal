@@ -37,7 +37,7 @@ class AuthLoginFragment : Fragment() {
         authViewModel.initContext(requireContext())
         auth = Firebase.auth
 
-        // UI 요소 리스너
+        mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
         setupUiListeners()
 
         // 로그인 시 저장된 체크 상태 확인 및 자동 로그인 시도

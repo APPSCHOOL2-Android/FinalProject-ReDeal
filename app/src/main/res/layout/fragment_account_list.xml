@@ -22,12 +22,13 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/materialToolbarAccountList"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/background"
                 android:minHeight="?attr/actionBarSize"
+                android:theme="@style/Theme.ReDeal.ToolbarTheme"
                 app:title="리딜"
-                app:titleTextAppearance="@style/account_list_toolbar_title_text_appearance" />
+                app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
             <com.google.android.material.search.SearchBar
                 android:id="@+id/searchBarAccountList"
@@ -64,46 +65,34 @@
         android:layout_height="match_parent"
         android:layout_marginTop="62dp">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/imageViewAccountListUserThumb"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:paddingHorizontal="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/rounded_rectangle_vertical_padding_primary90"
-            app:srcCompat="@drawable/card_account_detail_24px_primary99"
-            app:tint="@color/primary95" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewAccountListUserName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:maxLines="1"
-            android:textColor="@color/text10"
-            app:layout_constraintBottom_toTopOf="@id/textViewAccountListUserInfo"
-            app:layout_constraintEnd_toStartOf="@id/tabLayoutAccountListState"
-            app:layout_constraintStart_toEndOf="@id/imageViewAccountListUserThumb"
-            app:layout_constraintTop_toTopOf="@id/imageViewAccountListUserThumb" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:src="@drawable/card_account_detail_24px_primary20" />
 
-        <TextView
-            android:id="@+id/textViewAccountListUserInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="내 정보"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:textColor="@color/text50"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@id/textViewAccountListUserName"
-            app:layout_constraintTop_toBottomOf="@id/textViewAccountListUserName"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewAccountListUserThumb"/>
-
-
+            <TextView
+                android:id="@+id/textViewAccountListUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:maxLines="1"
+                android:textColor="@color/text30"
+                android:textSize="10sp"
+                tools:text="유민국님" />
+        </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutAccountListState"
@@ -119,29 +108,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-    <!--        <com.google.android.material.tabs.TabItem-->
-    <!--            android:id="@+id/tabItemAccountListFavorites"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListFavorites"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
 
-    <!--        <com.google.android.material.tabs.TabItem-->
-    <!--            android:id="@+id/tabItemAccountListTrading"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListTrading"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
 
-    <!--        <com.google.android.material.tabs.TabItem-->
-    <!--            android:id="@+id/tabItemAccountListTry"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListTry"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
 
-    <!--        <com.google.android.material.tabs.TabItem-->
-    <!--            android:id="@+id/tabItemAccountListStop"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
+            <!--        <com.google.android.material.tabs.TabItem-->
+            <!--            android:id="@+id/tabItemAccountListStop"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout="@layout/tab_item_layout_account_list"/>-->
 
         </com.google.android.material.tabs.TabLayout>
 

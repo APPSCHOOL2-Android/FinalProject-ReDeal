@@ -17,17 +17,17 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarAuthFindPw"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
             android:background="@color/background"
             android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/menu_auth"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="비밀번호 찾기"
-            app:titleTextAppearance="@style/AuthMainToolbarTitleTextAppearance"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
             app:titleTextColor="@color/primary20" />
 
         <View

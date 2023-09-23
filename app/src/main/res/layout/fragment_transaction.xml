@@ -28,8 +28,8 @@
             app:menu="@menu/menu_transaction"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="거래 내역"
-            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
-            app:titleTextColor="@color/primary20" />
+            app:titleTextColor="@color/primary20"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
         <View
             android:id="@+id/divider"

@@ -63,7 +63,7 @@ class AuthJoinFragment : Fragment() {
                 val isPasswordValid = password.length >= 8 && PASSWORD_POLICY.matches(password)
                 val isPasswordMatch = password == passwordCheck
                 val isNameValid =
-                    name.length in 2..12 && !INVALID_NICKNAME_CHARACTERS.any { name.contains(it) }
+                    name.length in 1..8 && !INVALID_NICKNAME_CHARACTERS.any { name.contains(it) }
                 val isContinuitycheck = containsConsecutiveOrSequentialNumbers(password)
 
                 // 유효성 검사

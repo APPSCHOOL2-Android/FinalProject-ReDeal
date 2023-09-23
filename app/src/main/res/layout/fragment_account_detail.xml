@@ -16,9 +16,10 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/materialToolbarAccountDetail"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:background="@color/background"
             android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:menu="@menu/toolbar_menu_account_detail"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
@@ -41,19 +42,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.kakao.vectormap.MapView
-                android:id="@+id/mapViewAccountDetail"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="12:7"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-<!--            <View-->
+<!--            <com.kakao.vectormap.MapView-->
 <!--                android:id="@+id/mapViewAccountDetail"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="0dp"-->
 <!--                app:layout_constraintDimensionRatio="12:7"-->
 <!--                app:layout_constraintTop_toTopOf="parent"/>-->
+
+            <View
+                android:id="@+id/mapViewAccountDetail"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="12:7"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <View
                 android:id="@+id/divider3"
