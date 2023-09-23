@@ -7,9 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat.StopForegroundFlags
 import androidx.core.graphics.drawable.IconCompat
-import androidx.work.ListenableWorker
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -20,7 +18,6 @@ import com.hifi.redeal.R
 class CallNumberCheckService: Service() {
 
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
-    val NOTIFICATION_CHANNEL1_NAME = "리딜"
     var notiId = 30
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

@@ -4,9 +4,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.SystemClock
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.work.Worker
@@ -17,7 +14,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import java.util.Date
 
 class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
     Worker(context, workerParams) {
@@ -31,7 +27,6 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
 
     override fun doWork(): Result {
         // 실행할 내용을 작성 한다.
-        Log.d("ttt","전화번호: $incommingNumber")
 
         var clientIdx : Long? = null
         var clientName : String? = null

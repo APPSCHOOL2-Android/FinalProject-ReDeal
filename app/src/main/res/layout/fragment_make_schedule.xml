@@ -22,6 +22,7 @@
             android:background="@color/background"
             android:clickable="true"
             android:minHeight="?attr/actionBarSize"
+            android:theme="Theme.ReDeal.ToolbarTheme"
             app:itemIconTint="@color/primary20"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:navigationIconTint="@color/primary20"

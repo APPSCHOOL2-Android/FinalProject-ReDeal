@@ -1,19 +1,11 @@
 package com.hifi.redeal.incoming
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.telephony.TelephonyManager
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
@@ -32,11 +24,9 @@ class PhoneCallReceiver: BroadcastReceiver() {
 
             when (intent.getStringExtra(TelephonyManager.EXTRA_STATE)) { // 현재 단말기의 통화 상태를 가져온다.
                 TelephonyManager.EXTRA_STATE_RINGING -> { // 전화 벨이 울리는 경우 -> 전화 수신 상태
-                    // 여기에서 전화번호를 사용하거나 저장할 수 있습니다.
 
                     if(incomingNumber != null && lastState){
                         lastState = false
-                        Log.d("tttt","통화 수신 로그 / 실행 시간 : ${System.currentTimeMillis()}")
                         val serviceIntent = Intent(context, CallNumberCheckService::class.java)
                         serviceIntent.putExtra("incomingNumber", "$incomingNumber")
 
@@ -49,13 +39,10 @@ class PhoneCallReceiver: BroadcastReceiver() {
                                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                                 .build()
                             WorkManager.getInstance(context).enqueue(request)
-                            Log.d("tttt","통화 수신 워커 실행 / 실행 시간 : ${System.currentTimeMillis()}")
                         } else if( context != null) {
                             ContextCompat.startForegroundService(context, serviceIntent)
-                            Log.d("tttt","통화 수신 서비스 실행 / 실행 시간 : ${System.currentTimeMillis()}")
                         } else {
                             context?.startService(serviceIntent)
-                            Log.d("tttt","통화 수신 서비스 실행 낮은 버전 / 실행 시간 : ${System.currentTimeMillis()}")
                         }
 
                     }
@@ -67,11 +54,9 @@ class PhoneCallReceiver: BroadcastReceiver() {
                     // 통화 종료 처리
                     if(context != null && !lastState && incomingNumber != null) {
                         lastState = true
-                        // 서비스를 종료하는 Intent 생성
+
                         val stopServiceIntent = Intent(context, CallNumberCheckService::class.java)
-                        // 서비스 종료
                         context.stopService(stopServiceIntent)
-                        Log.d("tttt","통화 수신 서비스 종료 / 종료 시간 : ${System.currentTimeMillis()}")
                     }
                 }
             }

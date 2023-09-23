@@ -44,7 +44,7 @@ class ScheduleRepository {
                     }
 
                     override fun onFailure(call: Call<FullAddrResponse>, t: Throwable) {
-                        Log.d("brudenell", "네트워크 통신 실패")
+
                     }
                 })
         }

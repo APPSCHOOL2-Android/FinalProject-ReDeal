@@ -4,15 +4,11 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.NumberPicker
 import android.widget.TimePicker
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.hifi.redeal.R
-import java.time.LocalDate
 import java.time.LocalTime
-import java.util.Calendar
 
 class CustomTimePicker : TimePicker {
 
@@ -24,17 +20,14 @@ class CustomTimePicker : TimePicker {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        // 분 단위 스피너를 찾기
         val minutePicker = findViewById<NumberPicker>(
             resources.getIdentifier("minute", "id", "android")
         )
 
-        // 시 단위 스피너를 찾기
         val hourPicker = findViewById<NumberPicker>(
             resources.getIdentifier("hour", "id", "android")
         )
 
-        // 오전 오후 단위 스피너를 찾기
         val amPmPicker = findViewById<NumberPicker>(
             resources.getIdentifier("amPm", "id", "android")
         )
@@ -55,7 +48,7 @@ class CustomTimePicker : TimePicker {
         hourPicker.minValue = 1
         hourPicker.maxValue = 12
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // 버전 10 이상 일 경우에만 색상 및 폰트 적용.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             minutePicker.textColor = context.getColor(R.color.primary10)
             hourPicker.textColor = context.getColor(R.color.primary10)
             amPmPicker.textColor = context.getColor(R.color.primary10)

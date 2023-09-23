@@ -1,13 +1,9 @@
 package com.hifi.redeal.transaction
 
-import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -247,13 +243,13 @@ class TransactionFragment : Fragment() {
     private fun setClickEvent(){
 
         fragmentTransactionBinding.run{
-            // 입금 버튼 클릭 이벤트 처리
+
             ImgBtnAddDeposit.setOnClickListener {
                 inoutMode = true
                 showDepositDialog()
             }
 
-            // 거래 버튼 클릭 이벤트 처리
+
             ImgBtnAddTransaction.setOnClickListener {
                 inoutMode = false
                 showTransactionDialog()
