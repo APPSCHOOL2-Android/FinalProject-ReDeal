@@ -357,15 +357,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                 holder.rowMapClientListBookMark.visibility = View.INVISIBLE
             }
             holder.rowMapClientListBtnToNavi.visibility = View.INVISIBLE
-
-//            holder.rowMapClientListBtnToNavi.setOnClickListener {
-//                fragmentMapBinding.mapSearchView.hide()
-//                val clientAddr = clientViewModel.clientDataListAll.value?.get(position)?.clientAddress
-//                if(!clientAddr.isNullOrBlank()){
-//                    getTMapAddress(clientAddr)
-//                }
-//
-//            }
         }
     }
 
@@ -669,7 +660,6 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
     override fun onCameraMoveEnd(
         kakaoMap: KakaoMap,
         cameraPosition: CameraPosition,
