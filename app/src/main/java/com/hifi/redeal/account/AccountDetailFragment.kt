@@ -150,7 +150,7 @@ class AccountDetailFragment : Fragment() {
                     .setMessage("티맵 길 안내를 시작하시겠습니까?")
                     .setPositiveButton("확인") { _, _ ->
                         if (mainActivity.tMapTapi.isTmapApplicationInstalled) {
-                            mainActivity.tMapTapi.invokeRoute(coordinate.newBuildingName, coordinate.newLon.toFloat(), coordinate.newLat.toFloat())
+                            mainActivity.tMapTapi.invokeRoute(clientName, coordinate.newLon.toFloat(), coordinate.newLat.toFloat())
                         } else {
                             Snackbar.make(fragmentAccountDetailBinding.root, "티맵 앱 설치 후 다시 시도해주세요", Snackbar.LENGTH_SHORT)
                                 .setAction("설치하기") {
