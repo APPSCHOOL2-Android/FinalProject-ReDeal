@@ -169,12 +169,12 @@ class AuthViewModel : ViewModel() {
     }
 
     // 구글 로그인 클라이언트 초기화
-    fun getGoogleSignInClient(context: Context): GoogleSignInClient {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        return GoogleSignIn.getClient(context, gso)
-    }
+//    fun getGoogleSignInClient(context: Context): GoogleSignInClient {
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(context.getString(R.string.default_web_client_id))
+//            .requestEmail()
+//            .build()
+//        return GoogleSignIn.getClient(context, gso)
+//    }
 
 }
