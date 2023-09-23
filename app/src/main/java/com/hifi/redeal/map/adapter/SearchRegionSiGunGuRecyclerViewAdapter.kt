@@ -70,7 +70,6 @@ class SearchRegionSiGunGuRecyclerViewAdapter(private val mainActivity: MainActiv
             holder.rowMapRegionSearchLayout.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.primary95))
             holder.rowMapRegionSearchName.setTextColor(ContextCompat.getColor(mainActivity, R.color.primary20))
         } else {
-            Log.d("포지션21",position.toString())
             holder.rowMapRegionSearchLayout.setBackgroundColor(Color.TRANSPARENT)
             holder.rowMapRegionSearchName.setTextColor(ContextCompat.getColor(mainActivity, R.color.text10))
         }
