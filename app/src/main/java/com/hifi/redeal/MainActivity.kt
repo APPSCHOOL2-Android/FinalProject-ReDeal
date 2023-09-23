@@ -36,6 +36,8 @@ import com.hifi.redeal.memo.MemoFragment
 import com.hifi.redeal.memo.PhotoDetailFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.myPage.MyPageEditNameFragment
+import com.hifi.redeal.myPage.MyPageFragment
 import com.hifi.redeal.schedule.view.EditScheduleFragment
 import com.hifi.redeal.schedule.view.MakeScheduleFragment
 import com.hifi.redeal.schedule.view.ScheduleManageFragment

@@ -76,11 +76,11 @@ class AuthLoginFragment : Fragment() {
             mainActivity.showSoftInput(it)
         }
 
-        // 구글 로그인 버튼
-        fragmentAuthLoginBinding.buttonAuthGoogleLogin.setOnClickListener {
-            val signInIntent = authViewModel.getGoogleSignInClient(requireContext()).signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
-       }
+//        // 구글 로그인 버튼
+//        fragmentAuthLoginBinding.buttonAuthGoogleLogin.setOnClickListener {
+//            val signInIntent = authViewModel.getGoogleSignInClient(requireContext()).signInIntent
+//            startActivityForResult(signInIntent, RC_SIGN_IN)
+//       }
     }
 
     // 자동 로그인 상태를 확인하고 시도하는 함수
