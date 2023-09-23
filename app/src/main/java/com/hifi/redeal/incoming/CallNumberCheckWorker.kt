@@ -4,11 +4,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -24,16 +24,16 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
 
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
-    var notiId = 30
 
     override fun doWork(): Result {
         // 실행할 내용을 작성 한다.
-        Log.d("ttt","전화번호: $incommingNumber")
 
         var clientIdx : Long? = null
         var clientName : String? = null
         var clientExplain : String? = null
         var clientManagerName : String? = null
+
+        val id = Timestamp.now().nanoseconds
 
         val uid = Firebase.auth.uid ?: return Result.success()
 
@@ -67,8 +67,7 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
 
                     val notification = builder.build()
                     val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.notify(notiId, notification)
-                    notiId++
+                    notificationManager.notify(id, notification)
 
                 }
             }.addOnCompleteListener {
@@ -83,7 +82,8 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
                             clientName = a1["clientName"] as String
                             clientManagerName = a1["clientManagerName"] as String
                             val builder = getNotificationBuilder(NOTIFICATION_CHANNEL1_ID)
-                            builder.setSmallIcon(R.drawable.notifications_24px)
+                            val icon = IconCompat.createWithResource(applicationContext, R.drawable.notifications_24px)
+                            builder.setSmallIcon(icon)
                             builder.setContentTitle("${clientName}의 $clientManagerName")
                             builder.setContentText("거래처 : $clientName \n담당자 : $clientManagerName")
 
@@ -98,8 +98,7 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
 
                             val notification = builder.build()
                             val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                            notificationManager.notify(notiId, notification)
-                            notiId++
+                            notificationManager.notify(id, notification)
                         }
                     }
             }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:transitionGroup="true"
-    tools:context=".schedule.EditScheduleFragment">
+    tools:context=".schedule.view.EditScheduleFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/editScheduleAppBarLayout"
@@ -191,7 +191,7 @@
 
             </com.kizitonwose.calendarview.CalendarView>
 
-            <com.hifi.redeal.schedule.CustomTimePicker
+            <com.hifi.redeal.schedule.model.CustomTimePicker
                 android:id="@+id/editScheduleTimePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -9,6 +9,7 @@ import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
@@ -46,6 +47,11 @@ class AccountDetailFragment : Fragment() {
     ): View? {
         mainActivity = activity as MainActivity
         fragmentAccountDetailBinding = FragmentAccountDetailBinding.inflate(layoutInflater)
+
+        if(arguments?.getLong("notifyClientIdx") != null){
+            clientIdx = arguments?.getLong("notifyClientIdx")!!
+            mainActivity.activityMainBinding.bottomNavigationViewMain.isVisible = false
+        }
 
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0

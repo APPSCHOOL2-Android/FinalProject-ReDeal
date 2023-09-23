@@ -3,7 +3,6 @@ package com.hifi.redeal.auth
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +66,7 @@ class AuthJoinFragment : Fragment() {
                     name.length in 1..8 && !INVALID_NICKNAME_CHARACTERS.any { name.contains(it) }
                 val isContinuitycheck = containsConsecutiveOrSequentialNumbers(password)
 
-                // 이메일 패턴 유효 검사
+                // 유효성 검사
                 if (!isEmailValid) {
                     warningJoinEmailFormat.visibility = View.VISIBLE
                     return@setOnClickListener
@@ -110,10 +109,9 @@ class AuthJoinFragment : Fragment() {
                 registrationLiveData.observe(viewLifecycleOwner, Observer { authResult ->
                     val user = authResult.user
                     if (user != null) {
-                        // 등록 성공 시 처리
+                        // 등록 성공
                         showRegistrationSuccessDialog()
                         mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, true, null)
-                        Log.d("AuthJoinFragment", "replaceFragment 호출됨")
                     } else {
                         showErrorMessageDialog("가입 실패")
                     }
@@ -121,13 +119,11 @@ class AuthJoinFragment : Fragment() {
             }
         }
 
-        // 터치 시 키보드 숨기기 처리
         hideKeyboardOnTouch(fragmentAuthJoinBinding.root)
-
         return fragmentAuthJoinBinding.root
     }
 
-    // 가입 성공 다이얼로그를 보여주는 함수
+    // 가입 성공 다이얼로그
     private fun showRegistrationSuccessDialog() {
         val view =
             requireActivity().layoutInflater.inflate(R.layout.dialog_join_success_message, null)
@@ -141,7 +137,7 @@ class AuthJoinFragment : Fragment() {
         alertDialog.show()
     }
 
-    // 오류 처리 다이얼로그를 보여주는 함수
+    // 오류 처리 다이얼로그
     private fun showErrorMessageDialog(message: String) {
         val alertDialogBuilder =
             AlertDialog.Builder(requireContext()).setTitle("오류").setMessage(message)

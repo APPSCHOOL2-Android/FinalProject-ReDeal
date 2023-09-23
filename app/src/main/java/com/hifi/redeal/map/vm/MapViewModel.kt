@@ -13,7 +13,6 @@ class MapViewModel : ViewModel() {
     var currentDongPosition = MutableLiveData<Int>()
 
     init {
-        // 초기값 설정, 선택되지 않은 상태로 시작
         currentSiDoPosition.value = -1
         currentSiGunGuPosition.value = -1
         currentDongPosition.value = -1

@@ -58,13 +58,6 @@ class AccountListFragment : Fragment() {
         mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.VISIBLE
         fragmentAccountListBinding = FragmentAccountListBinding.inflate(layoutInflater)
 
-        if(arguments?.getLong("notifyClientIdx") != null){ // 알림을 통하여 왔을 경우
-            val clientIdx = arguments?.getLong("notifyClientIdx")!!
-            val bundle = Bundle()
-            bundle.putLong("clientIdx", clientIdx)
-            mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
-        }
-
         accountListViewModel = ViewModelProvider(this)[AccountListViewModel::class.java]
 
         accountListViewModel.accountListRepository.getUserData(mainActivity.uid) {

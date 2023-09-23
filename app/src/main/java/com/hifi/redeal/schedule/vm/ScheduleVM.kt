@@ -40,7 +40,7 @@ class ScheduleVM: ViewModel() {
     var selectedScheduleIsVisit = true
     var selectDate = LocalDate.now()
 
-    // 사용자가 선택했던 데이터들을 초기화 한다.
+
     fun selectClientDataClear() {
         userSelectClientSimpleData = MutableLiveData<ClientSimpleData>()
     }
@@ -51,7 +51,6 @@ class ScheduleVM: ViewModel() {
 
     fun getSelectScheduleInfo(uid : String,scheduleIdx: String){
         ScheduleRepository.getSelectScheduleInfo(uid, scheduleIdx){
-            Log.d("ttt","${it.result}")
             val tempSelectScheduleData = ScheduleData(
                 it.result["scheduleIdx"] as Long,
                 it.result["clientIdx"] as Long,

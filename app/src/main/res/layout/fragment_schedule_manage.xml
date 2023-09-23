@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:orientation="vertical"
     android:transitionGroup="true"
-    tools:context=".schedule.ScheduleManageFragment">
+    tools:context=".schedule.view.ScheduleManageFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout10"
