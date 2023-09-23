@@ -167,17 +167,12 @@ class ClientViewModel : ViewModel() {
                     options.setBodyOffset(0f, -41f)
                     val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
 
-
-                    val style = LabelStyles.from(
-                        LabelStyle.from(R.drawable.blue_marker).setTextStyles(
-                            LabelTextStyle.from(30, R.color.primary20, 1, Color.WHITE)
-                        )
-                    );
-
                     labelList.add(
                         infoWindowOptions
                     )
+
                     clientDataListLabel.value = labelList
+
                     Log.d("라벨3", clientDataListLabel.value.toString())
                 }
             }
