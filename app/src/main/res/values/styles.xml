@@ -20,12 +20,12 @@
 
     <style name="account_list_toolbar_title_text_appearance" parent="@style/TextAppearance.AppCompat.Large">
         <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/primary20</item>
     </style>
 
     <style name="account_detail_toolbar_title_text_appearance" parent="account_list_toolbar_title_text_appearance">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">20dp</item>
     </style>
 
     <style name="tab_item_text_appearance_account_list_sort" parent="TextAppearance.AppCompat.Medium">

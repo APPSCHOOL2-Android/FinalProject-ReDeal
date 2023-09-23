@@ -2,8 +2,6 @@ package com.hifi.redeal.memo.vm
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp

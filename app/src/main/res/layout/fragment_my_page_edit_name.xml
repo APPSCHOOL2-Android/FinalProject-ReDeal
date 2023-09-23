@@ -17,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="이름 수정" />
+        app:title="이름 수정"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/myPageEditNameDivider"
@@ -98,7 +99,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/nanumsquareneo_regular"
-        android:text="최대 12글자 이내 사용 가능합니다"
+        android:text="최대 8글자 이내 사용 가능합니다"
         android:textColor="@color/design_default_color_error"
         android:textSize="12sp"
         android:visibility="gone"
@@ -151,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="• 길이는 최대 12 이내"
+            android:text="• 길이는 최대 8 이내"
             android:textColor="@color/text30"
             android:textSize="12sp" />
 

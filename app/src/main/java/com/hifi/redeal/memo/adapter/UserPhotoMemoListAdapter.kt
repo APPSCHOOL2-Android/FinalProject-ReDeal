@@ -19,7 +19,6 @@ import com.hifi.redeal.memo.utils.dpToPx
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.MemoViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class UserPhotoMemoListAdapter(
     val mainActivity: MainActivity,
@@ -124,7 +123,7 @@ class UserPhotoMemoListAdapter(
         private val textViewRowFooterAccountList = rowFooterAccountListBinding.textViewRowFooterAccountList
         fun bind() {
             if (memoViewModel.userPhotoMemoList.value?.isEmpty()!!) {
-                textViewRowFooterAccountList.text = "포모 메모가 없습니다"
+                textViewRowFooterAccountList.text = "포토 메모가 없습니다"
             } else {
                 textViewRowFooterAccountList.text = "등록된 포토 메모 ${memoViewModel.userPhotoMemoList.value?.size}개"
             }

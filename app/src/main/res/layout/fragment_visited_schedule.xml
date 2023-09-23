@@ -17,8 +17,8 @@
         app:menu="@menu/schedule_menu"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
         app:title="방문 일정"
-        app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
-        app:titleTextColor="@color/primary20" />
+        app:titleTextColor="@color/primary20"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <LinearLayout
         android:layout_width="match_parent"

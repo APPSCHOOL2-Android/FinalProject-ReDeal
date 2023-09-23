@@ -22,12 +22,13 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/materialToolbarAccountList"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/background"
                 android:minHeight="?attr/actionBarSize"
+                android:theme="@style/Theme.ReDeal.ToolbarTheme"
                 app:title="리딜"
-                app:titleTextAppearance="@style/account_list_toolbar_title_text_appearance" />
+                app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
             <com.google.android.material.search.SearchBar
                 android:id="@+id/searchBarAccountList"

@@ -34,8 +34,8 @@
         app:navigationIconTint="@color/primary20"
         app:title="일정 관리"
         app:titleCentered="false"
-        app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
-        app:titleTextColor="@color/primary20" />
+        app:titleTextColor="@color/primary20"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <ScrollView
         android:id="@+id/scrollView2"

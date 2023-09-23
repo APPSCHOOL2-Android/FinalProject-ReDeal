@@ -1,5 +1,6 @@
 package com.hifi.redeal.memo.adapter
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -22,7 +23,6 @@ import com.hifi.redeal.memo.utils.getTotalDuration
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.MemoViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class UserRecordMemoListAdapter(
     val mainActivity: MainActivity,

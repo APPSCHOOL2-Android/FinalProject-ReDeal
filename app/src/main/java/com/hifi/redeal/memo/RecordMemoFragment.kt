@@ -1,5 +1,6 @@
 package com.hifi.redeal.memo
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -26,7 +27,6 @@ import com.hifi.redeal.memo.utils.getTotalDuration
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class RecordMemoFragment : Fragment() {
 
@@ -79,6 +79,13 @@ class RecordMemoFragment : Fragment() {
             }
         }
         return fragmentRecordMemoBinding.root
+    }
+
+    private fun stopAudioPlayback() {
+        val i = Intent("com.android.music.musicservicecommand")
+        i.putExtra("command", "pause")
+
+        activity?.sendBroadcast(i)
     }
 
     override fun onDestroy() {
@@ -184,6 +191,7 @@ class RecordMemoFragment : Fragment() {
     }
 
     fun resetAudio(){
+        stopAudioPlayback()
         isAudioPlaying = false
         handler.removeCallbacksAndMessages(null)
         currentMediaPlayer?.release()

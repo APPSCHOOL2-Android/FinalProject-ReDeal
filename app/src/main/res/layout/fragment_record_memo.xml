@@ -18,7 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="음성 메모" />
+        app:title="음성 메모"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/materialDivider3"

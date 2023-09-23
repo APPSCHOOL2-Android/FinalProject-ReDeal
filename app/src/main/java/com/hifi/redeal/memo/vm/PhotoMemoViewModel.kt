@@ -1,16 +1,10 @@
 package com.hifi.redeal.memo.vm
 
-import android.content.Context
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.memo.model.PhotoMemoData
-import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
-import com.hifi.redeal.memo.repository.RecordMemoRepository
-import java.io.File
 
 class PhotoMemoViewModel : ViewModel(){
     val photoMemoList = MutableLiveData<List<PhotoMemoData>>()

@@ -17,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="내 정보" />
+        app:title="내 정보"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/myPageDivider"

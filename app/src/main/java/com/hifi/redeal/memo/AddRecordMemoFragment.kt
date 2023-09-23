@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
@@ -254,7 +253,7 @@ class AddRecordMemoFragment : Fragment() {
 
         fragmentAddRecordMemoBinding.addRecordMemoAddBtn.isEnabled = true
         fragmentAddRecordMemoBinding.addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_container)
-        fragmentAddRecordMemoBinding.addRecordMemoAddBtn.text = "포토 메모 등록"
+        fragmentAddRecordMemoBinding.addRecordMemoAddBtn.text = "음성 메모 등록"
 
         fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = PREVIEW_VIEW
     }

@@ -2,14 +2,13 @@ package com.hifi.redeal.myPage
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMyPageBinding
 import com.hifi.redeal.myPage.repository.MyPageRepository
 
@@ -23,7 +22,7 @@ class MyPageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentMyPageBinding = FragmentMyPageBinding.inflate(inflater)
         mainActivity = activity as MainActivity
         val fragmentManager = mainActivity.supportFragmentManager
@@ -54,6 +53,7 @@ class MyPageFragment : Fragment() {
                 }
                 val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
+                editor.apply()
 
                 editor.remove("user_uid")
                 Firebase.auth.signOut()

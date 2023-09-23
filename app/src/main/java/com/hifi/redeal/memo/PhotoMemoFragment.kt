@@ -24,7 +24,6 @@ import com.hifi.redeal.memo.utils.dpToPx
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PhotoMemoFragment : Fragment() {
 
