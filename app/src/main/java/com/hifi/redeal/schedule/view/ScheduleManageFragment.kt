@@ -1,4 +1,4 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.content.DialogInterface
 import android.graphics.Color
@@ -21,7 +21,6 @@ import com.hifi.redeal.databinding.FragmentScheduleManageBinding
 import com.hifi.redeal.databinding.ScheduleItemBinding
 import com.hifi.redeal.schedule.model.ScheduleTotalData
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
-import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository.Companion.getSelectScheduleInfo
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -96,7 +95,7 @@ class ScheduleManageFragment : Fragment(){
 
         }
 
-        scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+        scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
     }
 
     private fun setClickEvent(){
@@ -106,7 +105,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     notVisitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     scheduleVM.selectedScheduleIsVisit = true
-                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+                    scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
                 }
             }
 
@@ -115,7 +114,7 @@ class ScheduleManageFragment : Fragment(){
                     setTextColor(mainActivity.getColor(R.color.primary10))
                     visitScheduleFilter.setTextColor(mainActivity.getColor(R.color.primary90))
                     scheduleVM.selectedScheduleIsVisit = false
-                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+                    scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
                 }
             }
 
@@ -200,7 +199,7 @@ class ScheduleManageFragment : Fragment(){
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 처리 됩니다.")
                             builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                 ScheduleRepository.updateUserDayOfScheduleState(uid, schedule.scheduleIdx.toString()){
-                                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+                                    scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
                                 }
                             }
                             builder.setPositiveButton("취소", null)
@@ -262,7 +261,7 @@ class ScheduleManageFragment : Fragment(){
                             builder.setMessage("확인 버튼을 누르면 해당 일정은 완료 취소 처리 됩니다.")
                             builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                 ScheduleRepository.updateUserDayOfScheduleState(uid, schedule.scheduleIdx.toString()){
-                                    scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+                                    scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
                                 }
                             }
                             builder.setPositiveButton("취소", null)
@@ -277,10 +276,10 @@ class ScheduleManageFragment : Fragment(){
         }
 
         // 방문 일정 표시 하는 텍스트 뷰
-        val spaceTextView = TextView(mainActivity)
+        val spaceTextView = TextView(context)
         var layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            400
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         spaceTextView.layoutParams = layoutParams
         spaceTextView.text = if(scheduleVM.selectedScheduleIsVisit) {
@@ -289,7 +288,7 @@ class ScheduleManageFragment : Fragment(){
             "비 방문 일정 ${count}개"
         }
         spaceTextView.setTextColor(mainActivity.getColor(R.color.text50))
-        spaceTextView.gravity = Gravity.CENTER_HORIZONTAL
+        spaceTextView.gravity = Gravity.CENTER
         spaceTextView.setBackgroundColor(mainActivity.getColor(R.color.background))
         fragmentScheduleManageBinding.scheduleListLayout.addView(spaceTextView)
 
@@ -349,7 +348,7 @@ class ScheduleManageFragment : Fragment(){
                     container.headerYearTextView.text = "${month.year}"
                     container.headerGotoTextView.setOnClickListener {
                         scheduleVM.selectDate = LocalDate.now()
-                        scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+                        scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
                         calendarView.notifyCalendarChanged()
                         calendarView.scrollToDate(scheduleVM.selectDate, DayOwner.THIS_MONTH)
                     }
@@ -390,7 +389,7 @@ class ScheduleManageFragment : Fragment(){
 
                 // 클릭한 날짜에 해당하는 일정을 가져오는 코드 작성 부분
 
-                scheduleVM.getUserDayOfSchedule("${scheduleVM.selectDate}")
+                scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
 
                 setDateText()
 

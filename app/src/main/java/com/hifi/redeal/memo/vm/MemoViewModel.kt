@@ -26,9 +26,10 @@ class MemoViewModel : ViewModel(){
                 val context = document.get("photoMemoContext") as String
                 val date = document.get("photoMemoDate") as Timestamp
                 val srcArr = document.get("photoMemoSrcArr") as List<String>
-                val newPhotoMemo = UserPhotoMemoData(clientIdx, context, date.seconds + 32400, srcArr)
+                val newPhotoMemo = UserPhotoMemoData(clientIdx, context, date, srcArr)
                 photoMemoData.add(newPhotoMemo)
             }
+            photoMemoData.reverse()
             userPhotoMemoList.postValue(photoMemoData)
         }
     }
@@ -46,9 +47,9 @@ class MemoViewModel : ViewModel(){
                 var audioFileUri: Uri? = null
                 if(recordFileLocation.exists()){
                     audioFileUri = Uri.fromFile(recordFileLocation)
+                    val newPhotoMemo = UserRecordMemoData(clientIdx, context, date, audioFileUri, audioFilename)
+                    userRecordMemoData.add(newPhotoMemo)
                 }
-                val newPhotoMemo = UserRecordMemoData(clientIdx, context, date.seconds + 32400, audioFileUri, audioFilename)
-                userRecordMemoData.add(newPhotoMemo)
             }
             userRecordMemoData.reverse()
             userRecordMemoList.postValue(userRecordMemoData)

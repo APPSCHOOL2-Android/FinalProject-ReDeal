@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:transitionGroup="true"
     tools:context=".map.view.MapSearchRegionFragment">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/mapSearchRegionAppBarLayout"
         android:layout_width="match_parent"
@@ -19,13 +21,14 @@
             android:background="@color/background"
             android:clickable="true"
             android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
             app:itemIconTint="@color/primary20"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:navigationIconTint="@color/primary20"
             app:title="지역 검색"
             app:titleCentered="false"
-            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
-            app:titleTextColor="@color/primary20" />
+            app:titleTextColor="@color/primary20"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
         <View
             android:id="@+id/mapSearchRegionToolbarDivider"
@@ -63,7 +66,7 @@
             android:id="@+id/mapSearchRegionRecyclerViewSiDo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -77,7 +80,7 @@
             android:id="@+id/mapSearchRegionRecyclerViewSiGunGu"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
         </androidx.recyclerview.widget.RecyclerView>
 

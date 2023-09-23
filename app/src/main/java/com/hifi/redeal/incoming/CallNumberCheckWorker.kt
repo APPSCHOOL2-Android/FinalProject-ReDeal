@@ -1,14 +1,18 @@
 package com.hifi.redeal.incoming
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
-import android.os.Build
-import android.util.Log
+import android.content.Intent
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 
 class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
@@ -20,17 +24,19 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
 
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
-    var notiId = 30
 
     override fun doWork(): Result {
         // 실행할 내용을 작성 한다.
-        Log.d("ttt","전화번호: $incommingNumber")
 
+        var clientIdx : Long? = null
         var clientName : String? = null
         var clientExplain : String? = null
         var clientManagerName : String? = null
 
-        val uid = "1" // 추후 uid로 정보 찾음. 프리퍼런스를 이용.
+        val id = Timestamp.now().nanoseconds
+
+        val uid = Firebase.auth.uid ?: return Result.success()
+
         val db = Firebase.firestore
 
         // 대표 번호 조회
@@ -41,6 +47,7 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
             .get()
             .addOnCompleteListener {
                 for(a1 in it.result){
+                    clientIdx = a1["clientIdx"] as Long
                     clientName = a1["clientName"] as String
                     clientExplain = a1["clientExplain"] as String
 
@@ -49,10 +56,18 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
                     builder.setContentTitle("${clientName}로 부터 전화")
                     builder.setContentText("거래처 : $clientName \n 한 줄 설명 : $clientExplain")
 
+                    builder.setAutoCancel(true)
+
+                    val newIntent = Intent(applicationContext, MainActivity::class.java)
+                    newIntent.putExtra("notifyClientIdx", clientIdx)
+
+                    val pendingIntent = PendingIntent.getActivity(applicationContext, 10, newIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+                    builder.setContentIntent(pendingIntent)
+
                     val notification = builder.build()
                     val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.notify(notiId, notification)
-                    notiId++
+                    notificationManager.notify(id, notification)
 
                 }
             }.addOnCompleteListener {
@@ -63,16 +78,27 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
                     .get()
                     .addOnCompleteListener {
                         for(a1 in it.result){
+                            clientIdx = a1["clientIdx"] as Long
                             clientName = a1["clientName"] as String
                             clientManagerName = a1["clientManagerName"] as String
                             val builder = getNotificationBuilder(NOTIFICATION_CHANNEL1_ID)
-                            builder.setSmallIcon(R.drawable.notifications_24px)
+                            val icon = IconCompat.createWithResource(applicationContext, R.drawable.notifications_24px)
+                            builder.setSmallIcon(icon)
                             builder.setContentTitle("${clientName}의 $clientManagerName")
                             builder.setContentText("거래처 : $clientName \n담당자 : $clientManagerName")
+
+                            builder.setAutoCancel(true)
+
+                            val newIntent = Intent(applicationContext, MainActivity::class.java)
+                            newIntent.putExtra("notifyClientIdx", clientIdx)
+
+                            val pendingIntent = PendingIntent.getActivity(applicationContext, 10, newIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+                            builder.setContentIntent(pendingIntent)
+
                             val notification = builder.build()
                             val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                            notificationManager.notify(notiId, notification)
-                            notiId++
+                            notificationManager.notify(id, notification)
                         }
                     }
             }

@@ -1,5 +1,6 @@
 package com.hifi.redeal.memo
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -23,13 +24,13 @@ import com.hifi.redeal.databinding.RowRecordMemoBinding
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
+import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
 
 class RecordMemoFragment : Fragment() {
 
-    private val dateFormat = SimpleDateFormat("yyyy년 M월 d일 a h시", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     private lateinit var fragmentRecordMemoBinding : FragmentRecordMemoBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var recordMemoViewModel: RecordMemoViewModel
@@ -80,6 +81,13 @@ class RecordMemoFragment : Fragment() {
         return fragmentRecordMemoBinding.root
     }
 
+    private fun stopAudioPlayback() {
+        val i = Intent("com.android.music.musicservicecommand")
+        i.putExtra("command", "pause")
+
+        activity?.sendBroadcast(i)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         resetAudio()
@@ -104,8 +112,8 @@ class RecordMemoFragment : Fragment() {
                 }
             }
             fun bindItem(item: RecordMemoData){
-                recordDateTextView.text = dateFormat.format(item.date * 1000)
-                recordMemoTextView.text = item.context
+                recordDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
+                recordMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
                 recordMemoFilenameTextView.text = item.audioFilename
                 recordMemoAudioSeekBar.progress = 0
                 recordMemoAudioSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -183,6 +191,7 @@ class RecordMemoFragment : Fragment() {
     }
 
     fun resetAudio(){
+        stopAudioPlayback()
         isAudioPlaying = false
         handler.removeCallbacksAndMessages(null)
         currentMediaPlayer?.release()

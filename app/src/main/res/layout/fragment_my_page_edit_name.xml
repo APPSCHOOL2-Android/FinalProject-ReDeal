@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".myPage.MyPageEditNameFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/myPageEditNameToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Theme.ReDeal.ToolbarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/arrow_back_ios_24px"
+        app:title="이름 수정"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/myPageEditNameDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/primary20"
+        app:dividerThickness="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myPageEditNameToolbar" />
+
+    <LinearLayout
+        android:id="@+id/currentNameLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myPageEditNameDivider">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:text="사용 중인 이름 :"
+            android:textColor="@color/text30"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/currentNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:textColor="@color/text10"
+            android:textSize="16sp"
+            tools:text="홍길동" />
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/myPageEditNameTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColorHint="@color/text50"
+        android:transitionGroup="true"
+        app:boxStrokeColor="@color/primary20"
+        app:counterTextColor="@color/primary20"
+        app:helperTextTextColor="@color/primary20"
+        app:hintTextColor="@color/primary20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentNameLinearLayout"
+        app:placeholderTextColor="@color/primary20"
+        app:prefixTextColor="@color/primary20"
+        app:suffixTextColor="@color/primary20">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myPageEditNameTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:hint="변경할 이름"
+            android:inputType="text"
+            android:textColor="@color/text10"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/myPageEditNameLengthWarningTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="최대 8글자 이내 사용 가능합니다"
+        android:textColor="@color/design_default_color_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myPageEditNameTextInputLayout" />
+
+    <TextView
+        android:id="@+id/myPageEditNameWarningTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="이모티콘 및 특수문자는 사용할 수 없습니다"
+        android:textColor="@color/design_default_color_error"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myPageEditNameTextInputLayout" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/myPageEditNameConfirmBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/add_button_container"
+        android:fontFamily="@font/nanumsquareneo_bold"
+        android:text="완료"
+        android:textColor="@color/primary99"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myPageEditNameTextInputLayout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myPageEditNameConfirmBtn">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:text="• 길이는 최대 8 이내"
+            android:textColor="@color/text30"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:text="• 이모티콘 및 특수문자 사용불가"
+            android:textColor="@color/text30"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

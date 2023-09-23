@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".schedule.VisitedScheduleFragment">
+    tools:context=".schedule.view.VisitedScheduleFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/visitedScheduleToolbar"
@@ -17,8 +17,8 @@
         app:menu="@menu/schedule_menu"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
         app:title="방문 일정"
-        app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
-        app:titleTextColor="@color/primary20" />
+        app:titleTextColor="@color/primary20"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/visitedClientDetail"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginRight="12dp"
@@ -101,13 +101,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/scheduleClientAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:minHeight="20dp"
@@ -198,6 +198,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
             android:fontFamily="@font/nanumsquareneo_bold"
+            android:inputType="text"
             android:text="판매 자료 액셀 정리 후 보내기"
             android:textColor="@color/text10"
             android:textSize="16sp" />

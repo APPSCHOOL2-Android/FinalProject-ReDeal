@@ -18,6 +18,8 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.adapter.AccountListAdapter
@@ -68,7 +70,7 @@ import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
         fragmentAccountListBinding = FragmentAccountListBinding.inflate(layoutInflater)
 
         accountListViewModel.accountListRepository.getUserData(mainActivity.uid) {
-            fragmentAccountListBinding.textViewAccountListUserName.text = it.userName
+            fragmentAccountListBinding.textViewAccountListUserName.text = "${it.userName}님"
         }
 
         fragmentAccountListBinding.run {
@@ -99,7 +101,6 @@ import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
             }
 
             val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)
-
             val searchResultAdapter = SearchResultAdapter(mainActivity, accountListViewModel)
 
             searchViewAccountList.editText.setOnEditorActionListener { v, actionId, event ->
@@ -125,6 +126,7 @@ import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
                         }
                     }
                 }
+
             }
 
             tabLayoutAccountListState.run {
@@ -179,6 +181,9 @@ import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
                 }
             }
 
+            imageViewAccountListUserThumb.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.MY_PAGE_FRAGMENT, true, null)
+            }
             tabItemChipListSort.clear()
 
             tabItemChipListSort.add(chipAccountListSortReference)

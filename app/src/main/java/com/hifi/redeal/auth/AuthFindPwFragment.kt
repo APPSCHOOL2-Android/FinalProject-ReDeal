@@ -18,7 +18,6 @@ class AuthFindPwFragment : Fragment() {
     private lateinit var fragmentAuthFindPwBinding: FragmentAuthFindPwBinding
     lateinit var mainActivity: MainActivity
 
-    // FirebaseAuth 객체 선언
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +33,12 @@ class AuthFindPwFragment : Fragment() {
 
             buttonFindPwComplete.setOnClickListener {
                 resetPassword()
+                // 키보드 설정
+                val imm =
+                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             }
 
-            // 터치 시 키보드 숨기기 처리
             hideKeyboardOnTouch(fragmentAuthFindPwBinding.root)
 
             return fragmentAuthFindPwBinding.root
@@ -49,34 +51,27 @@ class AuthFindPwFragment : Fragment() {
 
         if (email.isEmpty()) {
             // 이메일 주소를 입력하지 않은 경우 처리
-
+            showSnackbar("이메일 주소를 입력해주세요")
             return
         }
 
-        // Firebase Authentication을 사용하여 비밀번호 재설정 이메일을 보냅니다.
+        // Firebase Authentication을 사용하여 비밀번호 재설정 이메일 발송
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-
-                    // 성공적으로 이메일을 보냈을 때 스낵바로 메시지 표시
-                    val successMessage = "비밀번호 재설정 발송 성공. 이메일을 확인해주세요"
-                    showSnackbar(successMessage)
+                    showSnackbar("비밀번호 재설정 발송 성공. 이메일을 확인해주세요")
 
                 } else {
-                    // 비밀번호 재설정 이메일을 보내는 데 실패한 경우 처리
                     val exception = task.exception
                     if (exception != null) {
 
-                        //  이메일을 보내기 실패한 경우 스낵바로 메시지 표시
-                        val failedMessage = "비밀번호 재설정 발송 실패. 아이디를 확인해주세요"
-                        showSnackbar(failedMessage)
-
+                        showSnackbar("비밀번호 재설정 발송 실패. 아이디를 확인해주세요")
                     }
                 }
             }
     }
 
-    // 스낵바를 표시하는 함수
+    // 스낵바
     private fun showSnackbar(message: String) {
         val snackbar = Snackbar.make(
             fragmentAuthFindPwBinding.root,
@@ -89,7 +84,8 @@ class AuthFindPwFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun hideKeyboardOnTouch(view: View) {
         view.setOnTouchListener { _, _ ->
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            val imm =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             false
         }

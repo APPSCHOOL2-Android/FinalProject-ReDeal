@@ -3,15 +3,10 @@ package com.hifi.redeal.transaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.model.customTransactionData
 
 class TransactionViewModel: ViewModel() {
-
-    val uid = Firebase.auth.uid!!
 
     var transactionList = MutableLiveData<MutableList<customTransactionData>>()
     var tempTransactionList = mutableListOf<customTransactionData>()
@@ -20,14 +15,14 @@ class TransactionViewModel: ViewModel() {
     var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
 
     var nextTransactionIdx = 0L
-    fun getNextTransactionIdx(){
+    fun getNextTransactionIdx(uid: String){
         TransactionRepository.getNextTransactionIdx(uid){
             for(c1 in it.result){
                 nextTransactionIdx = c1["transactionIdx"] as Long + 1L
             }
         }
     }
-    fun getAllTransactionData(){
+    fun getAllTransactionData(uid: String){
         tempTransactionList.clear()
         TransactionRepository.getAllTransactionData(uid,{
             for(c1 in it.result){
@@ -57,7 +52,7 @@ class TransactionViewModel: ViewModel() {
         })
     }
 
-    fun getUserAllClient(){
+    fun getUserAllClient(uid: String){
         tempClientSimpleDataList.clear()
         TransactionRepository.getUserAllClient(uid){
             for(c1 in it.result){

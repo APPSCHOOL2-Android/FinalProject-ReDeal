@@ -11,7 +11,15 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Transaction
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.hifi.redeal.BuildConfig
+import com.hifi.redeal.account.repository.RetrofitManager
+import com.hifi.redeal.account.repository.model.Coordinate
+import com.hifi.redeal.account.repository.model.FullAddrResponse
 import com.hifi.redeal.schedule.model.ScheduleData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -21,6 +29,25 @@ class ScheduleRepository {
 
     companion object{
 
+        fun getFullAddrGeocoding(fullAddr: String, callback: (Coordinate?) -> Unit) {
+            val encodedFullAddr = URLEncoder.encode(fullAddr, "UTF-8")
+
+            RetrofitManager.tMapTapiService.tMapFullTextGeocoding(fullAddr = encodedFullAddr, appKey = BuildConfig.TMAP_APP_KEY)
+                .enqueue(object : Callback<FullAddrResponse> {
+                    override fun onResponse(
+                        call: Call<FullAddrResponse>,
+                        response: Response<FullAddrResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            callback(response.body()?.coordinateInfo?.coordinate?.get(0))
+                        }
+                    }
+
+                    override fun onFailure(call: Call<FullAddrResponse>, t: Throwable) {
+
+                    }
+                })
+        }
         fun delSelectSchedule(userIdx: String, scheduleIdx: String, callback1: (Task<Void>) -> Unit){
             val db = Firebase.firestore
             db.collection("userData")

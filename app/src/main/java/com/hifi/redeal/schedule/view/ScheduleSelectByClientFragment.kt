@@ -1,4 +1,4 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.search.SearchView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentScheduleSelectByClientBinding
@@ -25,6 +27,7 @@ class ScheduleSelectByClientFragment : Fragment() {
     lateinit var fragmentScheduleSelectByClientBinding: FragmentScheduleSelectByClientBinding
     lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
+    private val uid = Firebase.auth.uid!!
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     var userClientSimpleDataList = mutableListOf<ClientSimpleData>()
     var userClientSimpleDataResultList = mutableListOf<ClientSimpleData>()
@@ -53,7 +56,7 @@ class ScheduleSelectByClientFragment : Fragment() {
                 fragmentScheduleSelectByClientBinding.recyclerViewAllResult.adapter?.notifyDataSetChanged()
             }
 
-            getUserAllClientInfo()
+            getUserAllClientInfo(uid)
         }
 
     }
@@ -74,7 +77,7 @@ class ScheduleSelectByClientFragment : Fragment() {
             }
 
             searchViewClientList.run{
-                hint = "찾고 있는 거래처를 입력해주세요"
+                hint = "거래처 또는 담당자 이름으로 검색"
 
                 addTransitionListener { searchView, previousState, newState ->
                     // 서치바를 눌러 서치뷰가 보일 때
@@ -116,7 +119,7 @@ class ScheduleSelectByClientFragment : Fragment() {
                         temp!!.clientIdx = userClientSimpleDataList[bindingAdapterPosition].clientIdx
                         scheduleVM.editScheduleData.postValue(temp)
                     }
-                    scheduleVM.getUserSelectClientInfo(userClientSimpleDataList[bindingAdapterPosition].clientIdx)
+                    scheduleVM.getUserSelectClientInfo(uid, userClientSimpleDataList[bindingAdapterPosition].clientIdx)
                     mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
                 }
             }
@@ -175,7 +178,7 @@ class ScheduleSelectByClientFragment : Fragment() {
                         temp!!.clientIdx = userClientSimpleDataResultList[bindingAdapterPosition].clientIdx
                         scheduleVM.editScheduleData.postValue(temp)
                     }
-                    scheduleVM.getUserSelectClientInfo(userClientSimpleDataResultList[bindingAdapterPosition].clientIdx)
+                    scheduleVM.getUserSelectClientInfo(uid, userClientSimpleDataResultList[bindingAdapterPosition].clientIdx)
                     mainActivity.removeFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT)
                 }
             }

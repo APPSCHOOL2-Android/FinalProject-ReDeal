@@ -2,8 +2,6 @@ package com.hifi.redeal.memo.vm
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
@@ -29,9 +27,9 @@ class RecordMemoViewModel : ViewModel() {
                 var audioFileUri:Uri? = null
                 if(recordFileLocation.exists()){
                     audioFileUri = Uri.fromFile(recordFileLocation)
+                    val newPhotoMemo = RecordMemoData(context, date, audioFileUri, audioFilename)
+                    recordMemoData.add(newPhotoMemo)
                 }
-                val newPhotoMemo = RecordMemoData(context, date.seconds + 32400, audioFileUri, audioFilename)
-                recordMemoData.add(newPhotoMemo)
             }
             recordMemoData.reverse()
             recordMemoList.postValue(recordMemoData)

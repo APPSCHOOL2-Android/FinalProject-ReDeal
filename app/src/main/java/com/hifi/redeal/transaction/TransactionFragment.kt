@@ -1,13 +1,9 @@
 package com.hifi.redeal.transaction
 
-import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -40,6 +36,20 @@ class TransactionFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     lateinit var transactionVM: TransactionViewModel
     var clientSimpleDataList = mutableListOf<ClientSimpleData>()
+
+    lateinit var selBulider : AlertDialog.Builder
+    lateinit var selDialog : AlertDialog
+
+    lateinit var dialogAddDepositBinding: DialogAddDepositBinding
+    lateinit var addDepositBuilder : AlertDialog.Builder
+    lateinit var addDepositDialog : AlertDialog
+
+    lateinit var dialogAddTransactionBinding: DialogAddTransactionBinding
+    lateinit var addTransactionBuilder : AlertDialog.Builder
+    lateinit var addTransactionDialog : AlertDialog
+
+    var inoutMode = true
+
     var clientIdx : Long? = null
     var selectClientIdx: Long? = null
     val uid = Firebase.auth.uid!!
@@ -131,7 +141,7 @@ class TransactionFragment : Fragment() {
                                 }
 
                                 transItem.textProductName.text = TransactionData.transactionName
-                                transItem.textProductCount.text = TransactionData.transactionItemCount.toString()
+                                transItem.textProductCount.text = formatAmount(TransactionData.transactionItemCount.toString())
                                 transItem.textUnitPrice.text = formatAmount(TransactionData.transactionItemPrice)
 
                                 val totalAmount = BigInteger(TransactionData.transactionItemPrice).multiply(
@@ -197,7 +207,7 @@ class TransactionFragment : Fragment() {
                             }
 
                             transItem.textProductName.text = TransactionData.transactionName
-                            transItem.textProductCount.text = TransactionData.transactionItemCount.toString()
+                            transItem.textProductCount.text = formatAmount(TransactionData.transactionItemCount.toString())
                             transItem.textUnitPrice.text = formatAmount(TransactionData.transactionItemPrice)
 
                             val totalAmount = BigInteger(TransactionData.transactionItemPrice).multiply(
@@ -223,45 +233,68 @@ class TransactionFragment : Fragment() {
                 }
             }
 
-            transactionVM.getAllTransactionData()
-            transactionVM.getNextTransactionIdx()
-            transactionVM.getUserAllClient()
+            transactionVM.getAllTransactionData(uid)
+            transactionVM.getNextTransactionIdx(uid)
+            transactionVM.getUserAllClient(uid)
         }
 
     }
 
     private fun setClickEvent(){
-        // 입금 버튼 클릭 이벤트 처리
-        val addButtonLeft = fragmentTransactionBinding.ImgBtnAddDeposit
-        addButtonLeft.setOnClickListener {
-            showDepositDialog()
-        }
 
-        // 거래 버튼 클릭 이벤트 처리
-        val addButtonRight = fragmentTransactionBinding.ImgBtnAddTransaction
-        addButtonRight.setOnClickListener {
-            showTransactionDialog()
+        fragmentTransactionBinding.run{
+
+            ImgBtnAddDeposit.setOnClickListener {
+                inoutMode = true
+                showDepositDialog()
+            }
+
+
+            ImgBtnAddTransaction.setOnClickListener {
+                inoutMode = false
+                showTransactionDialog()
+            }
+
+            toolbarTransactionMain.run{
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.TRANSACTION_FRAGMENT)
+                }
+            }
         }
     }
 
         // 입금 추가 다이얼 로그 생성 함수
     private fun showDepositDialog() {
-        val builder = AlertDialog.Builder(requireContext())
 
-        val dialogAddDepositBinding = DialogAddDepositBinding.inflate(layoutInflater)
-
-        val dialog = builder.create()
+        dialogAddDepositBinding = DialogAddDepositBinding.inflate(layoutInflater)
+        addDepositBuilder = AlertDialog.Builder(requireContext())
+        addDepositDialog = addDepositBuilder.create()
 
         dialogAddDepositBinding.run{
+
+            addDepositPriceEditTextNumber.setOnEditorActionListener { v, actionId, event ->
+                if(!v.editableText.isNullOrEmpty()){
+                    addDepositPriceinputLayout.error = null
+                }
+                true
+            }
+
             if(clientIdx != null){ // 거래처 화면에서 왔을 경우
                 addSelectClientDepositBtn.visibility = View.GONE
 
                 addDepositBtn.setOnClickListener {
+
+                    if(addDepositPriceEditTextNumber.editableText.isNullOrEmpty()){
+                        addDepositPriceinputLayout.error = "금액을 입력해 주세요."
+                        addDepositPriceEditTextNumber.requestFocus()
+                        return@setOnClickListener
+                    }
+
                     val newTransactionData = TransactionData(
                         clientIdx!!,
                         Timestamp.now(),
                         true,
-                        editTextNumber.editableText.toString(),
+                        addDepositPriceEditTextNumber.editableText.toString(),
                         transactionVM.nextTransactionIdx,
                         0L,
                         "0",
@@ -269,10 +302,10 @@ class TransactionFragment : Fragment() {
                     )
                     TransactionRepository.setTransactionData(uid,newTransactionData){
                         TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
-                            dialog.dismiss()
+                            addDepositDialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "입금 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                            transactionVM.getAllTransactionData()
-                            transactionVM.getNextTransactionIdx()
+                            transactionVM.getAllTransactionData(uid)
+                            transactionVM.getNextTransactionIdx(uid)
                         }
                     }
                 }
@@ -281,11 +314,37 @@ class TransactionFragment : Fragment() {
                     if(selectClientIdx == null){
                         addSelectClientDepositBtn.requestFocus()
                         addSelectClientDepositBtn.callOnClick()
+                    } else {
+
+                        if(addDepositPriceEditTextNumber.editableText.isNullOrEmpty()){
+                            addDepositPriceinputLayout.error = "금액을 입력해 주세요."
+                            addDepositPriceEditTextNumber.requestFocus()
+                            return@setOnClickListener
+                        }
+
+                        val newTransactionData = TransactionData(
+                            selectClientIdx!!,
+                            Timestamp.now(),
+                            true,
+                            addDepositPriceEditTextNumber.editableText.toString(),
+                            transactionVM.nextTransactionIdx,
+                            0L,
+                            "0",
+                            ""
+                        )
+                        TransactionRepository.setTransactionData(uid,newTransactionData){
+                            TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
+                                selectClientIdx = null
+                                Snackbar.make(fragmentTransactionBinding.root, "입금 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                                transactionVM.getAllTransactionData(uid)
+                                transactionVM.getNextTransactionIdx(uid)
+                                addDepositDialog.dismiss()
+                            }
+                        }
                     }
                 }
                 addSelectClientDepositBtn.setOnClickListener {
-                    val selBulider = AlertDialog.Builder(requireContext())
-                    val selDialog = selBulider.create()
+
                     val transactionSelectClientBinding = TransactionSelectClientBinding.inflate(layoutInflater)
 
                     clientSimpleDataList.clear()
@@ -299,41 +358,91 @@ class TransactionFragment : Fragment() {
                             layoutManager = LinearLayoutManager(context)
                             addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
                         }
-                        searchClientEditText.setOnEditorActionListener { v, actionId, event ->
+
+                        searchClientEditText.setOnEditorActionListener { v, _, _ ->
                             clientSimpleDataList.clear()
                             transactionVM.clientSimpleDataListVM.value?.forEach {
                                 if(it.clientName.contains(v.editableText) || it.clientManagerName.contains(v.editableText)){
                                     clientSimpleDataList.add(it)
                                 }
-                                // 어댑터 갱신
                                 searchClientResultRecyclerView.adapter?.notifyDataSetChanged()
                             }
                             true
                         }
                     }
-
+                    selBulider = AlertDialog.Builder(requireContext())
+                    selDialog = selBulider.create()
                     selDialog.setView(transactionSelectClientBinding.root)
                     selDialog.show()
 
                 }
             }
         }
-        dialog.setView(dialogAddDepositBinding.root)
-        dialog.show()
+        addDepositDialog.setView(dialogAddDepositBinding.root)
+        addDepositDialog.show()
     }
 
-    private fun showTransactionDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+    private fun showTransactionDialog() { // 거래 추가 다이얼로그
 
-        val dialogAddTransactionBinding = DialogAddTransactionBinding.inflate(layoutInflater)
 
-        val dialog = builder.create()
+        dialogAddTransactionBinding = DialogAddTransactionBinding.inflate(layoutInflater)
+        addTransactionBuilder = AlertDialog.Builder(requireContext())
+        addTransactionDialog = addTransactionBuilder.create()
 
         dialogAddTransactionBinding.run{
+
+            transactionNameEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionNameLayout.error = null
+                }
+                true
+            }
+            transactionItemCountEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionItemCountLayout.error = null
+                }
+                true
+            }
+            transactionItemPriceEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionItemPriceLayout.error = null
+                }
+                true
+            }
+            transactionAmountReceivedEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionAmountReceivedLayout.error = null
+                }
+                true
+            }
+
             if(clientIdx != null){
                 selectTransactionClientBtn.visibility = View.GONE
 
                 addTransactionBtn.setOnClickListener {
+
+                    if(transactionNameEditText.editableText.isNullOrEmpty()){
+                        transactionNameLayout.error = "품명을 입력해 주세요."
+                        mainActivity.showSoftInput(transactionNameEditText)
+                        return@setOnClickListener
+                    }
+                    if(transactionItemCountEditText.editableText.isNullOrEmpty()){
+                        transactionItemCountLayout.error = "수량을 입력해 주세요."
+                        mainActivity.showSoftInput(transactionItemCountEditText)
+                        return@setOnClickListener
+                    }
+                    if(transactionItemPriceEditText.editableText.isNullOrEmpty()){
+                        transactionItemPriceLayout.error = "단가를 입력해 주세요."
+                        mainActivity.showSoftInput(transactionItemPriceEditText)
+                        return@setOnClickListener
+                    }
+                    if(transactionAmountReceivedEditText.editableText.isNullOrEmpty()){
+                        transactionAmountReceivedLayout.error = "받은 금액을 입력해 주세요."
+                        mainActivity.showSoftInput(transactionAmountReceivedEditText)
+                        return@setOnClickListener
+                    }
+
+
                     val newTransactionData = TransactionData(
                         clientIdx!!,
                         Timestamp.now(),
@@ -346,20 +455,100 @@ class TransactionFragment : Fragment() {
                     )
                     TransactionRepository.setTransactionData(uid,newTransactionData){
                         TransactionRepository.setClientTransactionDataList(uid, newTransactionData){
-                            dialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "거래 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                            transactionVM.getAllTransactionData()
-                            transactionVM.getNextTransactionIdx()
+                            transactionVM.getAllTransactionData(uid)
+                            transactionVM.getNextTransactionIdx(uid)
+                            addTransactionDialog.dismiss()
                         }
                     }
                 }
 
             } else {
+                addTransactionBtn.setOnClickListener {
+                    if(selectClientIdx == null){
+                        selectTransactionClientBtn.requestFocus()
+                        selectTransactionClientBtn.callOnClick()
+                    } else {
 
+                        if(transactionNameEditText.editableText.isNullOrEmpty()){
+                            transactionNameLayout.error = "품명을 입력해 주세요."
+                            mainActivity.showSoftInput(transactionNameEditText)
+                            return@setOnClickListener
+                        }
+                        if(transactionItemCountEditText.editableText.isNullOrEmpty()){
+                            transactionItemCountLayout.error = "수량을 입력해 주세요."
+                            mainActivity.showSoftInput(transactionItemCountEditText)
+                            return@setOnClickListener
+                        }
+                        if(transactionItemPriceEditText.editableText.isNullOrEmpty()){
+                            transactionItemPriceLayout.error = "단가를 입력해 주세요."
+                            mainActivity.showSoftInput(transactionItemPriceEditText)
+                            return@setOnClickListener
+                        }
+                        if(transactionAmountReceivedEditText.editableText.isNullOrEmpty()){
+                            transactionAmountReceivedLayout.error = "받은 금액을 입력해 주세요."
+                            mainActivity.showSoftInput(transactionAmountReceivedEditText)
+                            return@setOnClickListener
+                        }
+
+                        val newTransactionData = TransactionData(
+                            selectClientIdx!!,
+                            Timestamp.now(),
+                            false,
+                            transactionAmountReceivedEditText.editableText.toString(),
+                            transactionVM.nextTransactionIdx,
+                            transactionItemCountEditText.text.toString().toLong(),
+                            transactionItemPriceEditText.text.toString(),
+                            transactionNameEditText.text.toString()
+                        )
+                        TransactionRepository.setTransactionData(uid,newTransactionData){
+                            TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
+                                selectClientIdx = null
+                                Snackbar.make(fragmentTransactionBinding.root, "거래 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                                transactionVM.getAllTransactionData(uid)
+                                transactionVM.getNextTransactionIdx(uid)
+                                addTransactionDialog.dismiss()
+                            }
+                        }
+                    }
+                }
+                selectTransactionClientBtn.setOnClickListener {
+
+                    val transactionSelectClientBinding = TransactionSelectClientBinding.inflate(layoutInflater)
+
+                    clientSimpleDataList.clear()
+                    transactionVM.clientSimpleDataListVM.value?.forEach {
+                        clientSimpleDataList.add(it)
+                    }
+
+                    transactionSelectClientBinding.run{
+                        searchClientResultRecyclerView.run{
+                            adapter = SearchClientAdapter()
+                            layoutManager = LinearLayoutManager(context)
+                            addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
+                        }
+
+                        searchClientEditText.setOnEditorActionListener { v, _, _ ->
+                            clientSimpleDataList.clear()
+                            transactionVM.clientSimpleDataListVM.value?.forEach {
+                                if(it.clientName.contains(v.editableText) || it.clientManagerName.contains(v.editableText)){
+                                    clientSimpleDataList.add(it)
+                                }
+                                searchClientResultRecyclerView.adapter?.notifyDataSetChanged()
+                            }
+                            true
+                        }
+                    }
+                    selBulider = AlertDialog.Builder(requireContext())
+                    selDialog = selBulider.create()
+                    selDialog.setView(transactionSelectClientBinding.root)
+                    selDialog.show()
+
+                }
             }
         }
-        dialog.setView(dialogAddTransactionBinding.root)
-        dialog.show()
+        addTransactionDialog.setView(dialogAddTransactionBinding.root)
+        addTransactionDialog.show()
     }
 
     // 금액을 000,000 형식으로 변환하는 함수
@@ -374,14 +563,22 @@ class TransactionFragment : Fragment() {
 
             val selectTransactionClientName = transactionSelectClientItemBinding.selectTransactionClientName
             val selectTransactionClinetState = transactionSelectClientItemBinding.selectTransactionClinetState
-            val selectClientBtn = transactionSelectClientItemBinding.selectClientBtn
             val selectTransactionClientManagerName = transactionSelectClientItemBinding.selectTransactionClientManagerName
             val selectTransactionClientBookmarkView = transactionSelectClientItemBinding.selectTransactionClientBookmarkView
 
             init{
-                selectClientBtn.setOnClickListener {
+                transactionSelectClientItemBinding.root.setOnClickListener {
                     selectClientIdx = clientSimpleDataList[bindingAdapterPosition].clientIdx
 
+                    if(inoutMode){
+                        Snackbar.make(dialogAddDepositBinding.root,
+                            "${clientSimpleDataList[bindingAdapterPosition].clientName} 선택 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                    } else {
+                        Snackbar.make(dialogAddTransactionBinding.root,
+                            "${clientSimpleDataList[bindingAdapterPosition].clientName} 선택 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    selDialog.dismiss()
                 }
             }
 

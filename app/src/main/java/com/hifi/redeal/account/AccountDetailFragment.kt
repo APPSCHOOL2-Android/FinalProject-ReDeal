@@ -6,10 +6,10 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
@@ -22,18 +22,12 @@ import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.label.LabelStyle
-import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.mapwidget.InfoWindowOptions
 import com.kakao.vectormap.mapwidget.component.GuiImage
 import com.kakao.vectormap.mapwidget.component.GuiLayout
 import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
-import java.lang.NullPointerException
-
 import java.text.SimpleDateFormat
 
 
@@ -56,6 +50,12 @@ class AccountDetailFragment : Fragment() {
         fragmentAccountDetailBinding = FragmentAccountDetailBinding.inflate(layoutInflater)
 
         mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
+      
+        if(arguments?.getLong("notifyClientIdx") != null){
+            clientIdx = arguments?.getLong("notifyClientIdx")!!
+            mainActivity.activityMainBinding.bottomNavigationViewMain.isVisible = false
+        }
+
 
         if (clientIdx == 0L)
             clientIdx = arguments?.getLong("clientIdx") ?: 0

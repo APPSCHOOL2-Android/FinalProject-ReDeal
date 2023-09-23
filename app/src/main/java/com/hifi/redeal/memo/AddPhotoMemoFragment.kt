@@ -1,14 +1,12 @@
 package com.hifi.redeal.memo
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
@@ -39,7 +36,7 @@ class AddPhotoMemoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentAddPhotoMemoBinding = FragmentAddPhotoMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
         clientIdx = arguments?.getLong("clientIdx")?:1L
@@ -148,29 +145,7 @@ class AddPhotoMemoFragment : Fragment() {
                     val bitmap = BitmapFactory.decodeFile(source)
                     imageView.setImageBitmap(bitmap)
                 }
-            }
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-                // 이미지를 생성할 수 있는 디코더를 생성한다.
-                val source = ImageDecoder.createSource(mainActivity.contentResolver, it)
-                // Bitmap객체를 생성한다.
-                val bitmap = ImageDecoder.decodeBitmap(source)
-
-                imageView.setImageBitmap(bitmap)
-            } else {
-                // 컨텐츠 프로바이더를 통해 이미지 데이터 정보를 가져온다.
-                val cursor = mainActivity.contentResolver.query(it, null, null, null, null)
-                if(cursor != null){
-                    cursor.moveToNext()
-
-                    // 이미지의 경로를 가져온다.
-                    val idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
-                    val source = cursor.getString(idx)
-
-                    // 이미지를 생성하여 보여준다.
-                    val bitmap = BitmapFactory.decodeFile(source)
-                    imageView.setImageBitmap(bitmap)
-                }
+                cursor?.close()
             }
             imgCnt++
             linearLayoutHorizontal.addView(imageView)

@@ -1,26 +1,24 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
-import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -29,7 +27,6 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Calendar
@@ -41,6 +38,7 @@ class MakeScheduleFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     lateinit var scheduleVM: ScheduleVM
     private var clientIdx = 0L
+    private val uid = Firebase.auth.uid!!
   
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -335,7 +333,7 @@ class MakeScheduleFragment : Fragment() {
                     makeScheduleEditTextScheduleTitle.editableText.toString()
                 )
 
-                scheduleVM.addUserSchedule(newScheduleData){
+                scheduleVM.addUserSchedule(uid, newScheduleData){
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정을 성공적으로 저장하였습니다.")
                     builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->

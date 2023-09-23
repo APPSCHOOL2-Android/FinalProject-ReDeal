@@ -1,15 +1,16 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -90,8 +91,8 @@ class VisitedScheduleFragment : Fragment() {
                     }
                 }
 
-                getClientInfo(scheduleInfo.clientIdx)
-                getSelectClientLastVisitDate(scheduleInfo.clientIdx)
+                getClientInfo(uid, scheduleInfo.clientIdx)
+                getSelectClientLastVisitDate(uid, scheduleInfo.clientIdx)
             }
 
             selectClientData.observe(viewLifecycleOwner){
@@ -154,7 +155,7 @@ class VisitedScheduleFragment : Fragment() {
                 }
             }
 
-            getSelectScheduleInfo("${scheduleVM.selectScheduleIdx}")
+            getSelectScheduleInfo(uid, "${scheduleVM.selectScheduleIdx}")
 
         }
     }
@@ -165,6 +166,41 @@ class VisitedScheduleFragment : Fragment() {
 
                 setNavigationOnClickListener {
                     mainActivity.removeFragment(MainActivity.VISITED_SCHEDULE_FRAGMENT)
+                }
+
+                visitedClientDetail.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putLong("clientIdx", scheduleVM.selectScheduleData.value!!.clientIdx)
+                    mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
+                }
+
+                startNavOfTmapBtn.setOnClickListener {
+
+                    ScheduleRepository.getFullAddrGeocoding(scheduleVM.selectClientData.value!!.clientAddress){
+
+                        AlertDialog.Builder(mainActivity)
+                            .setTitle("길 안내")
+                            .setMessage("티맵 길 안내를 시작하시겠습니까?")
+                            .setPositiveButton("확인") { _, _ ->
+                                if (mainActivity.tMapTapi.isTmapApplicationInstalled) {
+                                    mainActivity.tMapTapi.invokeRoute(scheduleVM.selectClientData.value!!.clientName
+                                        , it!!.newLon.toFloat(), it!!.newLat.toFloat())
+                                } else {
+                                    Snackbar.make(fragmentVisitedScheduleBinding.root, "티맵 앱 설치 후 다시 시도해주세요", Snackbar.LENGTH_SHORT)
+                                        .setAction("설치하기") {
+                                            val intent = Intent(Intent.ACTION_VIEW)
+                                            intent.data = Uri.parse("market://details?id=com.skt.tmap.ku")
+                                            startActivity(intent)
+                                        }.apply {
+                                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                                        }
+                                        .show()
+                                }
+                            }
+                            .setNegativeButton("취소", null)
+                            .show()
+
+                    }
                 }
 
                 setOnMenuItemClickListener {
@@ -178,9 +214,9 @@ class VisitedScheduleFragment : Fragment() {
                                 cancelBuilder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
                                     updateScheduleData.isScheduleFinish = false
                                     ScheduleRepository.setUserSchedule(uid, updateScheduleData,{
-                                        scheduleVM.getSelectClientLastVisitDate(scheduleVM.selectScheduleData.value!!.clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate(uid, scheduleVM.selectScheduleData.value!!.clientIdx)
                                     },{
-                                        scheduleVM.getSelectScheduleInfo("${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                        scheduleVM.getSelectScheduleInfo(uid, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
                                     })
                                 }
                                 cancelBuilder.setPositiveButton("취소",null)
@@ -192,9 +228,9 @@ class VisitedScheduleFragment : Fragment() {
                                     updateScheduleData.isScheduleFinish = true
                                     updateScheduleData.scheduleFinishTime = Timestamp.now()
                                     ScheduleRepository.setUserSchedule(uid, updateScheduleData,{
-                                        scheduleVM.getSelectClientLastVisitDate(scheduleVM.selectScheduleData.value!!.clientIdx)
+                                        scheduleVM.getSelectClientLastVisitDate(uid, scheduleVM.selectScheduleData.value!!.clientIdx)
                                     },{
-                                        scheduleVM.getSelectScheduleInfo("${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
+                                        scheduleVM.getSelectScheduleInfo(uid, "${scheduleVM.selectScheduleData.value!!.scheduleIdx}")
                                     })
                                 }
                                 completeBuilder.setPositiveButton("취소",null)

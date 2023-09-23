@@ -20,9 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.transition.MaterialSharedAxis
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.app
 import com.hifi.redeal.account.AccountDetailFragment
 import com.hifi.redeal.account.AccountEditFragment
 import com.hifi.redeal.account.AccountListFragment
@@ -40,12 +37,14 @@ import com.hifi.redeal.memo.MemoFragment
 import com.hifi.redeal.memo.PhotoDetailFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
-import com.hifi.redeal.schedule.EditScheduleFragment
-import com.hifi.redeal.schedule.MakeScheduleFragment
-import com.hifi.redeal.schedule.ScheduleManageFragment
-import com.hifi.redeal.schedule.ScheduleSelectByClientFragment
-import com.hifi.redeal.schedule.UnvisitedScheduleFragment
-import com.hifi.redeal.schedule.VisitedScheduleFragment
+import com.hifi.redeal.myPage.MyPageEditNameFragment
+import com.hifi.redeal.myPage.MyPageFragment
+import com.hifi.redeal.schedule.view.EditScheduleFragment
+import com.hifi.redeal.schedule.view.MakeScheduleFragment
+import com.hifi.redeal.schedule.view.ScheduleManageFragment
+import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
+import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
+import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.hifi.redeal.transaction.TransactionFragment
 import com.skt.tmap.TMapTapi
@@ -109,6 +108,8 @@ class MainActivity : AppCompatActivity() {
         val MAP_SEARCH_REGION_FRAGMENT = "MapSearchRegionFragment"
         val TRANSACTION_FRAGMENT = "TransactionFragment"
         val NOTIFICATION_FRAGMENT = "NotificationFragment"
+        val MY_PAGE_FRAGMENT = "MyPageFragment"
+        val MY_PAGE_EDIT_NAME_FRAGMENT = "MyPageEditNameFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -136,6 +137,19 @@ class MainActivity : AppCompatActivity() {
 //        R.id.mapFragment,
 //    )
 
+    override fun onResume() {
+        super.onResume()
+        if(intent.getLongExtra("notifyClientIdx", -1) != -1L){
+            Log.d("RedealNotify", "메인 액티비티 실행 : ${intent.getLongExtra("notifyClientIdx", -1)}")
+            val bundle = Bundle()
+            val notifyClientIdx = intent.getLongExtra("notifyClientIdx", -1)
+            if(notifyClientIdx != -1L){
+                bundle.putLong("notifyClientIdx", notifyClientIdx)
+                replaceFragment(ACCOUNT_DETAIL_FRAGMENT, false, bundle)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -160,6 +174,7 @@ class MainActivity : AppCompatActivity() {
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
         activityMainBinding.run {
+
             bottomNavigationViewMain.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.accountListFragment -> {
@@ -338,6 +353,8 @@ class MainActivity : AppCompatActivity() {
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
             TRANSACTION_FRAGMENT -> TransactionFragment()
             NOTIFICATION_FRAGMENT -> NotificationFragment()
+            MY_PAGE_FRAGMENT -> MyPageFragment()
+            MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             else -> Fragment()
         }
 

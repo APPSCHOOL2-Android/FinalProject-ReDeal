@@ -7,7 +7,7 @@
     android:orientation="vertical"
 
     android:transitionGroup="true"
-    tools:context=".schedule.MakeScheduleFragment">
+    tools:context=".schedule.view.MakeScheduleFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/makeScheduleAppBarLayout"
@@ -22,12 +22,13 @@
             android:background="@color/background"
             android:clickable="true"
             android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
             app:itemIconTint="@color/primary20"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:navigationIconTint="@color/primary20"
             app:title="일정 등록"
             app:titleCentered="false"
-            app:titleTextAppearance="@style/Theme.ReDeal.ToolbarTheme"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
             app:titleTextColor="@color/primary20" />
 
         <View
@@ -192,7 +193,7 @@
             </com.kizitonwose.calendarview.CalendarView>
 
 
-            <com.hifi.redeal.schedule.CustomTimePicker
+            <com.hifi.redeal.schedule.model.CustomTimePicker
                 android:id="@+id/makeScheduleTimePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -18,7 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="포토 메모" />
+        app:title="포토 메모"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/view"
@@ -29,56 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/photoMemoToolbar" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clientProfileLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="36dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view">
-
-        <ImageView
-            android:id="@+id/clientProfileImageView"
-            android:layout_width="66dp"
-            android:layout_height="38dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/btn_round_primary90"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/card_account_detail_24px_primary95" />
-
-        <TextView
-            android:id="@+id/clientNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="미래 기술 연구소"
-            android:textColor="@color/text10"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/clientProfileImageView"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="미래 기술 연구소" />
-
-        <TextView
-            android:id="@+id/clientManagerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="하성진"
-            android:textColor="@color/text50"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/clientProfileImageView"
-            app:layout_constraintTop_toBottomOf="@+id/clientNameTextView"
-            tools:text="하성진" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photoMemoRecyclerView"
         android:layout_width="match_parent"
@@ -87,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clientProfileLayout"
+        app:layout_constraintTop_toBottomOf="@+id/view"
         tools:itemCount="1"
         tools:listitem="@layout/row_photo_memo" />
 

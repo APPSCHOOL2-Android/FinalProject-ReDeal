@@ -46,7 +46,6 @@ class SearchRegionSiDoRecyclerViewAdapter(private val mainActivity: MainActivity
         rowMapRegionSearchBinding.root.setOnClickListener {
             val position = allViewHolder.adapterPosition
             mapViewModel.run {
-                Log.d("지역1",dataList.get(position).admCode)
                 getSiGunGuList(dataList.get(position).admCode)//전달
                 currentSiDoPosition.value=position
                 currentSiGunGuPosition.value = -1
@@ -67,12 +66,10 @@ class SearchRegionSiDoRecyclerViewAdapter(private val mainActivity: MainActivity
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.rowMapRegionSearchName.text= dataList.get(position).lowestAdmCodeNm
-        // 선택된 항목의 배경색 변경
         if (position == mapViewModel.currentSiDoPosition.value) {
             holder.rowMapRegionSearchLayout.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.primary20))
             holder.rowMapRegionSearchName.setTextColor(Color.WHITE)
         } else {
-            Log.d("포지션21",position.toString())
             holder.rowMapRegionSearchLayout.setBackgroundColor(Color.TRANSPARENT)
             holder.rowMapRegionSearchName.setTextColor(ContextCompat.getColor(mainActivity, R.color.text10))
         }
