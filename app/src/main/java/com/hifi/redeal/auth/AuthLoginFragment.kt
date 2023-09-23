@@ -78,8 +78,8 @@ class AuthLoginFragment : Fragment() {
 
         // 구글 로그인 버튼
         fragmentAuthLoginBinding.buttonAuthGoogleLogin.setOnClickListener {
-            val signInIntent = authViewModel.getGoogleSignInClient(requireContext()).signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
+//            val signInIntent = authViewModel.getGoogleSignInClient(requireContext()).signInIntent
+//            startActivityForResult(signInIntent, RC_SIGN_IN)
        }
     }
 

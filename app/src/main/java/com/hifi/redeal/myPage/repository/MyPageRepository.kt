@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.UUID
 
 class MyPageRepository {
     companion object{
@@ -21,6 +22,16 @@ class MyPageRepository {
             userDocRef.update("userName", userNewName).addOnSuccessListener {
                 callback()
             }
+        }
+
+        fun addRequestMessage(message:String){
+            val db = Firebase.firestore
+            val uuid = UUID.randomUUID().toString()
+            val requestMessageRef = db.collection("requestMessage").document(uuid)
+            val requestMessage = hashMapOf(
+                "message" to message
+            )
+            requestMessageRef.set(requestMessage)
         }
 
     }
