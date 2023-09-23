@@ -216,4 +216,16 @@ class AccountListRepository {
                 it.printStackTrace()
             }
     }
+
+    fun getNotificationCnt(userId: String, callback: (Int) -> Unit) {
+        db.collection("userData").document(userId).collection("notificationData")
+            .whereEqualTo("isChecked", false)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    error.printStackTrace()
+                } else {
+                    callback(snapshot?.size() ?: 0)
+                }
+            }
+    }
 }

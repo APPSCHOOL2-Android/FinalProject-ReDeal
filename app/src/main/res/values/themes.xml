@@ -24,6 +24,12 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="Theme.ReDeal.MapSearchBarTheme" parent="Theme.ReDeal">
+        <item name="colorPrimary">@color/background</item>
+        <item name="hintTextColor">@color/text30</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
     <style name="Theme.ReDeal.ClientSearchViewTheme" parent="Theme.ReDeal">
         <item name="colorPrimary">@color/background</item>
         <item name="hintTextColor">@color/text30</item>
