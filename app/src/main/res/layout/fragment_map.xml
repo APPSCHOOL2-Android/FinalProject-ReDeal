@@ -35,9 +35,8 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/primary100"
                     android:hint="찾고 계신 거래처를 입력해주세요."
-                    android:theme="@style/Theme.ReDeal.ClientSearchBarTheme"
+                    android:theme="@style/Theme.ReDeal.MapSearchBarTheme"
                     app:defaultMarginsEnabled="false">
 
                 </com.google.android.material.search.SearchBar>
