@@ -1,9 +1,8 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +28,7 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId.systemDefault
 import java.time.temporal.WeekFields
@@ -68,6 +68,13 @@ class EditScheduleFragment : Fragment() {
     private fun setClickEvent(){
 
         fragmentEditScheduleBinding.run{
+
+            editScheduleToolbar.run{
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.EDIT_SCHEDULE_FRAGMENT)
+                }
+            }
+
             editScheduleBtnVisit.run{
                 setOnClickListener {
                     scheduleVM.editScheduleData.value?.isVisitSchedule = true
@@ -401,6 +408,7 @@ class EditScheduleFragment : Fragment() {
                         // Hide in and out dates
                         textView.setTextColor(mainActivity.getColor(R.color.text80))
                     }
+                    setDateToText()
                 }
             }
             editScheduleCalendarView.monthHeaderBinder = object :
@@ -410,6 +418,12 @@ class EditScheduleFragment : Fragment() {
                 override fun bind(container: MonthViewContainer, month: CalendarMonth) {
                     container.headerMonthTextView.text = "${month.month}월"
                     container.headerYearTextView.text = "${month.year}"
+                    container.headerGotoTextView.setOnClickListener {
+                        scheduleVM.selectDate = LocalDate.now()
+                        scheduleVM.getUserDayOfSchedule(uid, "${scheduleVM.selectDate}")
+                        editScheduleCalendarView.notifyCalendarChanged()
+                        editScheduleCalendarView.scrollToDate(scheduleVM.selectDate, DayOwner.THIS_MONTH)
+                    }
                 }
             }
         }
@@ -441,5 +455,6 @@ class EditScheduleFragment : Fragment() {
     private inner class MonthViewContainer(view: View) : ViewContainer(view) {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
+        val headerGotoTextView = view.findViewById<TextView>(R.id.headerGoToday)
     }
 }

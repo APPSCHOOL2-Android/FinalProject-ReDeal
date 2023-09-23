@@ -3,10 +3,7 @@ package com.hifi.redeal.transaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.model.customTransactionData
 
 class TransactionViewModel: ViewModel() {

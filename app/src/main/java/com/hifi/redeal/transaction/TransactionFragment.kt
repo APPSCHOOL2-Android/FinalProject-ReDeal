@@ -1,13 +1,9 @@
 package com.hifi.redeal.transaction
 
-import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -245,18 +241,25 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setClickEvent(){
-        // 입금 버튼 클릭 이벤트 처리
-        val addButtonLeft = fragmentTransactionBinding.ImgBtnAddDeposit
-        addButtonLeft.setOnClickListener {
-            inoutMode = true
-            showDepositDialog()
-        }
 
-        // 거래 버튼 클릭 이벤트 처리
-        val addButtonRight = fragmentTransactionBinding.ImgBtnAddTransaction
-        addButtonRight.setOnClickListener {
-            inoutMode = false
-            showTransactionDialog()
+        fragmentTransactionBinding.run{
+
+            ImgBtnAddDeposit.setOnClickListener {
+                inoutMode = true
+                showDepositDialog()
+            }
+
+
+            ImgBtnAddTransaction.setOnClickListener {
+                inoutMode = false
+                showTransactionDialog()
+            }
+
+            toolbarTransactionMain.run{
+                setNavigationOnClickListener {
+                    mainActivity.removeFragment(MainActivity.TRANSACTION_FRAGMENT)
+                }
+            }
         }
     }
 
@@ -268,6 +271,14 @@ class TransactionFragment : Fragment() {
         addDepositDialog = addDepositBuilder.create()
 
         dialogAddDepositBinding.run{
+
+            addDepositPriceEditTextNumber.setOnEditorActionListener { v, actionId, event ->
+                if(!v.editableText.isNullOrEmpty()){
+                    addDepositPriceinputLayout.error = null
+                }
+                true
+            }
+
             if(clientIdx != null){ // 거래처 화면에서 왔을 경우
                 addSelectClientDepositBtn.visibility = View.GONE
 
@@ -323,11 +334,11 @@ class TransactionFragment : Fragment() {
                         )
                         TransactionRepository.setTransactionData(uid,newTransactionData){
                             TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
-                                addDepositDialog.dismiss()
                                 selectClientIdx = null
                                 Snackbar.make(fragmentTransactionBinding.root, "입금 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
                                 transactionVM.getAllTransactionData(uid)
                                 transactionVM.getNextTransactionIdx(uid)
+                                addDepositDialog.dismiss()
                             }
                         }
                     }
@@ -348,7 +359,7 @@ class TransactionFragment : Fragment() {
                             addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
                         }
 
-                        searchClientEditText.setOnEditorActionListener { v, actionId, event ->
+                        searchClientEditText.setOnEditorActionListener { v, _, _ ->
                             clientSimpleDataList.clear()
                             transactionVM.clientSimpleDataListVM.value?.forEach {
                                 if(it.clientName.contains(v.editableText) || it.clientManagerName.contains(v.editableText)){
@@ -379,6 +390,32 @@ class TransactionFragment : Fragment() {
         addTransactionDialog = addTransactionBuilder.create()
 
         dialogAddTransactionBinding.run{
+
+            transactionNameEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionNameLayout.error = null
+                }
+                true
+            }
+            transactionItemCountEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionItemCountLayout.error = null
+                }
+                true
+            }
+            transactionItemPriceEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionItemPriceLayout.error = null
+                }
+                true
+            }
+            transactionAmountReceivedEditText.setOnEditorActionListener { v, _, _ ->
+                if(!v.editableText.isNullOrEmpty()){
+                    transactionAmountReceivedLayout.error = null
+                }
+                true
+            }
+
             if(clientIdx != null){
                 selectTransactionClientBtn.visibility = View.GONE
 
@@ -418,10 +455,10 @@ class TransactionFragment : Fragment() {
                     )
                     TransactionRepository.setTransactionData(uid,newTransactionData){
                         TransactionRepository.setClientTransactionDataList(uid, newTransactionData){
-                            addTransactionDialog.dismiss()
                             Snackbar.make(fragmentTransactionBinding.root, "거래 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
                             transactionVM.getAllTransactionData(uid)
                             transactionVM.getNextTransactionIdx(uid)
+                            addTransactionDialog.dismiss()
                         }
                     }
                 }
@@ -466,11 +503,11 @@ class TransactionFragment : Fragment() {
                         )
                         TransactionRepository.setTransactionData(uid,newTransactionData){
                             TransactionRepository.setClientTransactionDataList(uid,newTransactionData){
-                                addTransactionDialog.dismiss()
                                 selectClientIdx = null
                                 Snackbar.make(fragmentTransactionBinding.root, "거래 내용 저장 완료 되었습니다.", Snackbar.LENGTH_SHORT).show()
                                 transactionVM.getAllTransactionData(uid)
                                 transactionVM.getNextTransactionIdx(uid)
+                                addTransactionDialog.dismiss()
                             }
                         }
                     }
@@ -491,7 +528,7 @@ class TransactionFragment : Fragment() {
                             addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
                         }
 
-                        searchClientEditText.setOnEditorActionListener { v, actionId, event ->
+                        searchClientEditText.setOnEditorActionListener { v, _, _ ->
                             clientSimpleDataList.clear()
                             transactionVM.clientSimpleDataListVM.value?.forEach {
                                 if(it.clientName.contains(v.editableText) || it.clientManagerName.contains(v.editableText)){

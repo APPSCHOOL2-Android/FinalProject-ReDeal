@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".schedule.VisitedScheduleFragment">
+    tools:context=".schedule.view.VisitedScheduleFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/visitedScheduleToolbar"
@@ -79,7 +79,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/visitedClientDetail"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginRight="12dp"

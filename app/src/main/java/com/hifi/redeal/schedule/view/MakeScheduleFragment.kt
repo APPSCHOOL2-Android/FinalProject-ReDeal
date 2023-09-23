@@ -1,17 +1,14 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -22,7 +19,6 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentMakeScheduleBinding
-import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.model.ScheduleData
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -31,7 +27,6 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Calendar

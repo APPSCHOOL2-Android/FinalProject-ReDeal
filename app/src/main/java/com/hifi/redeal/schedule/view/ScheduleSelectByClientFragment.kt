@@ -1,4 +1,4 @@
-package com.hifi.redeal.schedule
+package com.hifi.redeal.schedule.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -77,7 +77,7 @@ class ScheduleSelectByClientFragment : Fragment() {
             }
 
             searchViewClientList.run{
-                hint = "찾고 있는 거래처를 입력해주세요"
+                hint = "거래처 또는 담당자 이름으로 검색"
 
                 addTransitionListener { searchView, previousState, newState ->
                     // 서치바를 눌러 서치뷰가 보일 때
