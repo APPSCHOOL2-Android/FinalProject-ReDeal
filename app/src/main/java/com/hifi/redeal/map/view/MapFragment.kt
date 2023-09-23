@@ -265,8 +265,9 @@ class MapFragment : Fragment(), KakaoMap.OnCameraMoveEndListener,
                     getClientListLabel(Firebase.auth.uid!!)
                     clientDataListLabel.observe(viewLifecycleOwner) {
                         Log.d("라벨 테스트2", clientViewModel.clientDataListLabel.value.toString())
-                        labels =
-                            kakaoMap?.labelManager!!.layer.addLabels(clientViewModel.clientDataListLabel.value)
+                        for(i in clientDataListLabel.value!!){
+                            kakaoMap.mapWidgetManager?.infoWindowLayer?.addInfoWindow(i)
+                        }
 
                     }
                     currentAddress.observe(viewLifecycleOwner) {

@@ -14,6 +14,11 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.label.LabelTextStyle
+import com.kakao.vectormap.mapwidget.InfoWindowOptions
+import com.kakao.vectormap.mapwidget.component.GuiImage
+import com.kakao.vectormap.mapwidget.component.GuiLayout
+import com.kakao.vectormap.mapwidget.component.GuiText
+import com.kakao.vectormap.mapwidget.component.Orientation
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -21,7 +26,7 @@ class ClientViewModel : ViewModel() {
     var clientDataListByKeyWord = MutableLiveData<MutableList<ClientDataClass>>()
     var clientDataListAll = MutableLiveData<MutableList<ClientDataClass>>()
     var currentAddress = MutableLiveData<LatLng>()
-    var clientDataListLabel = MutableLiveData<MutableList<LabelOptions>>()
+    var clientDataListLabel = MutableLiveData<MutableList<InfoWindowOptions>>()
     val selectedButtonId = MutableLiveData<Int>()
 
     init {
@@ -118,7 +123,7 @@ class ClientViewModel : ViewModel() {
 
     fun getClientListLabel(userIdx: String) {
         val tempList = mutableListOf<ClientDataClass>()
-        val labelList = mutableListOf<LabelOptions>()
+        val labelList = mutableListOf<InfoWindowOptions>()
         ClientRepository.getClientListByUser(userIdx) {
             for (snapshot in it.result.documents) {
                 Log.d("거래처 테스트1", snapshot.toObject(ClientDataClass::class.java).toString())
@@ -145,6 +150,24 @@ class ClientViewModel : ViewModel() {
                     val long = it!!.get(0).x.toDouble()
                     val latLng = LatLng.from(lat, long)
 
+                    val body = GuiLayout(Orientation.Horizontal)
+                    body.setPadding(0, -20, 0, -20)
+
+                    val bgImage = GuiImage(R.drawable.window_info_bg, true)
+                    bgImage.setFixedArea(39, 39, 39, 39)
+                    body.setBackground(bgImage)
+
+                    val text = GuiText(c.clientName)
+                    text.textSize = 30
+                    text.textColor = Color.DKGRAY
+                    body.addView(text)
+
+                    val options =  InfoWindowOptions.from(latLng)
+                    options.setBody(body)
+                    options.setBodyOffset(0f, -41f)
+                    val infoWindowOptions = options.setTail(GuiImage(R.drawable.window_info_tail, false))
+
+
                     val style = LabelStyles.from(
                         LabelStyle.from(R.drawable.blue_marker).setTextStyles(
                             LabelTextStyle.from(30, R.color.primary20, 1, Color.WHITE)
@@ -152,8 +175,7 @@ class ClientViewModel : ViewModel() {
                     );
 
                     labelList.add(
-                        LabelOptions.from(latLng)
-                            .setStyles(style).setTexts(c.clientName)
+                        infoWindowOptions
                     )
                     clientDataListLabel.value = labelList
                     Log.d("라벨3", clientDataListLabel.value.toString())
