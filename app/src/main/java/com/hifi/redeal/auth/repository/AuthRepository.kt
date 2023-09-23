@@ -1,9 +1,7 @@
 package com.hifi.redeal.auth.repository
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -90,21 +88,17 @@ class AuthRepository {
                     if (!querySnapshot.isEmpty) {
                         val lastUser = querySnapshot.documents[0]
                         val currentIdx = lastUser.getLong("userIdx") ?: 0
-                        Log.d("getNextIdx", "가져온 IDX: $currentIdx")
                         // 다음 인덱스 계산
                         val nextIdx = currentIdx + 1
-                        // 결과를 반환합니다.
                         callback(nextIdx)
                     } else {
-                        // 컬렉션에 아무 문서도 없을 경우 기본값 0을 반환합니다.
+                        // 컬렉션에 아무 문서도 없을 경우 0
                         callback(0)
                     }
                 }
                 .addOnFailureListener { e ->
-                    // 실패 시 처리
                     val errorMessage = "인터넷 연결을 확인해주세요"
                     errorCallback(errorMessage)
-                    Log.e("getNextIdx", errorMessage)
                 }
         }
 
