@@ -35,6 +35,8 @@ class AuthViewModel : ViewModel() {
     var onLoginSuccess: (() -> Unit)? = null
     var onRegistrationSuccess: (() -> Unit)? = null
 
+    var onLoginFailure: ((String) -> Unit)? = null
+
     // AuthLoginFragment의 로그인 함수
     fun loginUser(email: String, password: String, view: View) {
         AuthRepository.loginUser(email, password,
@@ -51,6 +53,7 @@ class AuthViewModel : ViewModel() {
             },
             errorCallback = { errorMessage ->
                 showErrorSnackbar(view, errorMessage)
+                onLoginFailure?.invoke(errorMessage)
             }
         )
     }
@@ -73,7 +76,7 @@ class AuthViewModel : ViewModel() {
                             onRegistrationSuccess?.invoke()
                         },
                         errorCallback = { errorMessage ->
-                                showErrorSnackbar(view, errorMessage)
+                            showErrorSnackbar(view, errorMessage)
                         }
                     )
 
@@ -168,7 +171,7 @@ class AuthViewModel : ViewModel() {
         )
     }
 
-     //구글 로그인 클라이언트 초기화
+    // 구글 로그인 클라이언트 초기화
     fun getGoogleSignInClient(context: Context): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.getString(R.string.default_web_client_id))

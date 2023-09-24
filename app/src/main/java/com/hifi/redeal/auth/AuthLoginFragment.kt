@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -50,6 +51,11 @@ class AuthLoginFragment : Fragment() {
             mainActivity.replaceFragment(MainActivity. ACCOUNT_LIST_FRAGMENT, false, null)
         }
 
+        authViewModel.onLoginFailure = {
+            // 로그인 실패 시 모든 UI 요소를 다시 활성화
+            setUIElementsEnabled(true)
+        }
+
         return fragmentAuthLoginBinding.root
     }
 
@@ -80,7 +86,7 @@ class AuthLoginFragment : Fragment() {
         fragmentAuthLoginBinding.buttonAuthGoogleLogin.setOnClickListener {
             val signInIntent = authViewModel.getGoogleSignInClient(requireContext()).signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
-       }
+        }
     }
 
     // 자동 로그인 상태를 확인하고 시도하는 함수
@@ -138,6 +144,7 @@ class AuthLoginFragment : Fragment() {
                 mainActivity.showSoftInput(fragmentAuthLoginBinding.textInputEditTextLoginUserPw)
             }
         } else {
+            setUIElementsEnabled(false)
             // 이메일과 비밀번호가 입력되었다면 로그인 처리 함수 호출
             authViewModel.loginUser(email, password, fragmentAuthLoginBinding.root)
 
@@ -158,12 +165,26 @@ class AuthLoginFragment : Fragment() {
                     authViewModel.googleSignIn(account, fragmentAuthLoginBinding.root)
                 } else {
                     // Google 로그인 실패
-
+                    showGoogleLoginFailureSnackbar("Google 로그인 실패")
                 }
             } catch (e: ApiException) {
-                // Google 로그인 실패
-
+                showGoogleLoginFailureSnackbar("Google 로그인 실패")
             }
         }
+    }
+
+    private fun showGoogleLoginFailureSnackbar(message: String) {
+        Snackbar.make(fragmentAuthLoginBinding.root, message, Snackbar.LENGTH_LONG).show()
+    }
+
+    // UI 요소를 활성화 또는 비활성화하는 함수
+    private fun setUIElementsEnabled(isEnabled: Boolean) {
+        fragmentAuthLoginBinding.checkboxAuthAutoLogin.isEnabled = isEnabled
+        fragmentAuthLoginBinding.textViewAuthJoin.isEnabled = isEnabled
+        fragmentAuthLoginBinding.textViewAuthFindPw.isEnabled = isEnabled
+        fragmentAuthLoginBinding.buttonAuthLogin.isEnabled = isEnabled
+        fragmentAuthLoginBinding.textInputEditTextLoginUserId.isEnabled = isEnabled
+        fragmentAuthLoginBinding.textInputEditTextLoginUserPw.isEnabled = isEnabled
+        fragmentAuthLoginBinding.buttonAuthGoogleLogin.isEnabled = isEnabled
     }
 }
