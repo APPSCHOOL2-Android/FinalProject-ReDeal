@@ -40,7 +40,7 @@ class MapSearchRegionFragment : Fragment() {
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
 
         mapViewModel.run {
-            currentSiGunGuList.observe(mainActivity) {
+            currentSiGunGuList.observe(viewLifecycleOwner) {
                 currentDongList.value?.clear()
                 fragmentMapSearchRegionBinding.mapSearchRegionRecyclerViewSiGunGu.run {
                     adapter = SearchRegionSiGunGuRecyclerViewAdapter(mainActivity, it!!)
@@ -49,14 +49,14 @@ class MapSearchRegionFragment : Fragment() {
 
             }
 
-            currentDongList.observe(mainActivity) {
+            currentDongList.observe(viewLifecycleOwner) {
                 fragmentMapSearchRegionBinding.mapSearchRegionRecyclerViewDong.run {
                     adapter = SearchRegionDongRecyclerViewAdapter(mainActivity, it!!)
                     layoutManager = LinearLayoutManager(context)
                 }
             }
 
-            currentSiDoPosition.observe(mainActivity){
+            currentSiDoPosition.observe(viewLifecycleOwner){
                 fragmentMapSearchRegionBinding.mapSearchRegionBtnToMap.isEnabled =
                     !(mapViewModel.currentSiDoPosition.value==-1 && fragmentMapSearchRegionBinding.mapSearchRegionSearchView.query.isNullOrBlank())
             }
