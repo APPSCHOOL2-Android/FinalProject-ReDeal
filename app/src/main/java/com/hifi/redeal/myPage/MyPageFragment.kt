@@ -53,11 +53,13 @@ class MyPageFragment : Fragment() {
                 }
                 val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
-
                 editor.remove("user_uid")
                 editor.apply()
                 Firebase.auth.signOut()
                 mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, false, null)
+            }
+            customerServiceBtn.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.MY_PAGE_REQUEST_FRAGMENT, true ,null)
             }
         }
         return fragmentMyPageBinding.root

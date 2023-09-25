@@ -179,5 +179,4 @@ class AuthViewModel : ViewModel() {
             .build()
         return GoogleSignIn.getClient(context, gso)
     }
-
 }

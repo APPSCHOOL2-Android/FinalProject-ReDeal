@@ -40,6 +40,7 @@ import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
 import com.hifi.redeal.myPage.MyPageEditNameFragment
 import com.hifi.redeal.myPage.MyPageFragment
+import com.hifi.redeal.myPage.MyPageRequestFragment
 import com.hifi.redeal.schedule.view.EditScheduleFragment
 import com.hifi.redeal.schedule.view.MakeScheduleFragment
 import com.hifi.redeal.schedule.view.ScheduleManageFragment
@@ -111,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         val NOTIFICATION_FRAGMENT = "NotificationFragment"
         val MY_PAGE_FRAGMENT = "MyPageFragment"
         val MY_PAGE_EDIT_NAME_FRAGMENT = "MyPageEditNameFragment"
+        val MY_PAGE_REQUEST_FRAGMENT = "MyPageRequestFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -358,6 +360,7 @@ class MainActivity : AppCompatActivity() {
             NOTIFICATION_FRAGMENT -> NotificationFragment()
             MY_PAGE_FRAGMENT -> MyPageFragment()
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
+            MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
             else -> Fragment()
         }
 
