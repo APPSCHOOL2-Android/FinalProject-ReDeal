@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentMyPageRequestBinding
 import com.hifi.redeal.myPage.repository.MyPageRepository
@@ -30,6 +31,8 @@ class MyPageRequestFragment : Fragment() {
                 val msg = myPageRequestEditNameTextInputEditText.text.toString()
                 if(msg.isNotEmpty()){
                     MyPageRepository.addRequestMessage(msg)
+                    Snackbar.make(requireView(), "전송 완료", Snackbar.LENGTH_LONG).show()
+                    mainActivity.removeFragment(MainActivity.MY_PAGE_REQUEST_FRAGMENT)
                 }
             }
         }

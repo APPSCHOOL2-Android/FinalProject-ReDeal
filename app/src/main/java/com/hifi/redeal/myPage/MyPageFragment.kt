@@ -58,6 +58,9 @@ class MyPageFragment : Fragment() {
                 Firebase.auth.signOut()
                 mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, false, null)
             }
+            customerServiceBtn.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.MY_PAGE_REQUEST_FRAGMENT, true ,null)
+            }
         }
         return fragmentMyPageBinding.root
     }
