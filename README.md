@@ -12,7 +12,7 @@ https://docs.google.com/viewer?url=https://drive.google.com/file/d/19v7tGV3CEGbP
 
 
 ### 🖥️ 시연 영상
-https://docs.google.com/viewer?url=https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive_link?raw=True
+https://docs.google.com/viewer?url=https://drive.google.com/file/d/1egILtkJIpCKMyOWRLfWx_PONg-2-ErBN/view?usp=drive_link?raw=True
 
 
 ### 📆 개발 인원 및 기간
@@ -47,7 +47,7 @@ Android|유민국|https://github.com/jlkim909
 > - ETC : <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
 
 ### ERD 설계
-<img width="80%" height="80%" src="https://user-images.githubusercontent.com/47100801/222034401-12ae32c8-5a9c-40e3-8eb7-e09eab6a1fdd.png">
+<img width="80%" height="80%" src="https://github.com/APPSCHOOL2-Android/FinalProject-ReDeal/assets/89250252/0ef7dc47-2a48-44bc-9760-c7f087977a38">
 
 
 
