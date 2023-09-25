@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapBottomSheetLayout"
+    style="@style/Widget.Material3.BottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/background"
+    android:orientation="vertical"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="32dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/mapBottomSheetDragBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/background"
+        app:tint="@color/primary40" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/mapBottomSheetTabAll"
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="전체"
+                    android:textColor="@color/primary20"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/primary20"
+                    tools:background="@drawable/btn_round_nofill_primary20" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/mapBottomSheetTabBookMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="즐겨찾기"
+                    android:textColor="@color/primary20"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/primary20"
+                    tools:background="@drawable/btn_round_nofill_primary20" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/mapBottomSheetTabVisit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_round_nofill_primary20"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="오늘 방문"
+                    android:textColor="@color/primary20"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/primary20" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mapBottomSheetLayoutClient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/mapBottomSheetTextViewEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="257dp"
+                    android:gravity="center"
+                    android:text="거래처가 존재하지 않습니다." />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mapBottomSheetRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

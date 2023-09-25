@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/background"
+    android:orientation="vertical"
+    tools:context=".map.view.MapFragment">
+
+    <com.kakao.vectormap.MapView
+        android:id="@+id/mapKakao"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/mapSearchBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.search.SearchBar
+                    android:id="@+id/mapSearchBar"
+                    style="@style/Theme.ReDeal.MapSearchBarTheme"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:hint="찾고 계신 거래처를 입력해주세요."
+                    android:theme="@style/Theme.ReDeal.MapSearchBarTheme"
+                    app:defaultMarginsEnabled="false">
+
+                </com.google.android.material.search.SearchBar>
+
+                <LinearLayout
+                    android:id="@+id/mapBtnSearchRegion"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_round_primary20"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/location_on_24" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/nanumsquareneo_bold"
+                        android:text="지역검색"
+                        android:textColor="@color/primary99"
+                        android:textSize="8sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mapFABMyLocation"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12dp"
+                android:clickable="true"
+                android:foreground="@drawable/my_location_custom_24"
+                app:backgroundTint="@color/background"
+                app:borderWidth="0dp"
+                app:layout_constraintEnd_toEndOf="@id/mapSearchBarLayout"
+                app:layout_constraintTop_toBottomOf="@id/mapSearchBarLayout"
+                app:tint="@color/primary20" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.kakao.vectormap.MapView>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/mapSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:hint="거래처 또는 담당자 이름으로 검색"
+        app:layout_anchor="@id/mapSearchBar"
+        app:layout_anchorGravity="center">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mapSearchRecyclerViewResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp" />
+    </com.google.android.material.search.SearchView>
+
+    <include
+        android:id="@+id/mapBottomSheet"
+        layout="@layout/map_bottom_sheet" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

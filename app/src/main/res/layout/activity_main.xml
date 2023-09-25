@@ -8,10 +8,28 @@
     tools:context=".MainActivity" >
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mainContainer"
-        android:name="com.hifi.redeal.accoutListFragment"
+        android:id="@+id/navHostFragmentMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:layout_weight="1"/>
+<!--        app:defaultNavHost="true"-->
+<!--    android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--        app:navGraph="@navigation/nav_graph_main"/>-->
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationViewMain"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@color/primary20"
+        android:visibility="gone"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemBackground="@color/primary20"
+        app:itemIconSize="28dp"
+        app:itemIconTint="@color/bottom_navigation_view_item_tint"
+        app:itemTextAppearanceActive="@style/bottom_navigation_view_item_text_appearance"
+        app:itemTextAppearanceInactive="@style/bottom_navigation_view_item_text_appearance"
+        app:itemTextColor="@color/bottom_navigation_view_item_tint"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu_main" />
 
 </LinearLayout>

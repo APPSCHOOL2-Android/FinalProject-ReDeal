@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".auth.AuthJoinFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayoutAuthJoin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarAuthJoin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_auth"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:title="회원가입"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
+            app:titleTextColor="@color/primary20" /> />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="46dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutAuthJoin">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutJoinUserId"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/background"
+            android:hint="이메일"
+            android:textColorHint="@color/text50"
+            android:transitionGroup="true"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditTextJoinUserId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="text|textEmailAddress"
+                android:padding="1dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text30" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutJoinUserPw"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/background"
+            android:hint="비밀번호"
+            android:textColorHint="@color/text50"
+            android:transitionGroup="true"
+            app:endIconMode="password_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserId"
+            tools:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditTextJoinUserPw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="text|textPassword"
+                android:padding="1dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text30" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutJoinUserPwCheck"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/background"
+            android:hint="비밀번호 확인"
+            android:textColorHint="@color/text50"
+            android:transitionGroup="true"
+            app:endIconMode="password_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserPw"
+            tools:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditTextJoinUserPwCheck"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="text|textPassword"
+                android:padding="1dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text30" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutJoinUserName"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/background"
+            android:hint="성명"
+            android:textColorHint="@color/text50"
+            android:transitionGroup="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserPwCheck">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditTextJoinUserName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="textPersonName"
+                android:padding="1dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/text30" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonJoinComplete"
+            android:layout_width="330dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="회원가입 완료"
+            app:backgroundTint="@color/primary20"
+            app:cornerRadius="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserName"
+            app:shapeAppearance="@style/TextAppearance.AppCompat.Button" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutJoinWarning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutJoinUserName">
+
+            <TextView
+                android:id="@+id/warningJoinEmailAlready"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="이미 등록된 아이디 입니다"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
+
+            <TextView
+                android:id="@+id/warningJoinEmailFormat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="이메일 형식으로 작성해주세요"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
+
+            <TextView
+                android:id="@+id/warningJoinPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="비밀번호는 8자 이상, 특수기호를 포함한 영문자와 숫자로 작성해주세요"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textSize="12dp"/>
+
+            <TextView
+                android:id="@+id/warningJoinPasswordCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="입력한 비밀번호가 일치하지 않습니다"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
+
+            <TextView
+                android:id="@+id/warningJoinPasswordContinuity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="연속된 숫자, 문자는 비밀번호로 사용하실 수 없습니다"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
+
+
+            <TextView
+                android:id="@+id/warningJoinNameFormat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="이모티콘 및 특수문자는 사용할 수 없습니다(최대 8글자)"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone"
+                android:fontFamily="@font/nanumsquareneo_regular"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

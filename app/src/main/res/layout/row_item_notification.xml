@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:foreground="?attr/selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/textViewRowItemNotificationSender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textViewRowItemNotificationNotifyDate"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="12sp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:textColor="@color/text50"/>
+
+    <TextView
+        android:id="@+id/textViewRowItemNotificationNotifyDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:textColor="@color/text50"
+        android:textSize="10sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/textViewRowItemNotificationSender"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewRowItemNotificationAccountName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonRowItemNotificationRegister"
+        app:layout_constraintTop_toBottomOf="@id/textViewRowItemNotificationSender"
+        android:maxLines="1"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:textColor="@color/text10"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/textViewRowItemNotificationRepresentative"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewRowItemNotificationAccountName"
+        app:layout_constraintEnd_toStartOf="@id/buttonRowItemNotificationRegister"
+        android:maxLines="1"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:textColor="@color/text10"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/buttonRowItemNotificationRegister"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textViewRowItemNotificationAccountName"
+        app:layout_constraintBottom_toBottomOf="@id/textViewRowItemNotificationRepresentative"
+        android:background="@drawable/btn_round_primary20"
+        android:text="저장"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:fontFamily="@font/nanumsquareneo_extrabold"
+        android:textColor="@color/background"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/accountListFragment"
+        android:icon="@drawable/card_account_detail_24px_primary99"
+        android:menuCategory="secondary"
+        android:title="거래처 목록" />
+
+    <item
+        android:id="@+id/scheduleManageFragment"
+        android:icon="@drawable/calendar_clock_24px_primary99"
+        android:menuCategory="secondary"
+        android:title="일정 관리" />
+
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@drawable/map_24px_primary99"
+        android:menuCategory="secondary"
+        android:title="거래처 맵" />
+
+    <item
+        android:id="@+id/transactionFragment"
+        android:icon="@drawable/work_history_24px_primary99"
+        android:menuCategory="secondary"
+        android:title="거래 내역" />
+
+    <item
+        android:id="@+id/memoFragment"
+        android:icon="@drawable/add_memo_24px_primary99"
+        android:menuCategory="secondary"
+        android:title="메모" />
+</menu>

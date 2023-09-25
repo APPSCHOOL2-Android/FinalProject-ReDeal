@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionGroup="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".account.AccountEditFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayoutAccountEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionGroup="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/materialToolbarAccountEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:transitionGroup="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayoutAccountEdit">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewAccountEdit1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/nanumsquareneo_extrabold"
+                android:text="거래처 정보"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditState"
+                style="@style/Widget.App.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="거래 상태"
+                android:textColorHint="@color/text30"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountEdit1"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountEdit1">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/textEditTextAccountEditState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:inputType="none"
+                    android:padding="12dp"
+                    android:textColor="@color/text10"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccounteditAccountName"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditState"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditState">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditAccountName"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="거래처명"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditZipCode"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="주소"
+                android:textColorHint="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutAccounteditAccountName"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccounteditAccountName"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccounteditAccountName">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditZipCode"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="주소를 검색해주세요"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/buttonAccountEditAddressSearch"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/btn_round_primary20"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="4dp"
+                android:translationZ="1dp"
+                app:layout_constraintBottom_toBottomOf="@id/textInputLayoutAccountEditZipCode"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutAccountEditZipCode"
+                app:layout_constraintTop_toTopOf="@id/textInputLayoutAccountEditZipCode"
+                app:srcCompat="@drawable/address_search_24px" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditDetailAddress"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutAccountEditZipCode"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditZipCode"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditZipCode">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditDetailAddress"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="상세주소"
+                    android:inputType="textPostalAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditGeneralNumber"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintEnd_toStartOf="@id/textInputLayoutAccountEditFaxNumber"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditDetailAddress"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditDetailAddress">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditGeneralNumber"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="대표 번호"
+                    android:inputType="phone" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditFaxNumber"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutAccountEditDetailAddress"
+                app:layout_constraintStart_toEndOf="@id/textInputLayoutAccountEditGeneralNumber"
+                app:layout_constraintTop_toTopOf="@id/textInputLayoutAccountEditGeneralNumber">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditFaxNumber"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fax"
+                    android:inputType="phone" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textViewAccountEdit2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/nanumsquareneo_extrabold"
+                android:text="담당자 정보"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditGeneralNumber"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditGeneralNumber" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditRepresentative"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountEdit2"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountEdit2">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditRepresentative"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="담당자"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditDirectNumber"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutAccountEditRepresentative"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditRepresentative"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditRepresentative">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditDirectNumber"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="연락처"
+                    android:inputType="phone" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textViewAccountEdit3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/nanumsquareneo_extrabold"
+                android:text="기타사항 메모"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditDirectNumber"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditDirectNumber" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditShortDescription"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountEdit3"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountEdit3">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditShortDescription"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="거래처 한 줄 설명"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAccountEditEntireDescription"
+                style="@style/text_input_layout_style_account_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="36dp"
+                app:layout_constraintBottom_toTopOf="@id/buttonAccountEditSubmit"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutAccountEditShortDescription"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutAccountEditShortDescription"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutAccountEditShortDescription">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textEditTextAccountEditEntireDescription"
+                    style="@style/text_input_edit_text_style_account_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="거래처 종합 설명" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/buttonAccountEditSubmit"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/btn_round_primary20"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/nanumsquareneo_bold"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="거래처 등록"
+                android:textColor="@color/primary99"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

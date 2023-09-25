@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:transitionGroup="true">
+
+                <View
+                    android:id="@+id/selectTransactionClinetState"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/client_state_circle_trading" />
+
+                <TextView
+                    android:id="@+id/selectTransactionClientName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="4dp"
+                    android:fontFamily="@font/nanumsquareneo_regular"
+                    android:text="abc회사"
+                    android:textColor="@color/text10"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/selectTransactionClientBookmarkView"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/selectTransactionClientManagerName"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:maxLines="1"
+                android:text="김대리"
+                android:textColor="@color/text10"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

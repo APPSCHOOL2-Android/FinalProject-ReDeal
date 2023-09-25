@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".memo.MemoFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/memoToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Theme.ReDeal.ToolbarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/arrow_back_ios_24px"
+        app:title="메모 전체 보기"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/memoDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/primary20"
+        app:dividerThickness="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/memoToolbar" />
+
+    <LinearLayout
+        android:id="@+id/tapLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_record_file_container"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memoDivider">
+
+        <TextView
+            android:id="@+id/photoMemoTabItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="포토 메모"
+            android:textAlignment="center"
+            android:textColor="@color/primary10"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/recordMemoTabItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="음성 메모"
+            android:textAlignment="center"
+            android:textColor="@color/primary80"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <ViewSwitcher
+        android:id="@+id/memoViewSwitcher"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tapLinearLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userPhotoMemoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/row_user_photo_memo" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userRecordMemoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ViewSwitcher>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

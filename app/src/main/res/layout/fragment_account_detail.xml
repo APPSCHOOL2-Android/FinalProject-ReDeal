@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionGroup="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".account.AccountDetailFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayoutAccountDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/materialToolbarAccountDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:menu="@menu/toolbar_menu_account_detail"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayoutAccountDetail"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationViewAccountDetail" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.kakao.vectormap.MapView
+                android:id="@+id/mapViewAccountDetail"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="12:7"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+<!--            <View-->
+<!--                android:id="@+id/mapViewAccountDetail"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                app:layout_constraintDimensionRatio="12:7"-->
+<!--                app:layout_constraintTop_toTopOf="parent"/>-->
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/primary20"
+                app:layout_constraintTop_toBottomOf="@id/mapViewAccountDetail"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetail1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="거래 상태"
+                android:textSize="12sp"
+                android:textColor="@color/text10"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                app:layout_constraintTop_toBottomOf="@id/divider3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/textViewAccountDetail2"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetail2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="최근 연락"
+                android:textSize="12sp"
+                android:textColor="@color/text10"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetail1"
+                app:layout_constraintStart_toEndOf="@id/textViewAccountDetail1"
+                app:layout_constraintEnd_toStartOf="@id/textViewAccountDetail3"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetail3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="최근 방문"
+                android:textSize="12sp"
+                android:textColor="@color/text10"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetail2"
+                app:layout_constraintStart_toEndOf="@id/textViewAccountDetail2"
+                app:layout_constraintEnd_toStartOf="@id/imageViewAccountDetailFavorite"/>
+
+            <ImageView
+                android:id="@+id/imageViewAccountDetailFavorite"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintTop_toTopOf="@id/divider3"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/imageViewAccountDetailState"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetail1"
+                app:layout_constraintEnd_toStartOf="@id/textViewAccountDetailState"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetailState"
+                app:layout_constraintBottom_toBottomOf="@id/textViewAccountDetailState"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="10sp"
+                android:textColor="@color/text50"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                app:layout_constraintStart_toEndOf="@id/imageViewAccountDetailState"
+                app:layout_constraintEnd_toEndOf="@id/textViewAccountDetail1"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetail1"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailRecentContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="10sp"
+                android:textColor="@color/text50"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetail2"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetail2"
+                app:layout_constraintEnd_toEndOf="@id/textViewAccountDetail2"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailRecentVisit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="10sp"
+                android:textColor="@color/text50"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetail3"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetail3"
+                app:layout_constraintEnd_toEndOf="@id/textViewAccountDetail3"/>
+
+            <ImageView
+                android:id="@+id/buttonAccountDetailGeneralCall"
+                android:background="@drawable/btn_round_primary20"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="16dp"
+                android:padding="4dp"
+                app:srcCompat="@drawable/call_24px"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetailShortDescription"
+                app:layout_constraintBottom_toBottomOf="@id/textViewAccountDetailShortDescription"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/buttonAccountDetailDirectionsCar"
+                android:background="@drawable/btn_round_primary20"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="3dp"
+                app:srcCompat="@drawable/directions_car_24px"
+                app:layout_constraintTop_toTopOf="@id/buttonAccountDetailGeneralCall"
+                app:layout_constraintEnd_toStartOf="@id/buttonAccountDetailGeneralCall"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailShortDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="24dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                android:lineSpacingExtra="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailState"
+                app:layout_constraintEnd_toStartOf="@id/buttonAccountDetailDirectionsCar" />
+
+            <TextView
+                android:id="@+id/textViewAccountDetailGeneralNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="대표 번호   "
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetailShortDescription"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailShortDescription"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailFaxNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fax. "
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                app:layout_constraintEnd_toEndOf="@id/buttonAccountDetailGeneralCall"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetailGeneralNumber"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                android:lineSpacingExtra="4dp"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetailGeneralNumber"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailGeneralNumber"
+                app:layout_constraintEnd_toEndOf="@id/textViewAccountDetailFaxNumber"/>
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/text70"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailAddress" />
+
+            <TextView
+                android:id="@+id/textViewAccountDetail4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="담당자"
+                android:textSize="16sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider4"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailRepresentative"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                android:layout_marginStart="12dp"
+                android:lineSpacingExtra="8dp"
+                app:layout_constraintStart_toEndOf="@id/textViewAccountDetail4"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetail4"
+                app:layout_constraintEnd_toEndOf="@id/buttonAccountDetailDirectCall"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetail5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="연락처"
+                android:textSize="16sp"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetailRepresentative"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetail4"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetailDirectNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textColor="@color/text10"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/textViewAccountDetail5"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetail5"/>
+
+            <ImageView
+                android:id="@+id/buttonAccountDetailDirectCall"
+                android:background="@drawable/btn_round_primary20"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="16dp"
+                android:padding="4dp"
+                app:srcCompat="@drawable/call_24px"
+                app:layout_constraintTop_toTopOf="@id/textViewAccountDetailDirectNumber"
+                app:layout_constraintBottom_toBottomOf="@id/textViewAccountDetailDirectNumber"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/buttonAccountDetailSendMessage"
+                android:background="@drawable/btn_round_primary20"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="5dp"
+                app:srcCompat="@drawable/mail_24px"
+                app:layout_constraintTop_toTopOf="@id/buttonAccountDetailDirectCall"
+                app:layout_constraintEnd_toStartOf="@id/buttonAccountDetailDirectCall"
+                android:layout_marginEnd="12dp"/>
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/text70"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetail5"
+                android:layout_marginTop="12dp"/>
+
+            <TextView
+                android:id="@+id/textViewAccountDetail6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메모 사항"
+                android:fontFamily="@font/nanumsquareneo_bold"
+                android:textSize="16sp"
+                android:textColor="@color/text10"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/divider5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewAccountDetailMemoContent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:textSize="16sp"
+                android:textColor="@color/text10"
+                android:lineSpacingExtra="8dp"
+                android:background="@drawable/rounded_rectangle_stroke_primary20"
+                app:layout_constraintStart_toStartOf="@id/textViewAccountDetail6"
+                app:layout_constraintTop_toBottomOf="@id/textViewAccountDetail6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationViewAccountDetail"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="@color/primary95"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemIconSize="32dp"
+        app:itemIconTint="@color/primary10"
+        app:itemTextColor="@color/primary10"
+        app:itemBackground="@color/primary95"
+        app:labelVisibilityMode="labeled"
+        app:itemTextAppearanceActive="@style/bottom_bar_account_list_item_text_appearance"
+        app:itemTextAppearanceInactive="@style/bottom_bar_account_list_item_text_appearance"
+        app:menu="@menu/bottom_menu_account_detail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
