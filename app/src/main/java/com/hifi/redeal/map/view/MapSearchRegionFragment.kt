@@ -28,7 +28,7 @@ class MapSearchRegionFragment : Fragment() {
     lateinit var fragmentMapSearchRegionBinding: FragmentMapSearchRegionBinding
     lateinit var mainActivity: MainActivity
     lateinit var mapViewModel: MapViewModel
-    lateinit var clientViewModel : ClientViewModel
+    lateinit var clientViewModel: ClientViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +40,7 @@ class MapSearchRegionFragment : Fragment() {
         clientViewModel = ViewModelProvider(mainActivity)[ClientViewModel::class.java]
 
         mapViewModel.run {
-            currentSiGunGuList.observe(mainActivity) {
+            currentSiGunGuList.observe(viewLifecycleOwner) {
                 currentDongList.value?.clear()
                 fragmentMapSearchRegionBinding.mapSearchRegionRecyclerViewSiGunGu.run {
                     adapter = SearchRegionSiGunGuRecyclerViewAdapter(mainActivity, it!!)
@@ -49,11 +49,17 @@ class MapSearchRegionFragment : Fragment() {
 
             }
 
-            currentDongList.observe(mainActivity) {
+            currentDongList.observe(viewLifecycleOwner) {
                 fragmentMapSearchRegionBinding.mapSearchRegionRecyclerViewDong.run {
                     adapter = SearchRegionDongRecyclerViewAdapter(mainActivity, it!!)
                     layoutManager = LinearLayoutManager(context)
                 }
+            }
+
+            currentSiDoPosition.observe(viewLifecycleOwner) {
+                fragmentMapSearchRegionBinding.mapSearchRegionBtnToMap.isEnabled =
+                    !(mapViewModel.currentSiDoPosition.value == -1 &&
+                            fragmentMapSearchRegionBinding.mapSearchRegionSearchView.query.isNullOrBlank())
             }
         }
 
@@ -67,46 +73,66 @@ class MapSearchRegionFragment : Fragment() {
 
             MapRepository.searchSiDo { result ->
                 mapSearchRegionRecyclerViewSiDo.run {
-                    adapter = SearchRegionSiDoRecyclerViewAdapter(mainActivity, result!!.sortedBy { it.admCode })
+                    adapter = SearchRegionSiDoRecyclerViewAdapter(
+                        mainActivity,
+                        result!!.sortedBy { it.admCode })
                     layoutManager = LinearLayoutManager(context)
 
                 }
 
             }
 
-            mapSearchRegionBtnToMap.setOnClickListener {
-
-                 if (mapViewModel.currentSiDoPosition.value!=-1 && mapSearchRegionSearchView.query.isNotBlank()){
-                    showDialog("입력 오류","검색 혹은 지역 선택 둘 중 하나만 해주세요.",mainActivity)
-                } else {
-                     if(mapViewModel.currentSiDoPosition.value==-1){
-                         setCurrentAddress( mapSearchRegionSearchView.query.toString())
-                     } else {
-                         MapRepository.searchSiDo {
-                             var regionResult = ""
-                             if (mapViewModel.currentSiDoPosition.value != -1) {
-                                 regionResult += it!!.sortedBy { it.admCode }
-                                     .get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
-                             }
-
-                             if (mapViewModel.currentSiGunGuPosition.value != -1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()) {
-                                 regionResult += mapViewModel.currentSiGunGuList.value!!.get(
-                                     mapViewModel.currentSiGunGuPosition.value!!
-                                 ).lowestAdmCodeNm
-
-                             }
-                             if (mapViewModel.currentDongPosition.value != -1 && mapViewModel.currentDongList.value!!.isNotEmpty()) {
-                                 regionResult += mapViewModel.currentDongList.value!!.get(
-                                     mapViewModel.currentDongPosition.value!!
-                                 ).lowestAdmCodeNm
-
-                             }
-
-                             setCurrentAddress(regionResult)
-                         }
-                     }
+            mapSearchRegionSearchView.setOnQueryTextListener(object :
+                SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
                 }
 
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    mapSearchRegionBtnToMap.isEnabled =
+                        !(mapViewModel.currentSiDoPosition.value == -1 && newText.isNullOrBlank())
+                    return true
+                }
+            })
+
+            mapSearchRegionBtnToMap.run {
+                isEnabled =
+                    !(mapViewModel.currentSiDoPosition.value == -1 && fragmentMapSearchRegionBinding.mapSearchRegionSearchView.query.isNullOrBlank())
+                setOnClickListener {
+                    if (mapViewModel.currentSiDoPosition.value != -1 && mapSearchRegionSearchView.query.isNotBlank()) {
+                        showDialog("입력 오류", "검색 혹은 지역 선택 둘 중 하나만 해주세요.", mainActivity)
+                        mapViewModel.currentSiDoPosition.value == -1
+                        mapSearchRegionSearchView.clearFocus()
+                    } else {
+                        if (mapViewModel.currentSiDoPosition.value == -1) {
+                            setCurrentAddress(mapSearchRegionSearchView.query.toString())
+                        } else {
+                            MapRepository.searchSiDo {
+                                var regionResult = ""
+                                if (mapViewModel.currentSiDoPosition.value != -1) {
+                                    regionResult += it!!.sortedBy { it.admCode }
+                                        .get(mapViewModel.currentSiDoPosition.value!!).lowestAdmCodeNm
+                                }
+
+                                if (mapViewModel.currentSiGunGuPosition.value != -1 && mapViewModel.currentSiGunGuList.value!!.isNotEmpty()) {
+                                    regionResult += mapViewModel.currentSiGunGuList.value!!.get(
+                                        mapViewModel.currentSiGunGuPosition.value!!
+                                    ).lowestAdmCodeNm
+
+                                }
+                                if (mapViewModel.currentDongPosition.value != -1 && mapViewModel.currentDongList.value!!.isNotEmpty()) {
+                                    regionResult += mapViewModel.currentDongList.value!!.get(
+                                        mapViewModel.currentDongPosition.value!!
+                                    ).lowestAdmCodeNm
+
+                                }
+
+                                setCurrentAddress(regionResult)
+                            }
+                        }
+                    }
+
+                }
             }
 
         }
@@ -116,25 +142,25 @@ class MapSearchRegionFragment : Fragment() {
     }
 
 
-
     fun setCurrentAddress(addr: String) {
         MapRepository.searchAddr(addr!!) { list ->
             if (list?.isNotEmpty() == true && list != null) {
                 val lat = list[0].y.toDouble()
                 val long = list[0].x.toDouble()
-                clientViewModel.currentAddress.value = LatLng.from(lat,long)
+                clientViewModel.currentAddress.value = LatLng.from(lat, long)
                 mapViewModel.run {
-                    currentSiDoPosition.value=-1
-                    currentSiGunGuList.value= mutableListOf()
-                    currentDongList.value= mutableListOf()
+                    currentSiDoPosition.value = -1
+                    currentSiGunGuList.value = mutableListOf()
+                    currentDongList.value = mutableListOf()
                 }
                 mainActivity.removeFragment(MainActivity.MAP_SEARCH_REGION_FRAGMENT)
-            }else{
-                showDialog("주소 오류","지역 명으로 입력해주세요.",mainActivity)
+            } else {
+                showDialog("주소 오류", "지역 명으로 입력해주세요.", mainActivity)
             }
         }
     }
-    fun showDialog(title:String,message:String,context: Context) {
+
+    fun showDialog(title: String, message: String, context: Context) {
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder.setTitle(title)
         alertDialogBuilder.setMessage(message)
@@ -145,7 +171,6 @@ class MapSearchRegionFragment : Fragment() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
 
 
 }

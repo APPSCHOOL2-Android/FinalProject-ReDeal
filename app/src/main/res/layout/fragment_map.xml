@@ -30,7 +30,7 @@
 
                 <com.google.android.material.search.SearchBar
                     android:id="@+id/mapSearchBar"
-                    style="@style/Theme.ReDeal.ClientSearchViewTheme"
+                    style="@style/Theme.ReDeal.MapSearchBarTheme"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"

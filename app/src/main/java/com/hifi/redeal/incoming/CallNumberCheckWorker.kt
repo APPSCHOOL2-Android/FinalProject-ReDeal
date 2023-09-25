@@ -32,6 +32,7 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
         var clientName : String? = null
         var clientExplain : String? = null
         var clientManagerName : String? = null
+        var clientMemo : String? = null
 
         val id = Timestamp.now().nanoseconds
 
@@ -81,11 +82,12 @@ class CallNumberCheckWorker(context: Context, workerParams: WorkerParameters):
                             clientIdx = a1["clientIdx"] as Long
                             clientName = a1["clientName"] as String
                             clientManagerName = a1["clientManagerName"] as String
+                            clientMemo = a1["clientMemo"] as String
                             val builder = getNotificationBuilder(NOTIFICATION_CHANNEL1_ID)
                             val icon = IconCompat.createWithResource(applicationContext, R.drawable.notifications_24px)
                             builder.setSmallIcon(icon)
                             builder.setContentTitle("${clientName}의 $clientManagerName")
-                            builder.setContentText("거래처 : $clientName \n담당자 : $clientManagerName")
+                            builder.setContentText("거래처 : $clientName \n한 줄 설명 : $clientMemo")
 
                             builder.setAutoCancel(true)
 

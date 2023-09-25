@@ -45,6 +45,9 @@ class AuthJoinFragment : Fragment() {
             }
 
             buttonJoinComplete.setOnClickListener {
+                // 버튼 비활성화
+                it.isEnabled = false
+
                 val email = textInputEditTextJoinUserId.text.toString()
                 val password = textInputEditTextJoinUserPw.text.toString()
                 val name = textInputEditTextJoinUserName.text.toString()
@@ -69,6 +72,7 @@ class AuthJoinFragment : Fragment() {
                 // 유효성 검사
                 if (!isEmailValid) {
                     warningJoinEmailFormat.visibility = View.VISIBLE
+                    it.isEnabled = true
                     return@setOnClickListener
                 } else {
                     warningJoinEmailFormat.visibility = View.GONE
@@ -76,6 +80,7 @@ class AuthJoinFragment : Fragment() {
 
                 if (!isPasswordValid) {
                     warningJoinPassword.visibility = View.VISIBLE
+                    it.isEnabled = true
                     return@setOnClickListener
                 } else {
                     warningJoinPassword.visibility = View.GONE
@@ -83,6 +88,7 @@ class AuthJoinFragment : Fragment() {
 
                 if (!isPasswordMatch) {
                     warningJoinPasswordCheck.visibility = View.VISIBLE
+                    it.isEnabled = true
                     return@setOnClickListener
                 } else {
                     warningJoinPasswordCheck.visibility = View.GONE
@@ -90,6 +96,7 @@ class AuthJoinFragment : Fragment() {
 
                 if (!isNameValid) {
                     warningJoinNameFormat.visibility = View.VISIBLE
+                    it.isEnabled = true
                     return@setOnClickListener
                 } else {
                     warningJoinNameFormat.visibility = View.GONE
@@ -97,11 +104,11 @@ class AuthJoinFragment : Fragment() {
 
                 if (isContinuitycheck) {
                     warningJoinPasswordContinuity.visibility = View.VISIBLE
+                    it.isEnabled = true
                     return@setOnClickListener
                 } else {
                     warningJoinPasswordContinuity.visibility = View.GONE
                 }
-
 
                 // Firebase Authentication을 사용하여 사용자 등록
                 val registrationLiveData = authViewModel.registerUser(email, password, name, fragmentAuthJoinBinding.root)
@@ -115,6 +122,9 @@ class AuthJoinFragment : Fragment() {
                     } else {
                         showErrorMessageDialog("가입 실패")
                     }
+
+                    // 버튼 다시 활성화
+                    it.isEnabled = true
                 })
             }
         }
