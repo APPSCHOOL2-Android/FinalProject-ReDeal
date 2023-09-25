@@ -12,6 +12,7 @@ https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive
 
 
 ### 🖥️ 시연 영상(이미지 클릭 시 재생)
+
 [![Video Label](http://img.youtube.com/vi/B0PQ7tyE2ao/0.jpg)](https://youtu.be/B0PQ7tyE2ao)
 
 
