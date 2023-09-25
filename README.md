@@ -23,7 +23,7 @@ https://docs.google.com/viewer?url=https://drive.google.com/file/d/19v7tGV3CEGbP
 ## 🙌 팀원소개
 역할|이름|GitHub 주소|
 ---|---|---|
-Android|김도희|https://github.com/Lst-1995-kotlin
+Android|이성태|https://github.com/Lst-1995-kotlin
 Android|김소윤|https://github.com/iiolo
 Android|김현승|https://github.com/KHSSE
 Android|임보성|https://github.com/brudenell
