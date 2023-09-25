@@ -11,7 +11,7 @@ https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive
 
 
 ### 🖥️ 시연 영상(이미지 클릭 시 재생)
-[![Video Label](https://github.com/APPSCHOOL2-Android/FinalProject-ReDeal/assets/89250252/1edb8fab-8719-4c09-8a60-051e6bef557c)](https://youtu.be/B0PQ7tyE2ao)
+[![Video Label]( https://img.youtube.com/vi/B0PQ7tyE2ao/0.jpg )](https://youtu.be/B0PQ7tyE2ao)
 
 
 
@@ -33,7 +33,7 @@ Android|유민국|https://github.com/jlkim909
 
 ## 📄 협업 문서
 - 기획서 초안 : https://docs.google.com/document/d/1mL_gRcs6RkgZfokQ3JG8W9rUXrytQXGY_tpJ2MNOWco/edit
-- 화면 명세서 : https://docs.google.com/presentation/d/1HePd2MtEIzrH75uh6E8sNpeFWlRn8NmoKiezoDVIsr8/edit#slide=id.g242548a6f92_0_57
+- 화면 명세서 : https://docs.google.com/presentation/d/1HePd2MtEIzrH75uh6E8sNpeFWlRn8NmoKiezoDVIsr8/edit#slide=id.p
 - Mock Up & UI : https://www.figma.com/file/Ewsxr1KJFZ7W6Lxdg3WDVi/hifi-최종-프로젝트?type=design&node-id=84-2373&mode=design&t=xRX1WvvK2kJpjGAm-0
 - ERD : https://www.erdcloud.com/d/Pw6o7EvDjZ5FPF6no
 <br>
