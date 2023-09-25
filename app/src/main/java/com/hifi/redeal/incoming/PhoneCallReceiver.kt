@@ -39,10 +39,10 @@ class PhoneCallReceiver: BroadcastReceiver() {
                                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                                 .build()
                             WorkManager.getInstance(context).enqueue(request)
-                        } else if( context != null) {
-                            ContextCompat.startForegroundService(context, serviceIntent)
-                        } else {
-                            context?.startService(serviceIntent)
+                        } else{
+                            if( context != null) {
+                                ContextCompat.startForegroundService(context, serviceIntent)
+                            }
                         }
 
                     }
