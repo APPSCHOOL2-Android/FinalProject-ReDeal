@@ -1,5 +1,4 @@
-![5___PPT_1](https://github.com/APPSCHOOL2-Android/FinalProject-ReDeal/assets/89250252/04c61118-0983-4a43-9d66-04c0b9899c02)# 리딜(Remember a Deal)
-
+# 리딜(Remember a Deal)
 ## 👔 프로젝트 소개
 - **Re**member a **Deal**의 약자로, 거래를 기억하다 라는 뜻입니다. 거래를 기억하다의 뜻처럼 수 많은 거래처를 관리하는 영업사원을 위해 **거래처를 기억**해주고 <strong>거래처 관리</strong>할 수 있게 해주는 어플리케이션입니다.
 - 현재 대다수의 영업사원들은 **수기**로 거래처의 정보를 **관리**하는 경우가 많아 거래처 정보를 잃어버리는 등 **관리가 용이하지 않습니다**.
