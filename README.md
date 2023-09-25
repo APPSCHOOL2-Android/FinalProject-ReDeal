@@ -8,11 +8,11 @@
 
 
 ### 📁 프로젝트 문서
-https://docs.google.com/viewer?url=https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive_link?raw=True
+https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive_link
 
 
 ### 🖥️ 시연 영상
-https://docs.google.com/viewer?url=https://drive.google.com/file/d/1egILtkJIpCKMyOWRLfWx_PONg-2-ErBN/view?usp=drive_link?raw=True
+https://youtu.be/B0PQ7tyE2ao
 
 
 ### 📆 개발 인원 및 기간
