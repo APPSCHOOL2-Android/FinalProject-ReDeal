@@ -1,4 +1,4 @@
-# 리딜(Remember a Deal)
+![5___PPT_1](https://github.com/APPSCHOOL2-Android/FinalProject-ReDeal/assets/89250252/04c61118-0983-4a43-9d66-04c0b9899c02)# 리딜(Remember a Deal)
 
 ## 👔 프로젝트 소개
 - **Re**member a **Deal**의 약자로, 거래를 기억하다 라는 뜻입니다. 거래를 기억하다의 뜻처럼 수 많은 거래처를 관리하는 영업사원을 위해 **거래처를 기억**해주고 <strong>거래처 관리</strong>할 수 있게 해주는 어플리케이션입니다.
@@ -12,8 +12,7 @@ https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive
 
 
 ### 🖥️ 시연 영상(이미지 클릭 시 재생)
-
-[![Video Label](http://img.youtube.com/vi/B0PQ7tyE2ao/0.jpg)](https://youtu.be/B0PQ7tyE2ao)
+[![Video Label](https://github.com/APPSCHOOL2-Android/FinalProject-ReDeal/assets/89250252/1edb8fab-8719-4c09-8a60-051e6bef557c)](https://youtu.be/B0PQ7tyE2ao)
 
 
 
@@ -35,8 +34,8 @@ Android|유민국|https://github.com/jlkim909
 
 ## 📄 협업 문서
 - 기획서 초안 : https://docs.google.com/document/d/1mL_gRcs6RkgZfokQ3JG8W9rUXrytQXGY_tpJ2MNOWco/edit
-- 화면 명세서 : https://docs.google.com/spreadsheets/d/1aqqfWq-0bmhZsQnR2jCSDbcofVgwF4vRHhwERZyuU1w/edit#gid=0
-- Mock Up & UI : https://www.figma.com/file/Ewsxr1KJFZ7W6Lxdg3WDVi/hifi-%EC%B5%9C%EC%A2%85-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?type=design&mode=design&t=HRuL0RFiddx7vyD0-0
+- 화면 명세서 : https://docs.google.com/presentation/d/1HePd2MtEIzrH75uh6E8sNpeFWlRn8NmoKiezoDVIsr8/edit#slide=id.g242548a6f92_0_57
+- Mock Up & UI : https://www.figma.com/file/Ewsxr1KJFZ7W6Lxdg3WDVi/hifi-최종-프로젝트?type=design&node-id=84-2373&mode=design&t=xRX1WvvK2kJpjGAm-0
 - ERD : https://www.erdcloud.com/d/Pw6o7EvDjZ5FPF6no
 <br>
 
